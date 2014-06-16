@@ -1,7 +1,10 @@
 /*
- It's simple, return the fft of the input x where x is real and the output
- is complex. Packing format. The fft handle needs to be delt
- with with destroy_fft when it is no longer needed.
+ It's simple, return the fft (or ifft) of the input x.
+ Packing format is important to note.
+ The fft handle needs to be delt with.
+ destroy_fft when it is no longer needed.
+
+ the fftw 3.3.4 API is used here
 
  for real to complex fft, the output storage is:
 
