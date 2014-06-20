@@ -1,7 +1,7 @@
 #ifndef _FFT_H_
 #define _FFT_H_
 
-int rfft(float *x, int N);
-int destroy_fft();
+int fft(float *x, int N);
+int ifft(float *x, int N);
 
 #endif

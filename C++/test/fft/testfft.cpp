@@ -15,9 +15,10 @@ extern "C" {
 
 int main() {
 
-  std::cout << "about to perform the fft" << std::endl;
+  int N = 8;
+  float *x = new float [N+1];
 
-  float *x = new float [9];
+  std::cout << "about to perform the FFT:" << std::endl;
 
   // uniform random input example:
 
@@ -44,19 +45,24 @@ int main() {
     but the actual output is only half packed
  */
 
-  rfft(x,8);
+  fft(x,N);
 
-  // print fft results as they are packed
+  // print fft results (packed)
 
-  for (int i = 0; i < 9; i++)
+  for (int i = 0; i < N+1; i++)
+    printf("%f\n", x[i]);
+  std::cout << std::endl;
+
+  std::cout << "about to perform the inverse FFT:" << std::endl;
+
+  ifft(x,N);
+
+  for (int i = 0; i < N; i++)
     printf("%f\n", x[i]);
 
   // free the memory
 
   delete x;
-#if 0
-  destroy_fft();
-#endif
 
   return 0;
 }

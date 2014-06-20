@@ -1,16 +1,10 @@
 /*
- It's simple, return the fft (or ifft) of the input x.
- Packing format is important to note.
- The fft handle needs to be delt with.
- destroy_fft when it is no longer needed.
+ Return the fft (or ifft) of the input x in-place
+
+ x real on input into the fft
+   complex on input into the ifft but real on output
 
  the fftw 3.3.4 API is used here
-
- for real to complex fft, the output storage is:
-
- the full fft data comes out to be complex symmetric which looks like
-
- [DC, data, Nyquist, conj(data reversed)]
 
  */
 
@@ -18,7 +12,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-inline int rfft(float *x, int N) {
+/***************
+ * forward FFT *
+ ***************/
+
+inline int fft(float *x, int N) {
 
   fftwf_plan rplan;
   fftwf_complex *y;
@@ -29,6 +27,31 @@ inline int rfft(float *x, int N) {
 
   fftwf_execute(rplan);
   fftwf_destroy_plan(rplan);
+
+  return 0;
+}
+
+/***************
+ * inverse FFT *
+ ***************/
+
+inline int ifft(float *x, int N) {
+
+  fftwf_plan rplan;
+  fftwf_complex *y;
+
+  y = (fftwf_complex*) x;
+
+  rplan = fftwf_plan_dft_c2r_1d(N, y, x, FFTW_ESTIMATE);
+
+  fftwf_execute(rplan);
+  fftwf_destroy_plan(rplan);
+
+  float divN = 1.0/N;
+
+  int i;
+  for (i = 0; i < N; i++)
+    x[i] *= divN;
 
   return 0;
 }
