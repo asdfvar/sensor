@@ -17,7 +17,7 @@ int main() {
 
   std::cout << "about to perform the fft" << std::endl;
 
-  float *x = new float [8];
+  float *x = new float [9];
 
   // uniform random input example:
 
@@ -40,19 +40,23 @@ int main() {
               0.08689083 + 0.25979406i
              -0.39133236 - 0.34984209i
               0.06779949 - 1.11671607i
+
+    but the actual output is only half packed
  */
 
   rfft(x,8);
 
   // print fft results as they are packed
 
-  for (int i = 0; i < 8; i++)
+  for (int i = 0; i < 9; i++)
     printf("%f\n", x[i]);
 
   // free the memory
 
   delete x;
+#if 0
   destroy_fft();
+#endif
 
   return 0;
 }
