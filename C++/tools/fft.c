@@ -1,10 +1,19 @@
 /*
  Return the fft (or ifft) of the input x in-place
 
- x real on input into the fft
-   complex on input into the ifft but real on output
+ fft:
+ x is real on input. On output, x is complex stored
+ with its first half of its complex symetric part only.
 
- the fftw 3.3.4 API is used here
+ ifft:
+ on input, x is complex stored with the first half of its
+ complex symmetric form. On output, x is real.
+
+ The packing format for x is:
+
+        [r_0, 0, ..., r_{N-1}, i_{N-1}, r_{Nyq}]
+
+ the version of the fft API is fftw 3.3.4
 
  */
 
