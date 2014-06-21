@@ -12,7 +12,6 @@ extern "C" {
 #include <stdio.h>
 
 
-
 int main() {
 
   int N = 8;
