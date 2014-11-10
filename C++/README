@@ -1,1 +1,9 @@
 Main source code for the sensor project. This is a prototype. Nothing to submit in the readme yet.
+
+INSTRUCTIONS:
+
+To setup fftw, go to the respective library of files and run the following commands as root:
+
+./configure --enable-float
+make
+make install
