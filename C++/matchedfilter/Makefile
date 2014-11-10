@@ -10,3 +10,6 @@ all: $(OBJ)
 
 matchedfilter.o: matchedfilter.cpp
 	$(CPPC) $^ -c
+
+clean:
+	rm $(OBJ) $(LIB)
