@@ -44,6 +44,28 @@ void DATA::data_ifft( void ) {
    state = f_space; // set the state of this data
 }
 
+/* Return the energy spectral density of the data */
+
+float DATA::esd (void) {
+
+   float sum = 0.0;
+
+   if ( state == t_space ) {
+      for ( int i = 0; i < N; i++ ) {
+         sum += data[i]*data[i];
+      }
+      sum *= dt;
+   }
+   else if ( state == f_space ) {
+      for ( int i = 0; i < N+1; i++ ) {
+         sum += data[i]*data[i];
+      }
+      sum *= df;
+   }
+
+   return sum;
+}
+
 /* Destroy */
 
 DATA::~DATA ( void ) {

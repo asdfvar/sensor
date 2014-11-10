@@ -19,6 +19,8 @@ class DATA {
       void data_fft( void );  /* Performs an FFT on the data */
       void data_ifft( void );  /* Performs an FFT on the data */
 
+      float esd (void); /* Return the energy spectral density of the data */
+
    private:
 
       float *data;
