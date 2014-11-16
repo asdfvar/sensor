@@ -10,8 +10,8 @@ extern "C" {
 
 int main() {
 
-  float ref[N] = {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-  float sig[N] = {0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+  float ref[N+2] = {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+  float sig[N+2] = {0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
   float tmp;
 
@@ -22,12 +22,12 @@ int main() {
 
   // conjugate the reference
 
-  for (int i = 1; i < N; i+=2)
+  for (int i = 1; i < N+2; i+=2)
     ref[i] = -ref[i];
 
-  // multiply the refence to the signal (Complex)
+  // multiply the reference to the signal (Complex)
 
-  for (int i = 0; i < N; i+=2) {
+  for (int i = 0; i < N+2; i+=2) {
     tmp = sig[i]*ref[i] - sig[i+1]*ref[i+1];
     sig[i+1] = sig[i]*ref[i+1] + ref[i]*sig[i+1];
     sig[i] = tmp;

@@ -2,27 +2,19 @@ CC = gcc
 CPPC = g++
 FLAGS = -Wall -O3 -lfftw3 -lfftw3f -lm
 
-INC_x = -L./matchedfilter -I./tools
-INC = -I./tools
+INC = -Imatchedfilter
+LIBPATH = -L./matchedfilter
 LIBS = -lmatflt
 
-OBJ = mainwrapper.o data.o fft.o
-
-MATFLT = matchedfilter
+OBJ = main.o
 
 EXE = main
 
 all: $(OBJ)
-	$(CPPC) $(OBJ) $(FLAGS) $(INC) -o $(EXE)
+	$(CPPC) $(OBJ) $(FLAGS) -o $(EXE) $(INC) $(LIBPATH) $(LIBS)
 
 clean:
 	rm $(EXE) $(OBJ)
 
-mainwrapper.o: mainwrapper.cpp
-	$(CPPC) $^ -c
-
-data.o: data.cpp
-	$(CPPC) $(INC) $^ -c
-
-fft.o: tools/fft.c
-	$(CC) $^ -c
+main.o: main.cpp
+	$(CPPC) $^ -c $(INC)

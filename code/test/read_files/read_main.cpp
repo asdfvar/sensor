@@ -1,7 +1,7 @@
 
 float** read_kinetisense(const char path[]);
 
-  int main() {
+int main() {
 
   float **data = read_kinetisense("../../../data/Craig_Walking_tredmil.csv");
 

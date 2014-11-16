@@ -19,7 +19,7 @@ int main() {
 
   std::cout << "about to perform the FFT:" << std::endl;
 
-  // uniform random input example:
+  // uniformly distributed random data:
 
   x[0] = 0.31505814;
   x[1] = 0.51839913;
