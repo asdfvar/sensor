@@ -1,8 +1,7 @@
 /*
  * FUNCTIONAL DESCRIPTION:
- *    This routine reads in the kinetisense data.
+ *    This file contains routines that read in the kinetisense data.
  *
- * 
  */
 
 #include <stdio.h>
@@ -12,6 +11,8 @@
 #include <cstdlib>
 
 int count_kinetisense_lines(
+       /* Reads in the file data and counts how many lines of
+          data is in the file. */
        const char path[]) /* [I  ] Path to the kinetisense data */
 {
   std::string line;
@@ -25,7 +26,7 @@ int count_kinetisense_lines(
 
   kin_data.close();
 
-  N_lines -= 5; // first 5 lines are header lines
+  N_lines -= 1; // first line is a header
 
   return N_lines;
 }
@@ -33,10 +34,31 @@ int count_kinetisense_lines(
 /**********************************************************************/
 
 float **read_kinetisense(
-          /* Returns a pointer to hold the data. On input, this pointer
-             is NULL. On output, this will contain the data acceleration
-             data in units of Gs (1G = 9.81 m/s/s)*/
-       const char path[]) /* [I  ] Path to the kinetisense data */
+          /* Returns a pointer to hold the data. This will contain the acceleration
+             data in units of Gs (1G = 9.81 m/s/s) and EMG data. There are 20 arrays
+             as follows:
+               -sensor 1 acceleration data in x
+               -sensor 1 acceleration data in y
+               -sensor 1 acceleration data in z
+               -sensor 1 rotation data in x
+               -sensor 1 rotation data in y
+               -sensor 1 rotation data in z
+               -sensor 2 acceleration data in x
+               -sensor 2 acceleration data in y
+               -sensor 2 acceleration data in z
+               -sensor 2 rotation data in x
+               -sensor 2 rotation data in y
+               -sensor 2 rotation data in z
+               -sensor 3 acceleration data in x
+               -sensor 3 acceleration data in y
+               -sensor 3 acceleration data in z
+               -sensor 3 rotation data in x
+               -sensor 3 rotation data in y
+               -sensor 3 rotation data in z
+               -EMG 1
+               -EMG 2
+           */
+       const char path[]) /* [I  ] File of the kinetisense data */
 {
 
   std::string line;
@@ -44,54 +66,23 @@ float **read_kinetisense(
   kin_data.open (path);
   int N_lines = count_kinetisense_lines(path);
 
-  float freq = 200.0; // Hz
+  float freq = 128.0; // Hz
 
-  float **data = new float *[12];
-  for (int k = 0; k < 12; k++)
+  float **data = new float *[20];
+  for (int k = 0; k < 20; k++)
      data[k] = new float[N_lines];
 
   kin_data.seekg(0);
 
   // read past the header
-  for (int k = 0; k < 5; k++) std::getline (kin_data, line);
-  
+  std::getline (kin_data, line);
+
   for (int k = 0; k < N_lines; k++) {
-     // Sensor 1 x-axis
-     std::getline (kin_data, line, ',');
-     data[0][k] = atof(line.c_str())/250.0;
-     // Sensor 1 y-axis
-     std::getline (kin_data, line, ',');
-     data[1][k] = atof(line.c_str())/250.0;
-     // Sensor 1 z-axis
-     std::getline (kin_data, line, ',');
-     data[2][k] = atof(line.c_str())/250.0;
-     // Sensor 1 EMG
-     std::getline (kin_data, line, ',');
-     data[3][k] = atof(line.c_str());
-     // Sensor 2 x-axis
-     std::getline (kin_data, line, ',');
-     data[4][k] = atof(line.c_str())/250.0;
-     // Sensor 2 y-axis
-     std::getline (kin_data, line, ',');
-     data[5][k] = atof(line.c_str())/250.0;
-     // Sensor 2 z-axis
-     std::getline (kin_data, line, ',');
-     data[6][k] = atof(line.c_str())/250.0;
-     // Sensor 2 EMG
-     std::getline (kin_data, line, ',');
-     data[7][k] = atof(line.c_str());
-     // Sensor 3 x-axis
-     std::getline (kin_data, line, ',');
-     data[8][k] = atof(line.c_str())/250.0;
-     // Sensor 3 y-axis
-     std::getline (kin_data, line, ',');
-     data[9][k] = atof(line.c_str())/250.0;
-     // Sensor 3 z-axis
-     std::getline (kin_data, line, ',');
-     data[10][k] = atof(line.c_str())/250.0;
-     // Sensor 3 EMG
-     std::getline (kin_data, line, ',');
-     data[11][k] = atof(line.c_str());
+     for (int p = 0; p < 20; p++) {
+        std::getline (kin_data, line, ',');
+        data[p][k] = atof(line.c_str());
+     }
+        std::getline (kin_data, line);
   }
 
   kin_data.close();
