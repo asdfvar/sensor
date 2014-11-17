@@ -1,12 +1,14 @@
-extern "C" {
+//extern "C" {
 #include "fft.h"
-}
+//}
 #include <cmath>
+#include <iostream>
 
 namespace mflt {
 
    void FFT(float *data, int N) {
-      fft(data, N);
+//      fft(data, N);
+std::cout << "do the fft" << std::endl;
    }
 
 /************************************************************************/

@@ -1,15 +1,19 @@
 CPPC = g++
 CL = ar rcs
 
-LIB = libmatflt.a
+LIBEXE = libmatflt.a
+
+TOOLS = ../tools
+
+INC = -I$(TOOLS)
 
 OBJ = matchedfilter.o
 
 all: $(OBJ)
-	$(CL) $(LIB) $(OBJ)
+	$(CL) $(LIBEXE) $(OBJ)
 
 matchedfilter.o: matchedfilter.cpp
-	$(CPPC) $^ -c
+	$(CPPC) $(FLAGS) $^ -c $(INC)
 
 clean:
-	rm $(OBJ) $(LIB)
+	rm $(OBJ) $(LIBEXE)
