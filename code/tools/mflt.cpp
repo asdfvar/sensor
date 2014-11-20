@@ -1,6 +1,6 @@
-//extern "C" {
+extern "C" {
 #include "fft.h"
-//}
+}
 #include <cmath>
 #include <iostream>
 
@@ -14,7 +14,8 @@ std::cout << "do the fft" << std::endl;
 /************************************************************************/
 
    void iFFT(float *data, int N) {
-      ifft(data, N);
+//      ifft(data, N);
+std::cout << "do the ifft" << std::endl;
    }
 
 /************************************************************************/
@@ -71,7 +72,7 @@ std::cout << "do the fft" << std::endl;
          sig[k] = tmp;
       }
 
-      ifft(sig, N);
+      iFFT(sig, N);
 
       float max = sig[0];
       int max_ind = 0;

@@ -9,7 +9,7 @@ INC = -I$(MATCHFILTER) -I$(TOOLS)
 LIBPATH = -L./$(MATCHFILTER) -L./$(TOOLS)
 LIBS = -lmatflt -lsens
 
-OBJ = main.o
+OBJ = main.o fft.o
 
 EXE = main
 
@@ -25,3 +25,6 @@ clean:
 
 main.o: main.cpp
 	$(CPPC) $^ -c $(INC)
+
+fft.o: tools/fft.c
+	$(CC) $^ -c

@@ -13,7 +13,7 @@ mflt.o: mflt.cpp
 	$(CPPC) $^ -c
 
 fft.o: fft.c
-	$(CPPC) $^ -c
+	$(CC) $^ -c
 
 clean:
 	rm $(OBJ) $(LIB)

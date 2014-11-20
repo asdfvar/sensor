@@ -4,7 +4,7 @@
  *
  */
 
-#include "mflt.h"
+//#include "mflt.h"
 #include <iostream>
 extern "C" {
 #include "fft.h"
@@ -18,7 +18,8 @@ int matchedfilter(void) {
      data[k] = (float)k;
 
 //  mflt::FFT(data, 20);
-//   fft(data, 20);
+   fft(data, 20);
+//  mflt::energy_spectral_density(data, 20, 0.01);
 
   for (int k = 0; k < 20; k++)
      std::cout << data[k] << std::endl;
