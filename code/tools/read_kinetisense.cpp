@@ -1,5 +1,5 @@
 /*
- * FUNCTIONAL DESCRIPTION:
+ * DESCRIPTION:
  *    This file contains routines that read in the kinetisense data.
  *
  */
@@ -35,28 +35,30 @@ int count_kinetisense_lines(
 
 float **read_kinetisense(
           /* Returns a pointer to hold the data. This will contain the acceleration
-             data in units of Gs (1G = 9.81 m/s/s) and EMG data. There are 20 arrays
-             as follows:
-               -sensor 1 acceleration data in x
-               -sensor 1 acceleration data in y
-               -sensor 1 acceleration data in z
-               -sensor 1 rotation data in x
-               -sensor 1 rotation data in y
-               -sensor 1 rotation data in z
-               -sensor 2 acceleration data in x
-               -sensor 2 acceleration data in y
-               -sensor 2 acceleration data in z
-               -sensor 2 rotation data in x
-               -sensor 2 rotation data in y
-               -sensor 2 rotation data in z
-               -sensor 3 acceleration data in x
-               -sensor 3 acceleration data in y
-               -sensor 3 acceleration data in z
-               -sensor 3 rotation data in x
-               -sensor 3 rotation data in y
-               -sensor 3 rotation data in z
-               -EMG 1
-               -EMG 2
+             and rotation data in units of Gs (1G = 9.81 m/s/s) and EMG data. There
+             are 20 arrays of length N_lines as follows:
+
+   float[0]       -sensor 1 acceleration data in x
+   float[1]            -sensor 1 acceleration data in y
+   float[2]            -sensor 1 acceleration data in z
+   float[3]            -sensor 1 rotation data in x
+   float[4]            -sensor 1 rotation data in y
+   float[5]            -sensor 1 rotation data in z
+   float[6]            -sensor 2 acceleration data in x
+   float[7]            -sensor 2 acceleration data in y
+   float[8]            -sensor 2 acceleration data in z
+   float[9]            -sensor 2 rotation data in x
+   float[10]            -sensor 2 rotation data in y
+   float[11]            -sensor 2 rotation data in z
+   float[12]            -sensor 3 acceleration data in x
+   float[13]            -sensor 3 acceleration data in y
+   float[14]            -sensor 3 acceleration data in z
+   float[15]            -sensor 3 rotation data in x
+   float[16]            -sensor 3 rotation data in y
+   float[17]            -sensor 3 rotation data in z
+   float[18]            -EMG 1
+   float[19]            -EMG 2
+
            */
        const char path[]) /* [I  ] File of the kinetisense data */
 {

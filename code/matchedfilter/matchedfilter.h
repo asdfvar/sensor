@@ -1,6 +1,15 @@
-#ifndef MATCHEDFILTER_H
-#define MATCHEDFILTER_H
+class matchedfilter {
 
-int matchedfilter(void);
+   public:
 
-#endif
+      matchedfilter (float *ref, int N);
+      ~matchedfilter (void);
+
+      float run (float *signal, int N);
+
+   private:
+
+      int N;
+      float *ref;
+
+};

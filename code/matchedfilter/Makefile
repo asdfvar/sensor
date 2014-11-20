@@ -7,13 +7,19 @@ TOOLS = ../tools
 
 INC = -I$(TOOLS)
 
-OBJ = matchedfilter.o
+OBJ = mf_main.o matchedfilter.o run_mf.o
 
 all: $(OBJ)
 	$(CL) $(LIBEXE) $(OBJ)
 
-matchedfilter.o: matchedfilter.cpp
+mf_main.o: mf_main.cpp
 	$(CPPC) $(FLAGS) $^ -c $(INC)
 
 clean:
 	rm $(OBJ) $(LIBEXE)
+
+matchedfilter.o: matchedfilter.cpp
+	$(CPPC) $^ -c
+
+run_mf.o: run_mf.cpp
+	$(CPPC) $^ -c $(INC)

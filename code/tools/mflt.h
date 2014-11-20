@@ -8,7 +8,7 @@ namespace mflt {
    void FFT(float *data, int N);
    void iFFT(float *data, int N);
 
-   void crosscorr(
+   void crosscorr (
       /* Computes the cross correlation between the reference
          signal and the signal. */
          float *ref, /* Reference signal.
@@ -33,7 +33,7 @@ namespace mflt {
          float *correlation, /* The best correlation between
                         the signals */
 
-         int    shift); /* the circular shift the reference signal
+         int    *shift); /* the circular shift the reference signal
                         must do to best align with the signal */
 
    float energy_spectral_density(

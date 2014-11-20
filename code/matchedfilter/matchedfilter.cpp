@@ -1,30 +1,25 @@
-/*
- *
- * main for matched filter
- *
- */
+#include "matchedfilter.h"
 
-//#include "mflt.h"
-#include <iostream>
-extern "C" {
-#include "fft.h"
-}
+/******************************************************************************/
 
-int matchedfilter(void) {
+matchedfilter::matchedfilter (float *ref_in, int N_in)
+{
 
-  float *data = new float[20];
+   N = N_in;
+   ref = new float[N_in];
 
-  for (int k = 0; k < 20; k++)
-     data[k] = (float)k;
-
-//  mflt::FFT(data, 20);
-   fft(data, 20);
-//  mflt::energy_spectral_density(data, 20, 0.01);
-
-  for (int k = 0; k < 20; k++)
-     std::cout << data[k] << std::endl;
-
-  std::cout << "hey there" << std::endl;
-  return 0;
+   for (int k = 0; k < N; k++)
+      ref[k] = ref_in[k];
 
 }
+
+/******************************************************************************/
+
+matchedfilter::~matchedfilter (void)
+{
+
+   delete[] ref;
+
+}
+
+/******************************************************************************/

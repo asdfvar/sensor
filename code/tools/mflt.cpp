@@ -45,7 +45,7 @@ std::cout << "do the ifft" << std::endl;
          float *correlation, /* The best correlation between
                         the signals */
 
-         int    shift) /* the circular shift the reference signal
+         int    *shift) /* the circular shift the reference signal
                         must do to best align with the signal */
    {
 
@@ -84,7 +84,7 @@ std::cout << "do the ifft" << std::endl;
          }
       }
 
-      shift = max_ind;
+      *shift = max_ind;
       *correlation = max / sqrtf(norm_ref2 * norm_sig2);
 
    }
