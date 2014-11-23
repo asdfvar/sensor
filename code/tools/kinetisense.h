@@ -1,37 +1,7 @@
-/*
- * DESCRIPTION:
- *    This file contains routines that read in the kinetisense data.
- *
- */
-
-#include <stdio.h>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <cstdlib>
-
 int count_kinetisense_lines(
-       /* Reads in the file data and counts how many lines of
+          /* Reads in the file data and counts how many lines of
           data are in the file. */
-       const char path[]) /* [I  ] Path to the kinetisense data */
-{
-  std::string line;
-  std::ifstream kin_data;
-  kin_data.open (path);
-
-  int N_lines = 0;
-
-  while (std::getline (kin_data, line))
-     N_lines++;
-
-  kin_data.close();
-
-  N_lines -= 1; // first line is a header
-
-  return N_lines;
-}
-
-/**********************************************************************/
+       const char path[]); /* [I  ] Path to the kinetisense data */
 
 float **read_kinetisense(
           /* Returns a pointer to hold the data. This will contain the acceleration
@@ -60,34 +30,4 @@ float **read_kinetisense(
    float[19]           -EMG 2
 
            */
-       const char path[]) /* [I  ] File of the kinetisense data */
-{
-
-  std::string line;
-  std::ifstream kin_data;
-  kin_data.open (path);
-  int N_lines = count_kinetisense_lines(path);
-
-  float freq = 128.0; // Hz
-
-  float **data = new float *[20];
-  for (int k = 0; k < 20; k++)
-     data[k] = new float[N_lines];
-
-  kin_data.seekg(0);
-
-  // read past the header
-  std::getline (kin_data, line);
-
-  for (int k = 0; k < N_lines; k++) {
-     for (int p = 0; p < 20; p++) {
-        std::getline (kin_data, line, ',');
-        data[p][k] = atof(line.c_str());
-     }
-        std::getline (kin_data, line);
-  }
-
-  kin_data.close();
-
-  return data;
-}
+       const char path[]); /* [I  ] File of the kinetisense data */

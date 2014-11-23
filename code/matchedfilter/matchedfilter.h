@@ -12,4 +12,6 @@ class matchedfilter {
       int N;
       float *ref;
 
+      void crosscorr(float *ref, float *signal, int N, float *corr, int *shift);
+
 };
