@@ -13,7 +13,7 @@ all: $(OBJ)
 	$(CL) $(LIBEXE) $(OBJ)
 
 mf_main.o: mf_main.cpp
-	$(CPPC) $(FLAGS) $^ -c $(INC)
+	$(CPPC) $^ -c $(INC)
 
 clean:
 	rm $(OBJ) $(LIBEXE)
