@@ -30,4 +30,11 @@ float **read_kinetisense(
    float[19]           -EMG 2
 
            */
-       const char path[]); /* [I  ] File of the kinetisense data */
+       const char path[], /* [I  ] File of the kinetisense data */
+       const int  N_lines); /* number of lines in the file */
+
+float **read_kinetisense( const char path[] );
+
+float *read_reference ( const char path[], const int N );
+float *read_reference ( const char path[] );
+int count_ref_lines ( const char path[] );

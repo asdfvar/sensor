@@ -60,13 +60,13 @@ float **read_kinetisense(
    float[19]           -EMG 2
 
            */
-       const char path[]) /* [I  ] File of the kinetisense data */
+       const char path[], /* [I  ] File of the kinetisense data */
+       const int N_lines) 
 {
 
   std::string line;
   std::ifstream kin_data;
   kin_data.open (path);
-  int N_lines = count_kinetisense_lines(path);
 
   float freq = 128.0; // Hz
 
@@ -90,4 +90,14 @@ float **read_kinetisense(
   kin_data.close();
 
   return data;
+}
+
+/**********************************************************************/
+
+float **read_kinetisense( const char path[] ) {
+
+   int N = count_kinetisense_lines( path );
+
+   return read_kinetisense ( path, N );
+
 }
