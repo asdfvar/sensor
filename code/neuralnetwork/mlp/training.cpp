@@ -37,11 +37,12 @@
  * http://www.willamette.edu/~gorr/classes/cs449/backprop.html
  *****************************************************/
 #include "ann.h"
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <cmath>
    
-   void ann::train(float *inpSet, float *outSet, int K, int Steps){
+   void ann::train(float *inpSet, float *outSet, int K, int Steps, bool show_error){
       
       int i,j,k;
       int Set;            // Selected set
@@ -54,6 +55,7 @@
       float *xp;          // Layer
       int Max = 0;
       int tmp;
+      float err;
       
       for (i = 0; i < N-1; i++){
          tmp = LayerSizes[i]*LayerSizes[i+1];
@@ -80,6 +82,16 @@
          
          // Feed forward
          y = forward(inp);
+
+         if (show_error) {
+            err = 0.0;
+            for (int k = 0; k < LayerSizes[N-1]; k++) {
+               err += (y[k] - out[k])*(y[k] - out[k]);
+            }
+            err /= LayerSizes[N-1];
+            err = sqrtf(err);
+            std::cout << "Error = " << err << std::endl;
+         }
          
          // Get the output error
          for (i = 0; i < LayerSizes[N-1]; i++)
@@ -154,6 +166,5 @@
          Error = 0.0f;
          for (i = 0; i < LayerSizes[N-1]; i++)
             Error += d0[i]*d0[i];
-         printf("Error = %f\n", Error);
       }
    }

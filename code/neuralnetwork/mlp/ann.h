@@ -23,7 +23,7 @@ class ann{
       
       // Train the network with K input and corresponding
       // output sets
-      void train(float *inpSet, float *outSet, int K, int Steps);
+      void train(float *inpSet, float *outSet, int K, int Steps, bool show_error);
 
    private:
    

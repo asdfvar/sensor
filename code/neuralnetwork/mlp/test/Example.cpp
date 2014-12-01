@@ -28,7 +28,7 @@ int main(){
                      {0,1}};
 
    // Train the network
-   NN.train(&inpSet[0][0], &t[0][0], 4, 1000);
+   NN.train(&inpSet[0][0], &t[0][0], 4, 1000, true);
    
    // Run the network on a provided input
    out = NN.forward(inp);
