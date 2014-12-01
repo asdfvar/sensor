@@ -1,10 +1,13 @@
-int count_kinetisense_lines(
+
+namespace fio {
+
+   int count_kinetisense_lines(
           /* Reads in the file data and counts how many lines of
           data are in the file. */
        const char path[]); /* [I  ] Path to the kinetisense data */
 
-float **read_kinetisense(
-          /* Returns a pointer to hold the data. This will contain the acceleration
+   float **read_kinetisense(
+          /* Returns a pointer that holds the data. This will contain the acceleration
              and rotation data in units of Gs (1G = 9.81 m/s/s) and EMG data. There
              are 20 arrays of length N_lines as follows:
 
@@ -33,8 +36,10 @@ float **read_kinetisense(
        const char path[], /* [I  ] File of the kinetisense data */
        const int  N_lines); /* number of lines in the file */
 
-float **read_kinetisense( const char path[] );
+   float **read_kinetisense( const char path[] );
 
-float *read_reference ( const char path[], const int N );
-float *read_reference ( const char path[] );
-int count_ref_lines ( const char path[] );
+   float *read_reference ( const char path[], const int N );
+   float *read_reference ( const char path[] );
+   int count_ref_lines ( const char path[] );
+
+}

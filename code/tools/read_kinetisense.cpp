@@ -10,6 +10,8 @@
 #include <string>
 #include <cstdlib>
 
+namespace fio {
+
 int count_kinetisense_lines(
        /* Reads in the file data and counts how many lines of
           data are in the file. */
@@ -100,4 +102,5 @@ float **read_kinetisense( const char path[] ) {
 
    return read_kinetisense ( path, N );
 
+}
 }

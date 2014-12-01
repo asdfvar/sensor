@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 
+namespace fio {
 /**********************************************************************/
 
 int count_ref_lines ( const char path[] ) {
@@ -55,3 +56,4 @@ float *read_reference ( const char path[] )
 }
 
 /**********************************************************************/
+}
