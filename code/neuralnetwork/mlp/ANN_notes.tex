@@ -1,0 +1,98 @@
+\documentclass{amsart}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{epsfig}
+%
+\begin{document}
+%
+\begin{center}
+Notes on Artificial Neural Networks
+\end{center}
+%
+\begin{figure}[h!]
+\label{colliding_spheres}
+\centering
+  \includegraphics[angle=0,width=140mm]{ANN.jpg}
+\caption{ANN}
+\end{figure}
+%
+\begin{equation*}
+z_q^{k+1} = \sum_{i=0}^{N^k} x_i^k w_{i,q}^k + v_q^k b
+\end{equation*}
+%
+\begin{equation*}
+E = \frac{1}{2} \sum_{i=0}^N (x_i^n - t_i)^2
+\end{equation*}
+%
+\begin{equation*}
+\begin{aligned}
+&\frac{\partial E}{\partial \omega_{p,q}^k} = \sum_{i_n = 0}^{N^n} \Bigg( \frac{\partial E}{\partial x_{i_n}^n}
+\frac{\partial x_{i_n}^n}{\partial g} \frac{\partial g}{\partial z_{i_n}^n} \sum_{i_{n-1}=0}^{N^{n-1}} \Bigg(
+\frac{\partial z_{i_n}^n}{\partial x_{i_{n-1}}^{n-1}} \frac{\partial x_{i_{n-1}}^{n-1}}{\partial g}
+\frac{\partial g}{\partial z_{i_{n-1}}^{n-1}} \Bigg( \sum_{i_{n-2}=0}^{N^{n-2}}
+\frac{\partial z_{i_{n-1}}^{n-1}}{\partial x_{i_{n-2}}^{n-2}}
+\frac{\partial x_{i_{n-2}}^{n-2}}{\partial g} \frac{\partial g}{\partial z_{i_{n-2}}^{n-2}}
+\sum_{i_{n-3}=0}^{N^{n-3}} \Bigg( \ldots\\
+&\ldots \sum_{i_{k+2}=0}^{N^{k+2}} \Bigg( \frac{\partial z_{i_{k+3}}^{k+3}}{\partial x_{i_{k+2}}^{k+2}}
+\frac{\partial x_{i_{k+2}}^{k+2}}{\partial g}
+\frac{\partial g}{\partial z_{k+2}^{k+2}} \Bigg( \frac{\partial z_{i_{k+2}}^{k+2}}{\partial x_q^{k+1}}
+\frac{\partial x_q^{k+1}}{\partial g}
+\frac{\partial g}{\partial z_q^{k+1}} \Bigg(
+\frac{\partial z_q^{k+1}}{\partial \omega_{p,q}^k} \Bigg)\Bigg)\Bigg)\Bigg) \ldots \Bigg)\Bigg)\Bigg)\Bigg)
+\end{aligned}
+\end{equation*}
+%
+And the bias weights $v$ come out with the same process:
+%
+\begin{equation*}
+\begin{aligned}
+&\frac{\partial E}{\partial v_q^k} = \sum_{i_n = 0}^{N^n} \Bigg( \frac{\partial E}{\partial x_{i_n}^n}
+\frac{\partial x_{i_n}^n}{\partial g} \frac{\partial g}{\partial z_{i_n}^n} \sum_{i_{n-1}=0}^{N^{n-1}} \Bigg(
+\frac{\partial z_{i_n}^n}{\partial x_{i_{n-1}}^{n-1}} \frac{\partial x_{i_{n-1}}^{n-1}}{\partial g}
+\frac{\partial g}{\partial z_{i_{n-1}}^{n-1}} \Bigg( \sum_{i_{n-2}=0}^{N^{n-2}}
+\frac{\partial z_{i_{n-1}}^{n-1}}{\partial x_{i_{n-2}}^{n-2}}
+\frac{\partial x_{i_{n-2}}^{n-2}}{\partial g} \frac{\partial g}{\partial z_{i_{n-2}}^{n-2}}
+\sum_{i_{n-3}=0}^{N^{n-3}} \Bigg( \ldots\\
+&\ldots \sum_{i_{k+2}=0}^{N^{k+2}} \Bigg( \frac{\partial z_{i_{k+3}}^{k+3}}{\partial x_{i_{k+2}}^{k+2}}
+\frac{\partial x_{i_{k+2}}^{k+2}}{\partial g}
+\frac{\partial g}{\partial z_{k+2}^{k+2}} \Bigg( \frac{\partial z_{i_{k+2}}^{k+2}}{\partial x_q^{k+1}}
+\frac{\partial x_q^{k+1}}{\partial g}
+\frac{\partial g}{\partial z_q^{k+1}} \Bigg(
+\frac{\partial z_q^{k+1}}{\partial v_q^k} \Bigg)\Bigg)\Bigg)\Bigg) \ldots \Bigg)\Bigg)\Bigg)\Bigg)
+\end{aligned}
+\end{equation*}
+%
+\begin{equation*}
+\frac{\partial E}{\partial x_i} = (x_i^n - t_i)
+\end{equation*}
+%
+\begin{equation*}
+\frac{\partial z_q^{k+1}}{\partial \omega_{p,q}^k} = x_p^k
+\end{equation*}
+%
+\begin{equation*}
+\frac{\partial z_q^{k+1}}{\partial v_q^k} = b
+\end{equation*}
+%
+\begin{equation*}
+\frac{\partial z_{i_n}^{n}}{\partial x_{i_{n-1}}^{n-1}} = \omega_{i_{n-1},i_n}^{n-1}
+\end{equation*}
+%
+\begin{equation*}
+\frac{\partial x}{g} = 1
+\end{equation*}
+%
+\begin{equation*}
+g(z;\beta) = \frac{1}{1 + exp(-\beta z )}
+\end{equation*}
+%
+\begin{equation*}
+D_g(z;\beta) = \frac{\partial g}{\partial z} = \beta \frac{\exp(-\beta z)}{(1 + \exp(-\beta z))^2}
+\end{equation*}
+%
+\begin{equation*}
+\omega_{p,q}^k - \eta \frac{\partial E}{\partial \omega_{p,q}^k} \rightarrow \omega_{p,q}^k
+\end{equation*}
+%
+Then making these substitutions we get:
+\end{document}
