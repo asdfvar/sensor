@@ -5,7 +5,7 @@
 CC = gcc
 CPPC = g++
 
-FLAGS = -lfftw3 -lfftw3f -lm -Wall
+FLAGS = -lfftw3f -lm -Wall
 
 OBJ = testfft.o fft.o
 
