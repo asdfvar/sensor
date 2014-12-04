@@ -14,6 +14,11 @@ int count_ref_lines ( const char path[] ) {
 
   int N_data = 0;
 
+  // read past the headers
+  std::getline ( ref_file, line );
+  std::getline ( ref_file, line );
+  std::getline ( ref_file, line );
+
   while (std::getline ( ref_file, line, ',' ) )
      N_data++;
 
@@ -34,6 +39,11 @@ float *read_reference ( const char path[], const int N )
    float *ref = new float[N];
 
    ref_file.seekg( 0 );
+
+  // read past the headers
+  std::getline ( ref_file, line );
+  std::getline ( ref_file, line );
+  std::getline ( ref_file, line );
 
    for ( int k = 0; k < N; k++ ) {
       std::getline ( ref_file, line, ',' );
