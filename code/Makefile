@@ -1,6 +1,6 @@
 CC = gcc
 CPPC = g++
-FLAGS = -Wall -O3 -lfftw3 -lfftw3f -lm
+FLAGS = -Wall -O3 -lfftw3f -lm
 
 MATCHFILTER = matchedfilter
 PREPROC = preprocessing
@@ -8,6 +8,7 @@ TOOLS = tools
 
 INC = -I$(MATCHFILTER) -I$(TOOLS)
 LIBPATH = -L./$(MATCHFILTER) -L./$(TOOLS) -L./$(PREPROC)
+
 LIBS = -lmatflt -lsens -lpreproc
 
 OBJ = main.o fft.o

@@ -19,7 +19,7 @@ fft.o: fft.c
 	$(CC) $^ -c
 
 read_kinetisense.o: read_kinetisense.cpp
-	$(CC) $^ -c
+	$(CPPC) $^ -c
 
 read_reference.o: read_reference.cpp
-	$(CC) $^ -c
+	$(CPPC) $^ -c
