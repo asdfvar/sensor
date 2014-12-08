@@ -1,5 +1,6 @@
-void eigen_val(const float mat[3][3], float *eig);
+#ifndef EIGEN_H
+#define EIGEN_H
 
-void eigen_vec(const float mat[3][3], const float eig[3], float *eigVec);
+void eigen(const float mat[3][3], float *eigVl, float *eigVec);
 
-void eigen_vec(const float mat[3][3], float *eigVec);
+#endif
