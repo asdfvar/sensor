@@ -3,8 +3,8 @@
 
 int main() {
 
-const std::string kin_data_path = "../../../data/Craig_Walking_tredmil.csv";
-   const std::string ref_walking = "../../../data/Craig_walking_signal_primary_axis.csv";
+   const std::string kin_data_path = "../../../../data/Craig_Walking_tredmil.csv";
+   const std::string ref_walking = "../../../../data/Craig_walking_signal_primary_axis.csv";
 
    int N_all_pts = fio::count_kinetisense_lines( kin_data_path.c_str() );
    float **sens_data = fio::read_kinetisense( kin_data_path.c_str() );
