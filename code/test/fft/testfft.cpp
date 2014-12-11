@@ -15,7 +15,7 @@ extern "C" {
 int main() {
 
   int N = 8;
-  float *x = new float [N+1];
+  float *x = new float [N+2];
 
   std::cout << "about to perform the FFT:" << std::endl;
 
@@ -48,7 +48,7 @@ int main() {
 
   // print fft results (packed)
 
-  for (int i = 0; i < N+1; i++)
+  for (int i = 0; i < N+2; i++)
     printf("%f\n", x[i]);
   std::cout << std::endl;
 
