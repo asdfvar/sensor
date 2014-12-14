@@ -4,7 +4,8 @@ CL = ar rcs
 
 LIB = libsens.a
 
-OBJ = mflt.o fft.o read_kinetisense.o read_reference.o
+OBJ = mflt.o fft.o read_kinetisense.o read_reference.o\
+      fileio.o
 
 all: $(OBJ)
 	$(CL) $(LIB) $(OBJ)
@@ -22,4 +23,7 @@ read_kinetisense.o: read_kinetisense.cpp
 	$(CPPC) $^ -c
 
 read_reference.o: read_reference.cpp
+	$(CPPC) $^ -c
+
+fileio.o: fileio.cpp
 	$(CPPC) $^ -c

@@ -9,34 +9,33 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include "fileio.h"
 
-namespace fio {
-
-int count_kinetisense_lines(
+int fio::count_kinetisense_lines(
        /* Reads in the file data and counts how many lines of
           data are in the file. */
        const char path[]) /* [I  ] Path to the kinetisense data */
 {
-  std::string line;
-  std::ifstream kin_data;
-  kin_data.open (path);
+   std::string line;
+   std::ifstream kin_data;
+   kin_data.open (path);
 
-  int N_lines = 0;
+   int N_lines = 0;
 
-  while (std::getline (kin_data, line))
-     N_lines++;
+   while (std::getline (kin_data, line)) N_lines++;
 
-  kin_data.close();
+   kin_data.close();
 
-  N_lines -= 1; // first line is a header
+   N_lines -= 1; // first line is a header
 
-  return N_lines;
+   return N_lines;
 }
 
 /**********************************************************************/
 
-float **read_kinetisense(
-          /* Returns a pointer to hold the data. This will contain the acceleration
+float **fio::read_kinetisense(
+          /* Populates the data buffer with the kinetisense csv file data.
+             Returns a pointer to hold the data. This will contain the acceleration
              and rotation data in units of Gs (1G = 9.81 m/s/s) and EMG data. There
              are 20 arrays of length N_lines as follows:
 
@@ -66,41 +65,40 @@ float **read_kinetisense(
        const int N_lines) 
 {
 
-  std::string line;
-  std::ifstream kin_data;
-  kin_data.open (path);
+   std::string line;
+   std::ifstream kin_data;
+   kin_data.open (path);
 
-  float freq = 128.0; // Hz
+   float freq = 128.0; // Hz
 
-  float **data = new float *[20];
-  for (int k = 0; k < 20; k++)
-     data[k] = new float[N_lines];
+   float **data = new float *[20];
+   for (int k = 0; k < 20; k++)
+      data[k] = new float[N_lines];
 
-  kin_data.seekg(0);
+   kin_data.seekg(0);
 
-  // read past the header
-  std::getline (kin_data, line);
+   // read past the header
+   std::getline (kin_data, line);
 
-  for (int k = 0; k < N_lines; k++) {
-     for (int p = 0; p < 20; p++) {
-        std::getline (kin_data, line, ',');
-        data[p][k] = atof(line.c_str());
-     }
-        std::getline (kin_data, line);
-  }
+   for (int k = 0; k < N_lines; k++) {
+      for (int p = 0; p < 20; p++) {
+         std::getline (kin_data, line, ',');
+         data[p][k] = atof(line.c_str());
+      }
+         std::getline (kin_data, line);
+   }
 
-  kin_data.close();
+   kin_data.close();
 
-  return data;
+   return data;
 }
 
 /**********************************************************************/
 
-float **read_kinetisense( const char path[] ) {
+float **fio::read_kinetisense( const char path[] ) {
 
    int N = count_kinetisense_lines( path );
 
    return read_kinetisense ( path, N );
 
-}
 }

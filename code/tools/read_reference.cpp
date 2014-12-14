@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 
-namespace fio {
+namespace ref {
 /**********************************************************************/
 
 void read_reference_headers (
