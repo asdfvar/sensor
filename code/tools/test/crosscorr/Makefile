@@ -4,7 +4,7 @@
 
 CC = gcc
 CPPC = g++
-FLAGS = -lfftw3 -lfftw3f -lm -O3 -Wall
+FLAGS = -lfftw3f -lm -O3 -Wall
 
 OBJ = testcrosscorr.o fft.o
 
