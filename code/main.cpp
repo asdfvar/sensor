@@ -13,7 +13,21 @@ int main() {
    int N_all_pts = fio::count_kinetisense_lines( kin_data_path.c_str() );
    float **sens_data = fio::read_kinetisense( kin_data_path.c_str() );
 
-   float *ref_data = fio::read_reference ( ref_walking.c_str() );
+   int ref_N;
+   float ref_freq;
+   float ref_time;
+
+   fio::read_reference_headers (
+                        ref_walking.c_str(),
+                        &ref_N,
+                        &ref_freq,
+                        &ref_time);
+
+   float *ref_data = new float[ref_N];
+
+   fio::read_reference (ref_walking.c_str(),
+                        ref_data,
+                        ref_N);
 
 //   preproc ( ... );
 
