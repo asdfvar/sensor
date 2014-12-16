@@ -8,7 +8,7 @@ extern "C" {
 }
 
 int main() {
-
+//hello from paul
    const std::string kin_data_path = "../data/Craig_Walking_tredmil.csv";
    const std::string ref_walking = "../data/Craig_walking_signal_primary_axis.csv";
 
