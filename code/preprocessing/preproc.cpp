@@ -9,7 +9,8 @@ int preproc(
      float *sens3ax, /* sensor 3 acceleration data in x      */
      float *sens3ay, /* sensor 3 acceleration data in y      */
      float *sens3az, /* sensor 3 acceleration data in z      */
-     int N)          /* Number of data points for all inputs */
+     float window,   /* time window of the data              */
+     float samp_freq)/* sampling frequency of the data       */
 {
 
 

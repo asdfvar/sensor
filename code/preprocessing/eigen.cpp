@@ -1,4 +1,4 @@
-/* Routine to compute the eigenvalues and eigenvectors of a 3x3 matrix.
+/* Routine to compute the eigenvalues and eigenvectors of a real symmetric 3x3 matrix.
  * The algorithm for this routine can be generalized to any NxN matrix.
  *
  * The algorithm used here for computing the eigenvalues and eigenvectos uses the
@@ -34,6 +34,8 @@
  * C can be computed in place.
  * Only supports up to 3x3.
 */
+
+#define MAX_COUNT 100
 
 static void matrix_mult_transpose(float *C, const float *A, const float *Bt,
                                   const int N) {
@@ -167,6 +169,7 @@ void eigen(const float mat[3][3], float *eigVl, float *eigVec)
    // Parameters used for convergence computation
    float prev[3] = {0.0, 0.0, 0.0};
    float err;
+   unsigned int count = 0;
 
    do {
 
@@ -234,7 +237,12 @@ void eigen(const float mat[3][3], float *eigVl, float *eigVec)
       for (k = 0; k < 3; k++) err += (prev[k] - eigVl[k]) * (prev[k] - eigVl[k]);
       for (k = 0; k < 3; k++) prev[k] = eigVl[k];
 
-   } while (err > 0.000001);
+      count++;
+
+   } while (err > 0.000001 && count < MAX_COUNT);
+
+   if ( count >= MAX_COUNT )
+      std::cout << "Warning: Eigenvalues and eigenvectors may not have converged" << std::endl;
 
   /* The eigenvectors are transposed for output
    *
