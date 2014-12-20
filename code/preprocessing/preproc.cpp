@@ -12,6 +12,19 @@ int preproc(
 
    float cov_mat[3][3]; // Covariance matrix
 
+   /* Demean the data */
+
+   float ave;
+   for (int k = 0, ave = 0.0; k < N; k++) ave += ax[k];
+   ave /= (float) N;
+   for (int k = 0; k < N; k++) ax[k] -= ave;
+   for (int k = 0, ave = 0.0; k < N; k++) ave += ay[k];
+   ave /= (float) N;
+   for (int k = 0; k < N; k++) ay[k] -= ave;
+   for (int k = 0, ave = 0.0; k < N; k++) ave += az[k];
+   ave /= (float) N;
+   for (int k = 0; k < N; k++) az[k] -= ave;
+
    /* build the covariance matrix */
 
    for (int i = 0; i < 3; i++)
@@ -37,18 +50,6 @@ int preproc(
    eigen(cov_mat, eigVal, &eigVec[0][0]);
 
    float tmp;
-
-   /* Demean the data */
-   float ave;
-   for (int k = 0, ave = 0.0; k < N; k++) ave += ax[k];
-   ave /= (float) N;
-   for (int k = 0; k < N; k++) ax[k] -= ave;
-   for (int k = 0, ave = 0.0; k < N; k++) ave += ay[k];
-   ave /= (float) N;
-   for (int k = 0; k < N; k++) ay[k] -= ave;
-   for (int k = 0, ave = 0.0; k < N; k++) ave += az[k];
-   ave /= (float) N;
-   for (int k = 0; k < N; k++) az[k] -= ave;
 
    /* Re-order the eigen values in descending order along with their associated eigen vectors */
    for (int i = 0; i < 2; i++) {
