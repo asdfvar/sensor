@@ -6,7 +6,7 @@ MATCHFILTER = matchedfilter
 PREPROC = preprocessing
 TOOLS = tools
 
-INC = -I$(MATCHFILTER) -I$(TOOLS)
+INC = -I$(MATCHFILTER) -I$(TOOLS) -I$(PREPROC)
 LIBPATH = -L./$(MATCHFILTER) -L./$(TOOLS) -L./$(PREPROC)
 
 LIBS = -lmatflt -lsens -lpreproc

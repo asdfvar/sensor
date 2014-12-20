@@ -2,36 +2,50 @@
 #include "eigen.h"
 
 int preproc(
-     float *ax,      /* acceleration data in x               */
-     float *ay,      /* acceleration data in y               */
-     float *az,      /* acceleration data in z               */
-     float window,   /* time window of the data              */
-     float samp_freq,/* sampling frequency of the data       */
-     int   N)        /* number of sample points              */
+     float *ax,      /* Acceleration data in x               */
+     float *ay,      /* Acceleration data in y               */
+     float *az,      /* Acceleration data in z               */
+     float *power,   /* Resulting power of the signal        */
+     float dt,       /* Delta time comstant                  */
+     float window,   /* Time window of the data              */
+     float samp_freq,/* Sampling frequency of the data       */
+     int   N)        /* Number of sample points              */
 {
 
+   int i,j,k;
    float cov_mat[3][3]; // Covariance matrix
 
    /* Demean the data */
 
    float ave;
-   for (int k = 0, ave = 0.0; k < N; k++) ave += ax[k];
+   for (k = 0, ave = 0.0; k < N; k++) ave += ax[k];
    ave /= (float) N;
-   for (int k = 0; k < N; k++) ax[k] -= ave;
-   for (int k = 0, ave = 0.0; k < N; k++) ave += ay[k];
+   for (k = 0; k < N; k++) ax[k] -= ave;
+   for (k = 0, ave = 0.0; k < N; k++) ave += ay[k];
    ave /= (float) N;
-   for (int k = 0; k < N; k++) ay[k] -= ave;
-   for (int k = 0, ave = 0.0; k < N; k++) ave += az[k];
+   for (k = 0; k < N; k++) ay[k] -= ave;
+   for (k = 0, ave = 0.0; k < N; k++) ave += az[k];
    ave /= (float) N;
-   for (int k = 0; k < N; k++) az[k] -= ave;
+   for (k = 0; k < N; k++) az[k] -= ave;
 
-   /* build the covariance matrix */
+   /* Compute the power of the signal */
 
-   for (int i = 0; i < 3; i++)
-      for (int j = 0; j < 3; j++)
+   *power = 0.0;
+   for (k = 0; k < N; k++) {
+      *power += ax[k] * ax[k];
+      *power += ay[k] * ay[k];
+      *power += az[k] * az[k];
+   }
+   *power *= dt;
+   *power /= window;
+
+   /* Build the covariance matrix */
+
+   for (i = 0; i < 3; i++)
+      for (j = 0; j < 3; j++)
          cov_mat[i][j] = 0.0;
 
-   for (int k = 0; k < N; k++) {
+   for (k = 0; k < N; k++) {
       cov_mat[0][0] += ax[k] * ax[k];
       cov_mat[0][1] += ax[k] * ay[k];
       cov_mat[0][2] += ax[k] * az[k];
@@ -52,14 +66,14 @@ int preproc(
    float tmp;
 
    /* Re-order the eigen values in descending order along with their associated eigen vectors */
-   for (int i = 0; i < 2; i++) {
-      for (int j = 0; j < 2; j++) {
+   for (i = 0; i < 2; i++) {
+      for (j = 0; j < 2; j++) {
          if (eigVal[j] < eigVal[j+1]) {
             tmp = eigVal[j];
             eigVal[j] = eigVal[j+1];
             eigVal[j+1] = tmp;
 
-            for (int k = 0; k < 3; k++){
+            for (k = 0; k < 3; k++){
                tmp = eigVec[j][k];
                eigVec[j][k] = eigVec[j+1][k];
                eigVec[j+1][k] = tmp;
@@ -75,7 +89,7 @@ int preproc(
 
    float x,y,z;
 
-   for (int k = 0; k < N; k++) {
+   for (k = 0; k < N; k++) {
       x = ax[k];
       y = ay[k];
       z = az[k];

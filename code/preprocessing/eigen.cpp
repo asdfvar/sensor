@@ -35,7 +35,8 @@
  * Only supports up to 3x3.
 */
 
-#define MAX_COUNT 100
+#define MAX_COUNT 1000
+#define MIN_ERR 0.000001
 
 static void matrix_mult_transpose(float *C, const float *A, const float *Bt,
                                   const int N) {
@@ -239,7 +240,8 @@ void eigen(const float mat[3][3], float *eigVl, float *eigVec)
 
       count++;
 
-   } while (err > 0.000001 && count < MAX_COUNT);
+   } while (err > MIN_ERR && count < MAX_COUNT);
+std::cout << __FILE__ << ": itterations until convergence = " << count << std::endl;
 
    if ( count >= MAX_COUNT )
       std::cout << "Warning: Eigenvalues and eigenvectors may not have converged" << std::endl;

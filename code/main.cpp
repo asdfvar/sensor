@@ -2,6 +2,7 @@
 #include "mf_main.h"
 #include "fileio.h"
 #include "ref.h"
+#include "preproc.h"
 
 extern "C" {
 #include "fft.h"
@@ -10,18 +11,17 @@ extern "C" {
 int main() {
 
    const std::string kin_data_path = "../data/Craig_Walking_tredmil.csv";
-   const std::string ref_walking = "../data/craig_walking_tredmil_reference_signals.csv";
+   const std::string ref_walking   = "../data/craig_walking_tredmil_reference_signals.csv";
 
-#if 0
-   int N_all_pts = fio::count_kinetisense_lines( kin_data_path.c_str() );
-   float **sens_data = fio::read_kinetisense( kin_data_path.c_str() );
-#endif
+   /* Get kinetisense data */
 
    fio KIN( kin_data_path.c_str() );
 
-   int ref_N;
+   int   ref_N;
    float ref_freq;
    float ref_time;
+
+   /* Get reference data */
 
    ref::read_reference_headers (
                         ref_walking.c_str(),
@@ -29,7 +29,7 @@ int main() {
                         &ref_freq,
                         &ref_time);
 
-   float *ref_data_primary = new float[ref_N];
+   float *ref_data_primary   = new float[ref_N];
    float *ref_data_secondary = new float[ref_N];
 
    ref::read_reference (ref_walking.c_str(),
@@ -37,23 +37,52 @@ int main() {
                         ref_data_secondary,
                         ref_N);
 
+   float power;
+   /* Process data */
+
+   float start_time  = 0.0; // seconds
+   float time_window = 22.0; // seconds
+   float samp_freq   = 128.0; // Hz
+   float dt          = 1.0 / samp_freq; // seconds
+   int N_window      = (int) (samp_freq * time_window);
+
+   float *ax, *ay, *az;
+
+   while (KIN.valid_start_end (start_time, time_window))
+   {
+
 //   preproc ( ... );
+
+      ax = KIN.get_sens2_ax (start_time);
+      ay = KIN.get_sens2_ay (start_time);
+      az = KIN.get_sens2_az (start_time);
+
+float sum = 0.0;
+for (int k = 0; k < N_window; k++)
+   sum += ax[k];
+
+      preproc(
+        ax,            /* Acceleration data in x               */
+        ay,            /* Acceleration data in y               */
+        az,            /* Acceleration data in z               */
+        &power,        /* Resulting power of the signal        */
+        dt,            /* Delta time comstant                  */
+        time_window,   /* Time window of the data              */
+        samp_freq,     /* Sampling frequency of the data       */
+        N_window);     /* Number of sample points              */
+
+std::cout << "Signal power = " << power << std::endl;
+
 
 //   matchedfilter ( ... );
 
 //   neuralnetwork ( ... );
 
-#if 0
-   for (int k = 0; k < 20; k++)
-     delete[] sens_data[k];
-#endif
+      start_time += 0.5;
+   }
 
    delete[] ref_data_primary;
    delete[] ref_data_secondary;
 
-for (int k = 0; k < 512; k++ )
-   std::cout << ref_data_primary[k] << std::endl;
-
-std::cout << "Hello" << std::endl;
    return 0;
 }
