@@ -11,7 +11,8 @@ namespace ref {
 
    void read_reference (
                       const char path[],
-                      float *ref_data,
+                      float *ref_data_primary,
+                      float *ref_data_secondary,
                       int N);
 
    int count_ref_lines ( const char path[] );

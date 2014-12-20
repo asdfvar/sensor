@@ -54,7 +54,8 @@ void read_reference_headers (
 /**********************************************************************/
 
 void read_reference (const char path[],
-                     float *ref_data,
+                     float *ref_data_primary,
+                     float *ref_data_secondary,
                      int N)
  {
 
@@ -63,7 +64,7 @@ void read_reference (const char path[],
    std::ifstream ref_file;
 
    ref_file.open (path);
-   ref_file.seekg( 0 );
+   ref_file.seekg(0);
 
    // read past the headers
    std::getline ( ref_file, line );
@@ -72,7 +73,19 @@ void read_reference (const char path[],
 
    for ( int k = 0; k < N; k++ ) {
       std::getline ( ref_file, line, ',' );
-      ref_data[k] = atof ( line.c_str() );
+      ref_data_primary[k] = atof ( line.c_str() );
+   }
+
+   ref_file.seekg(0);
+   // read past the headers and first reference data
+   std::getline ( ref_file, line );
+   std::getline ( ref_file, line );
+   std::getline ( ref_file, line );
+   std::getline ( ref_file, line );
+
+   for ( int k = 0; k < N; k++ ) {
+      std::getline ( ref_file, line, ',' );
+      ref_data_secondary[k] = atof ( line.c_str() );
    }
 
    ref_file.close();
