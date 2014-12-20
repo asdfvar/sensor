@@ -27,8 +27,8 @@ int main() {
    eigen(mat, eig, &eigVec[0][0]);
 
    /* Re-order the eigen values in descending order along with their associated eigen vectors */
-   for (int i = 0; i < 2; i++)
-      for (int j = i; j < 2; j++)
+   for (int i = 0; i < 2; i++) {
+      for (int j = 0; j < 2; j++) {
          if (eig[j] < eig[j+1]) {
             tmp = eig[j];
             eig[j] = eig[j+1];
@@ -40,6 +40,8 @@ int main() {
                eigVec[j+1][k] = tmp;
             }
          }
+      }
+   }
 
    std::cout << "eigenvalues = "
      << eig[0] << "," << eig[1] << "," << eig[2] << std::endl;
