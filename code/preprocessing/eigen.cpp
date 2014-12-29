@@ -101,9 +101,13 @@ static void transpose_matrix_mult_transpose(float *Ct, const float *A, const flo
  * advantage of any potential auto vectorization offered
  * by the compiler whenever certain operations happen in
  * contiguous memory.
+ *
+ * On exit, this routine returns the number of iterations
+ * performed until it converged or reached its maximum number
+ * of iterations.
  */
 
-void eigen(const float mat[3][3], float *eigVl, float *eigVec)
+int eigen(const float mat[3][3], float *eigVl, float *eigVec)
 {
 
    int i,j,k;
@@ -241,7 +245,6 @@ void eigen(const float mat[3][3], float *eigVl, float *eigVec)
       count++;
 
    } while (err > MIN_ERR && count < MAX_COUNT);
-std::cout << __FILE__ << ": itterations until convergence = " << count << std::endl;
 
    if ( count >= MAX_COUNT )
       std::cout << "Warning: Eigenvalues and eigenvectors may not have converged" << std::endl;
@@ -255,5 +258,7 @@ std::cout << __FILE__ << ": itterations until convergence = " << count << std::e
    for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
          eigVec[i*3 + j] = V[j][i];
+
+   return count;
 
 }

@@ -1,15 +1,37 @@
+/* This routine pre-processes the data to prepare it for use in the activity
+ * classification routine.
+ *
+ * The x,y,z directions of acceleration are supplied on input. On output,
+ * the x,y,z directions will represent the acceleration data that has been
+ * rotated so that the primary direction of acceleration is in x, the secondary
+ * direction of acceleration is in y, and the third direction is in z. This
+ * process will be known as the dimensionality reduction of the data.
+ *
+ * Although not done yet, the data will also undergo a lowpass filter prior
+ * to a dimensionality reduction.
+ *
+ * The dimensionality reduction is acheived by computing the eigenvectors of
+ * the covariance matrix of the data. Because this matrix is a real-symmetric
+ * matrix, its eigenvectors are real and orthogonal to each other. The data
+ * is then projected onto these vectors to form a new basis to represent the data.
+ * This new set of basis vectors happen to lie in the directions where the
+ * variance in the data is the greatest. Because the direction of motion falls
+ * primarily within a 2-D plan, the third dimension can be disregarded for
+ * further processing.
+ */
+
 #include <iostream>
 #include "eigen.h"
 
 int preproc(
-     float *ax,      /* Acceleration data in x               */
-     float *ay,      /* Acceleration data in y               */
-     float *az,      /* Acceleration data in z               */
-     float *power,   /* Resulting power of the signal        */
-     float dt,       /* Delta time comstant                  */
-     float window,   /* Time window of the data              */
-     float samp_freq,/* Sampling frequency of the data       */
-     int   N)        /* Number of sample points              */
+     float *ax,             /* Acceleration data in x          */
+     float *ay,             /* Acceleration data in y          */
+     float *az,             /* Acceleration data in z          */
+     float *power,          /* Resulting power of the signal   */
+     const float dt,        /* Delta time comstant             */
+     const float window,    /* Time window of the data         */
+     const float samp_freq, /* Sampling frequency of the data  */
+     const int   N)         /* Number of sample points         */
 {
 
    int i,j,k;
@@ -65,7 +87,9 @@ int preproc(
 
    float tmp;
 
-   /* Re-order the eigen values in descending order along with their associated eigen vectors */
+   /* Re-order the eigenvalues in descending order along
+    * with their associated eigenvectors */
+
    for (i = 0; i < 2; i++) {
       for (j = 0; j < 2; j++) {
          if (eigVal[j] < eigVal[j+1]) {
@@ -83,6 +107,7 @@ int preproc(
    }
 
    /* Re-orient the axes in the direction of motion */
+
    float *eigVec_1 = &eigVec[0][0];
    float *eigVec_2 = &eigVec[1][0];
    float *eigVec_3 = &eigVec[2][0];

@@ -37,9 +37,9 @@ int main() {
                         ref_data_secondary,
                         ref_N);
 
-   float power;
    /* Process data */
 
+   float power;
    float start_time  = 0.0; // seconds
    float time_window = 22.0; // seconds
    float samp_freq   = 128.0; // Hz
@@ -56,10 +56,6 @@ int main() {
       ax = KIN.get_sens2_ax (start_time);
       ay = KIN.get_sens2_ay (start_time);
       az = KIN.get_sens2_az (start_time);
-
-float sum = 0.0;
-for (int k = 0; k < N_window; k++)
-   sum += ax[k];
 
       preproc(
         ax,            /* Acceleration data in x               */
