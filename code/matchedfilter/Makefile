@@ -7,7 +7,7 @@ TOOLS = ../tools
 
 INC = -I$(TOOLS)
 
-OBJ = mf_main.o matchedfilter.o run_mf.o crosscorr.o
+OBJ = mf_main.o matchedfilter.o run.o crosscorr.o
 
 all: $(OBJ)
 	$(CL) $(LIBEXE) $(OBJ)
@@ -21,7 +21,7 @@ clean:
 matchedfilter.o: matchedfilter.cpp
 	$(CPPC) $^ -c
 
-run_mf.o: run_mf.cpp
+run.o: run.cpp
 	$(CPPC) $^ -c $(INC)
 
 crosscorr.o: crosscorr.cpp
