@@ -14,7 +14,8 @@ class matchedfilter {
 
       /* run the main matched filter program for this instance */
 
-      float run (float *signal, float dt, float samp_freq, int N);
+      void run (float *sig_ax, float *sig_ay, float dt_sig, float sig_samp_freq, int data_N,
+                float *corr_ax, float *corr_ay);
 
    private:
 
@@ -26,16 +27,11 @@ class matchedfilter {
       float *ref_ax;    // Reference signal in x (Primary direction)
       float *ref_ay;    // Reference signal in y (Secondary direction)
 
-      float corr;
-
-      float shift;
-
       bool loaded_ref;
 
       float *work_buffer; // Buffer space the same size as the signal
 
       void crosscorr(float *ref, float *signal, float *buffer, float dt, float samp_freq,
-                     int N_window_ref, int N_data,
-                     float *corr, int *shift);
+                     int N_window_ref, int N_data, float *corr, int *shift);
 
 };

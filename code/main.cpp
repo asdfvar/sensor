@@ -1,8 +1,8 @@
 #include <iostream>
-#include "mf_main.h"
 #include "fileio.h"
 #include "ref.h"
 #include "preproc.h"
+#include "matchedfilter.h"
 
 extern "C" {
 #include "fft.h"
@@ -41,7 +41,7 @@ int main() {
 
    float power;
    float start_time  = 0.0; // seconds
-   float time_window = 22.0; // seconds
+   float time_window = 4.0; // seconds
    float samp_freq   = 128.0; // Hz
    float dt          = 1.0 / samp_freq; // seconds
    int N_window      = (int) (samp_freq * time_window);
@@ -51,7 +51,9 @@ int main() {
    while (KIN.valid_start_end (start_time, time_window))
    {
 
-//   preproc ( ... );
+/*
+ * PRE-PROCESSING
+ */
 
       ax = KIN.get_sens2_ax (start_time);
       ay = KIN.get_sens2_ay (start_time);
@@ -70,7 +72,9 @@ int main() {
 std::cout << "Signal power = " << power << std::endl;
 
 
-//   matchedfilter ( ... );
+/*
+ * MATCHED FILTER
+ */
 
 //   neuralnetwork ( ... );
 
