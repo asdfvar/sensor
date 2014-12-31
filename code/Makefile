@@ -11,15 +11,24 @@ LIBPATH = -L./$(MATCHFILTER) -L./$(TOOLS) -L./$(PREPROC)
 
 LIBS = -lmatflt -lsens -lpreproc
 
+# DIRECTIVE
+# switch between PC and onboard hardware
+
+MAIN_DIRECTIVE = -Dpc
+
 OBJ = main.o fft.o
 
 EXE = main
+
+# BUILD ALL
 
 all: $(OBJ)
 	cd $(MATCHFILTER) && $(MAKE)
 	cd $(PREPROC) && $(MAKE)
 	cd $(TOOLS) && $(MAKE)
 	$(CPPC) $(OBJ) $(FLAGS) -o $(EXE) $(INC) $(LIBPATH) $(LIBS)
+
+# CLEAN ALL
 
 clean:
 	make -C $(MATCHFILTER) clean
@@ -28,7 +37,7 @@ clean:
 	rm $(EXE) $(OBJ)
 
 main.o: main.cpp
-	$(CPPC) $^ -c $(INC)
+	$(CPPC) $(MAIN_DIRECTIVE) $^ -c $(INC)
 
 fft.o: tools/fft.c
 	$(CC) $^ -c

@@ -17,6 +17,7 @@ int main() {
 
    fio KIN( kin_data_path.c_str() );
 
+#ifdef pc
    int   ref_N;
    float ref_freq;
    float ref_time;
@@ -36,8 +37,11 @@ int main() {
                         ref_data_primary,
                         ref_data_secondary,
                         ref_N);
+#endif
 
-   /* Process data */
+/*
+ * PROCESS DATA
+ */
 
    float power;
    float start_time  = 0.0; // seconds
@@ -48,8 +52,10 @@ int main() {
 
    float *ax, *ay, *az;
 
+#ifdef pc
    while (KIN.valid_start_end (start_time, time_window))
    {
+#endif
 
 /*
  * PRE-PROCESSING
@@ -69,7 +75,7 @@ int main() {
         samp_freq,     /* Sampling frequency of the data       */
         N_window);     /* Number of sample points              */
 
-std::cout << "Signal power = " << power << std::endl;
+      std::cout << "Signal power = " << power << std::endl;
 
 
 /*
@@ -78,8 +84,10 @@ std::cout << "Signal power = " << power << std::endl;
 
 //   neuralnetwork ( ... );
 
+#ifdef pc
       start_time += 0.5;
    }
+#endif
 
    delete[] ref_data_primary;
    delete[] ref_data_secondary;
