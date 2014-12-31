@@ -49,8 +49,19 @@ int main() {
    float samp_freq   = 128.0; // Hz
    float dt          = 1.0 / samp_freq; // seconds
    int N_window      = (int) (samp_freq * time_window);
-
    float *ax, *ay, *az;
+   float corr_ax, corr_ay;
+   float *work_buffer = new float[512];
+
+#ifdef pc
+   matchedfilter MF1;
+
+//   MF1.load_ref (ref_data_primary, ref_data_secondary, dt, samp_freq, 1.5, 512, 192, work_buffer);
+#endif
+
+/*
+ * MAIN LOOP
+ */
 
 #ifdef pc
    while (KIN.valid_start_end (start_time, time_window))
@@ -66,17 +77,18 @@ int main() {
       az = KIN.get_sens2_az (start_time);
 
       preproc(
-        ax,            /* Acceleration data in x               */
-        ay,            /* Acceleration data in y               */
-        az,            /* Acceleration data in z               */
-        &power,        /* Resulting power of the signal        */
-        dt,            /* Delta time comstant                  */
-        time_window,   /* Time window of the data              */
-        samp_freq,     /* Sampling frequency of the data       */
-        N_window);     /* Number of sample points              */
+          ax,            /* Acceleration data in x               */
+          ay,            /* Acceleration data in y               */
+          az,            /* Acceleration data in z               */
+          &power,        /* Resulting power of the signal        */
+          dt,            /* Delta time comstant                  */
+          time_window,   /* Time window of the data              */
+          samp_freq,     /* Sampling frequency of the data       */
+          N_window);     /* Number of sample points              */
 
       std::cout << "Signal power = " << power << std::endl;
 
+//      MF1.run (ax, ay, dt, samp_freq, N_window, &corr_ax, &corr_ay);
 
 /*
  * MATCHED FILTER
