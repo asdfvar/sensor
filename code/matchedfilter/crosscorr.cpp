@@ -10,13 +10,14 @@ extern "C" {
 }
 #include "matchedfilter.h"
 #include <cmath>
+#include <iostream>
 
 void matchedfilter::crosscorr(float *ref,
                               float *sig,
                               float *norm_sig2, /* buffer space */
                               float dt, float samp_freq,
                               int N_window_ref, int N_data,
-                              float *corr, int *shift)
+                              float *corr, int *shift, data_form ref_form)
 {
 
    float tmp;
@@ -50,7 +51,7 @@ void matchedfilter::crosscorr(float *ref,
       sig[k] = tmp;
    }
 
-   /* At this point, sig represents the cross correlation between
+   /* At this point, sig represents the cross correlation squared between
     * the reference and the signal */
 
    ifft(sig, N_data);
@@ -58,15 +59,11 @@ void matchedfilter::crosscorr(float *ref,
    /* Normalize the correlation */
 
    for (k = 0; k < N_data - N_window_ref + 1; k++)
-      sig[k] /= norm_sig2[k] * norm_ref2;
+      sig[k] /= sqrtf( norm_sig2[k] * norm_ref2 );
 
    /* We don't care about circular shifts */
    for (k = N_data - N_window_ref + 1; k < N_data; k++)
       sig[k] = 0.0;
-
-   /* Square root the result to get the cross correlation result */
-   for (k = 0; k < N_data - N_window_ref + 1; k++)
-      sig[k] = sqrtf(sig[k]);
 
    float max = sig[0];
    int max_ind = 0;

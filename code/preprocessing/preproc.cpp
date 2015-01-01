@@ -43,9 +43,11 @@ int preproc(
    for (k = 0, ave = 0.0; k < N; k++) ave += ax[k];
    ave /= (float) N;
    for (k = 0; k < N; k++) ax[k] -= ave;
+
    for (k = 0, ave = 0.0; k < N; k++) ave += ay[k];
    ave /= (float) N;
    for (k = 0; k < N; k++) ay[k] -= ave;
+
    for (k = 0, ave = 0.0; k < N; k++) ave += az[k];
    ave /= (float) N;
    for (k = 0; k < N; k++) az[k] -= ave;
@@ -111,7 +113,6 @@ int preproc(
    float *eigVec_1 = &eigVec[0][0];
    float *eigVec_2 = &eigVec[1][0];
    float *eigVec_3 = &eigVec[2][0];
-
    float x,y,z;
 
    for (k = 0; k < N; k++) {

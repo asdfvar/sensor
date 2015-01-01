@@ -40,14 +40,13 @@ void matchedfilter::load_ref (float *ref_ax_in, float *ref_ay_in, float dt_in,
    samp_freq_ref   = samp_freq_in;
    N_data_ref      = N_data_in;
    N_window_ref    = N_window_in;
-   work_buffer     = work_buffer_in;
 
 }
 
 /******************************************************************************/
 
 void matchedfilter::run (float *sig_ax, float *sig_ay, float dt_sig, float samp_freq_sig, int N_sig,
-                         float *corr_ax, float *corr_ay)
+                         float *corr_ax, float *corr_ay, float *work_buffer)
 {
 
    int shift; // Shift in cells between the reference and the signal to match
@@ -73,10 +72,10 @@ void matchedfilter::run (float *sig_ax, float *sig_ay, float dt_sig, float samp_
    }
 
    crosscorr(ref_ax, sig_ax, work_buffer, dt_sig, samp_freq_sig,
-             N_window_ref, N_sig, corr_ax, &shift);
+             N_window_ref, N_sig, corr_ax, &shift, TIME);
 
    crosscorr(ref_ay, sig_ay, work_buffer, dt_sig, samp_freq_sig,
-             N_window_ref, N_sig, corr_ay, &shift);
+             N_window_ref, N_sig, corr_ay, &shift, TIME);
 
 }
 

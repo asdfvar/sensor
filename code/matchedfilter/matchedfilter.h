@@ -1,3 +1,5 @@
+enum data_form {TIME, FREQ};
+
 class matchedfilter {
 
    public:
@@ -15,7 +17,7 @@ class matchedfilter {
       /* run the main matched filter program for this instance */
 
       void run (float *sig_ax, float *sig_ay, float dt_sig, float sig_samp_freq, int data_N,
-                float *corr_ax, float *corr_ay);
+                float *corr_ax, float *corr_ay, float *work_buffer);
 
    private:
 
@@ -32,6 +34,6 @@ class matchedfilter {
       float *work_buffer; // Buffer space the same size as the signal
 
       void crosscorr(float *ref, float *signal, float *buffer, float dt, float samp_freq,
-                     int N_window_ref, int N_data, float *corr, int *shift);
+                     int N_window_ref, int N_data, float *corr, int *shift, data_form ref_form);
 
 };
