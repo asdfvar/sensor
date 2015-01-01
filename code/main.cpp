@@ -84,7 +84,7 @@ int main() {
       data_ay = KIN.get_sens2_ay (start_time);
       data_az = KIN.get_sens2_az (start_time);
 
-      for (int k=0; k<512; k++) {
+      for (int k=0; k<N_window+2; k++) {
          ax[k] = data_ax[k];
          ay[k] = data_ay[k];
          az[k] = data_az[k];
