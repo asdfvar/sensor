@@ -1,11 +1,12 @@
 #ifndef _FILEIO_H_
 #define _FILEIO_H_
 
-class fio {
+namespace fio {
+ class kinIO {
    public:
 
-      fio ( const char path[] );
-      ~fio ();
+      kinIO ( const char path[] );
+      ~kinIO ();
 
       /* check if the start of the array from get_* has N many valid
          elements in its array. */
@@ -77,6 +78,7 @@ class fio {
 
       // Pointers to the kinetisense data
       float **kin_data;
-};
+ };
+}
 
 #endif

@@ -12,12 +12,12 @@ extern "C" {
 #include <cmath>
 #include <iostream>
 
-void matchedfilter::crosscorr(float *ref,
+float matchedfilter::crosscorr(float *ref,
                               float *sig,
                               float *norm_sig2, /* buffer space */
                               float dt, float samp_freq,
                               int N_window_ref, int N_data,
-                              float *corr, int *shift, data_form ref_form)
+                              data_form ref_form)
 {
 
    float tmp;
@@ -75,10 +75,12 @@ void matchedfilter::crosscorr(float *ref,
       }
    }
 
-   *shift = max_ind;
-   *corr = max;
+   int   shift = max_ind; // The number of cells the reference must shift to best match the signal
+   float corr  = max;     // The normalized correlation after matching the reference to the signal
 
    /* Bring the reference signal back to temporal units */
    ifft(ref, N_data);
+
+   return corr;
 
 }

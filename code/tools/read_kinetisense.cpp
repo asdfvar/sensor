@@ -11,7 +11,8 @@
 #include <cstdlib>
 #include "fileio.h"
 
-int fio::count_kinetisense_lines(
+namespace fio {
+int kinIO::count_kinetisense_lines(
        /* Reads in the file data and counts how many lines of
           data are in the file. */
        const char path[]) /* [I  ] Path to the kinetisense data */
@@ -33,7 +34,7 @@ int fio::count_kinetisense_lines(
 
 /**********************************************************************/
 
-float **fio::read_kinetisense(
+float **kinIO::read_kinetisense(
           /* Populates the data buffer with the kinetisense csv file data.
              Returns a pointer to hold the data. This will contain the acceleration
              and rotation data in units of Gs (1G = 9.81 m/s/s) and EMG data. There
@@ -95,10 +96,11 @@ float **fio::read_kinetisense(
 
 /**********************************************************************/
 
-float **fio::read_kinetisense( const char path[] ) {
+float **kinIO::read_kinetisense( const char path[] ) {
 
    int N = count_kinetisense_lines( path );
 
    return read_kinetisense ( path, N );
 
+}
 }

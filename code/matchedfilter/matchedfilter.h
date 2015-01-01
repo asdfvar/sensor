@@ -4,7 +4,7 @@ class matchedfilter {
 
    public:
 
-      matchedfilter  (void);
+      matchedfilter  (const char path[], int N_data);
       ~matchedfilter (void);
 
       /* Load the reference data as well as point to some work buffer space */
@@ -16,8 +16,11 @@ class matchedfilter {
 
       /* run the main matched filter program for this instance */
 
-      void run (float *sig_ax, float *sig_ay, float dt_sig, float sig_samp_freq, int data_N,
-                float *corr_ax, float *corr_ay, float *work_buffer);
+      int run (float *sig_ax, float *sig_ay, float dt_sig, float sig_samp_freq, int data_N,
+                float *work_buffer);
+
+      float get_corr_ax (void); // Return correlation in x
+      float get_corr_ay (void); // Return correlation in y
 
    private:
 
@@ -26,14 +29,19 @@ class matchedfilter {
       float dt_ref;     // Delta time intervals between samples of the reference signal
       float samp_freq_ref; // Sampling frequency of the reference signal
       float time_window_ref; // Time window of data making up the reference signal
-      float *ref_ax;    // Reference signal in x (Primary direction)
-      float *ref_ay;    // Reference signal in y (Secondary direction)
 
-      bool loaded_ref;
+      float *ref_ax;    // Reference in x (Primary direction)
+      float *ref_ay;    // Reference in y (Secondary direction)
 
-      float *work_buffer; // Buffer space the same size as the signal
+      float corr_ax, corr_ay; // Normalized correlation in x and y directions respectively
 
-      void crosscorr(float *ref, float *signal, float *buffer, float dt, float samp_freq,
-                     int N_window_ref, int N_data, float *corr, int *shift, data_form ref_form);
+      /* Boolean cases to make sure values and such are set before calling certain routines */
+
+      bool correlations_computed;
+
+      /* Cross correlation */
+
+      float crosscorr(float *ref, float *signal, float *buffer, float dt, float samp_freq,
+                     int N_window_ref, int N_data, data_form ref_form);
 
 };
