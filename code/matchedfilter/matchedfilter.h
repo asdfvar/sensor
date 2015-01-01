@@ -7,13 +7,6 @@ class matchedfilter {
       matchedfilter  (const char path[], int N_data);
       ~matchedfilter (void);
 
-      /* Load the reference data as well as point to some work buffer space */
-
-      void load_ref (float *ref_ax, float *ref_ay,
-                     float dt, float samp_freq, float time_window,
-                     int N_data, int N_window,
-                     float *work_buf);
-
       /* run the main matched filter program for this instance */
 
       int run (float *sig_ax, float *sig_ay, float dt_sig, float sig_samp_freq, int data_N,
@@ -24,16 +17,17 @@ class matchedfilter {
 
    private:
 
-      int N_data_ref;   // Number of data points allocated for the reference signal
-      int N_window_ref; // Number of sampling points that makes up the reference signal
-      float dt_ref;     // Delta time intervals between samples of the reference signal
-      float samp_freq_ref; // Sampling frequency of the reference signal
-      float time_window_ref; // Time window of data making up the reference signal
+      int   N_data_ref;       // Number of data points allocated for the reference signal
+      int   N_window_ref;     // Number of sampling points that makes up the reference signal
+      float dt_ref;           // Delta time intervals between samples of the reference signal
+      float samp_freq_ref;    // Sampling frequency of the reference signal
+      float time_window_ref;  // Time window of data making up the reference signal
 
-      float *ref_ax;    // Reference in x (Primary direction)
-      float *ref_ay;    // Reference in y (Secondary direction)
+      float *ref_ax;          // Reference in x (Primary direction)
+      float *ref_ay;          // Reference in y (Secondary direction)
 
-      float corr_ax, corr_ay; // Normalized correlation in x and y directions respectively
+      float corr_ax;          // Normalized correlation in x (Primary direction)
+      float corr_ay;          // Normalized correlation in y (Secondary direction)
 
       /* Boolean cases to make sure values and such are set before calling certain routines */
 

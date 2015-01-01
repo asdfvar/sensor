@@ -53,6 +53,8 @@ matchedfilter::matchedfilter (const char path[], int N_data)
       ref_ax[k] = atof ( line.c_str() );
    }
 
+   ref_file.seekg(0);
+
    // read past the headers
    for (int k=0; k<N_headers+1; k++)
       std::getline ( ref_file, line );
@@ -75,24 +77,6 @@ matchedfilter::~matchedfilter (void)
 
    delete[] ref_ax;
    delete[] ref_ay;
-
-}
-
-/******************************************************************************/
-
-void matchedfilter::load_ref (float *ref_ax_in, float *ref_ay_in, float dt_in,
-                              float samp_freq_in, float time_window_in,
-                              int N_data_in, int N_window_in,
-                              float *work_buffer_in)
-{
-
-   ref_ax          = ref_ax_in;
-   ref_ay          = ref_ay_in;
-   dt_ref          = dt_in;
-   time_window_ref = time_window_in;
-   samp_freq_ref   = samp_freq_in;
-   N_data_ref      = N_data_in;
-   N_window_ref    = N_window_in;
 
 }
 

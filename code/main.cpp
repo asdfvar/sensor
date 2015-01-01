@@ -50,10 +50,6 @@ int main() {
    {
 #endif
 
-/*
- * PRE-PROCESSING
- */
-
 #ifdef pc
       data_ax = KIN.get_sens2_ax (start_time);
       data_ay = KIN.get_sens2_ay (start_time);
@@ -64,8 +60,11 @@ int main() {
          ay[k] = data_ay[k];
          az[k] = data_az[k];
       }
-
 #endif
+
+/*
+ * PRE-PROCESSING
+ */
 
       preproc(
           ax,            /* Acceleration data in x               */
@@ -77,15 +76,15 @@ int main() {
           samp_freq,     /* Sampling frequency of the data       */
           N_window);     /* Number of sample points              */
 
-      std::cout << "Signal power = " << power << std::endl;
-
-      MF1.run (ax, ay, dt, samp_freq, N_window, work_buffer);
-
-      std::cout << "Primary correlation = " << MF1.get_corr_ax() << std::endl;
-
 /*
  * MATCHED FILTER
  */
+
+      MF1.run (ax, ay, dt, samp_freq, N_window, work_buffer);
+
+      std::cout << "Signal power = " << power;
+      std::cout << " Primary correlation = " << MF1.get_corr_ax();
+      std::cout << " Secondary correlation = " << MF1.get_corr_ay() << std::endl;
 
 //   neuralnetwork ( ... );
 
