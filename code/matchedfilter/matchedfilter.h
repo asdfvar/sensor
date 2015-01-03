@@ -31,6 +31,9 @@ class matchedfilter {
       float *ref_ax;          // Reference in x (Primary direction)
       float *ref_ay;          // Reference in y (Secondary direction)
 
+      float norm_ref_ax;      // Normalizing factor of the reference
+      float norm_ref_ay;      // Normalizing factor of the reference
+
       float corr_ax;          // Normalized correlation in x (Primary direction)
       float corr_ay;          // Normalized correlation in y (Secondary direction)
 
@@ -41,7 +44,8 @@ class matchedfilter {
 
       /* Cross correlation */
 
-      float crosscorr(float *ref, float *signal, float *buffer, float dt, float samp_freq,
-                     int N_window_ref, int N_data, data_form ref_form);
+      float crosscorr(float *ref, float *signal, float norm_ref, float *buffer,
+                      float dt, float samp_freq,
+                      int N_window_ref, int N_data, data_form ref_form);
 
 };

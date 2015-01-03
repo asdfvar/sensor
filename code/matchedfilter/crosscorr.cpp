@@ -13,11 +13,12 @@ extern "C" {
 #include <iostream>
 
 float matchedfilter::crosscorr(float *ref,
-                              float *sig,
-                              float *norm_sig2, /* buffer space */
-                              float dt, float samp_freq,
-                              int N_window_ref, int N_data,
-                              data_form ref_form)
+                               float *sig,
+                               float norm_ref_in,
+                               float *norm_sig2, /* buffer space */
+                               float dt, float samp_freq,
+                               int N_window_ref, int N_data,
+                               data_form ref_form)
 {
 
    float tmp;
@@ -25,10 +26,8 @@ float matchedfilter::crosscorr(float *ref,
 
    /* Compute the norm squared of the reference
       signal and the signal */
-   float norm_ref2 = 0.0;
    norm_sig2[0] = 0.0;
    for (k = 0; k < N_window_ref; k++){
-      norm_ref2    += ref[k]*ref[k];
       norm_sig2[0] += sig[k]*sig[k];
    }
 
@@ -59,7 +58,7 @@ float matchedfilter::crosscorr(float *ref,
    /* Normalize the correlation */
 
    for (k = 0; k < N_data - N_window_ref + 1; k++)
-      sig[k] /= sqrtf( norm_sig2[k] * norm_ref2 );
+      sig[k] /= sqrtf( norm_sig2[k] ) * norm_ref_in;
 
    /* We don't care about circular shifts */
    for (k = N_data - N_window_ref + 1; k < N_data; k++)

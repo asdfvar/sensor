@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <stdlib.h>
+#include <cmath>
 extern "C" {
 #include "fft.h"
 }
@@ -51,6 +52,21 @@ void matchedfilter::load_ref (float *ax_in, float *ay_in,
       ref_ay[k] = 0.0;
    }
 
+   /* Compute the norm of the reference signal */
+
+   norm_ref_ax = 0.0;
+   norm_ref_ay = 0.0;
+   for (int k = 0; k < N_window_ref; k++){
+      norm_ref_ax    += ref_ax[k]*ref_ax[k];
+      norm_ref_ay    += ref_ay[k]*ref_ay[k];
+   }
+   norm_ref_ax = sqrtf( norm_ref_ax );
+   norm_ref_ay = sqrtf( norm_ref_ay );
+
+   fft(ref_ax, N_data_ref);
+   fft(ref_ay, N_data_ref);
+
+   ref_data_form         = FREQ;
 }
 
 /******************************************************************************/
@@ -106,15 +122,30 @@ matchedfilter::matchedfilter (const char path[], int N_data)
    for (int k=0; k<N_headers+1; k++)
       std::getline ( ref_file, line );
 
-   for ( int k = 0; k < N_window_ref; k++ ) {
+   for (int k = 0; k < N_window_ref; k++ ) {
       std::getline ( ref_file, line, ',' );
       ref_ay[k] = atof ( line.c_str() );
    }
 
    ref_file.close();
 
+   /* Compute the norm of the reference signal */
+
+   norm_ref_ax = 0.0;
+   norm_ref_ay = 0.0;
+   for (int k = 0; k < N_window_ref; k++){
+      norm_ref_ax    += ref_ax[k]*ref_ax[k];
+      norm_ref_ay    += ref_ay[k]*ref_ay[k];
+   }
+   norm_ref_ax = sqrtf( norm_ref_ax );
+   norm_ref_ay = sqrtf( norm_ref_ay );
+
    correlations_computed = false;
-   ref_data_form         = TIME;
+
+   fft(ref_ax, N_data_ref);
+   fft(ref_ay, N_data_ref);
+
+   ref_data_form         = FREQ;
 
 }
 
@@ -149,11 +180,11 @@ int matchedfilter::run (float *sig_ax, float *sig_ay, float dt_sig, float samp_f
       return -1;
    }
 
-   corr_ax = crosscorr(ref_ax, sig_ax, work_buffer, dt_sig, samp_freq_sig,
-                        N_window_ref, N_sig, TIME);
+   corr_ax = crosscorr(ref_ax, sig_ax, norm_ref_ax, work_buffer, dt_sig, samp_freq_sig,
+                        N_window_ref, N_sig, FREQ);
 
-   corr_ay = crosscorr(ref_ay, sig_ay, work_buffer, dt_sig, samp_freq_sig,
-                        N_window_ref, N_sig, TIME);
+   corr_ay = crosscorr(ref_ay, sig_ay, norm_ref_ay, work_buffer, dt_sig, samp_freq_sig,
+                        N_window_ref, N_sig, FREQ);
 
    correlations_computed = true;
 
