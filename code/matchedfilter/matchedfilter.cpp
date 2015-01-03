@@ -3,6 +3,9 @@
 #include <string>
 #include <fstream>
 #include <stdlib.h>
+extern "C" {
+#include "fft.h"
+}
 
 #define N_headers 3
 

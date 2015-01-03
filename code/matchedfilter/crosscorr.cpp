@@ -40,7 +40,7 @@ float matchedfilter::crosscorr(float *ref,
    }
 
    // FFT both signals
-   fft(ref, N_data);
+   if(ref_form == TIME) fft(ref, N_data);
    fft(sig, N_data);
 
    /* Conjugate multiply the reference (conjugate)
@@ -79,7 +79,7 @@ float matchedfilter::crosscorr(float *ref,
    float corr  = max;     // The normalized correlation after matching the reference to the signal
 
    /* Bring the reference signal back to temporal units */
-   ifft(ref, N_data);
+   if(ref_form == TIME) ifft(ref, N_data);
 
    return corr;
 

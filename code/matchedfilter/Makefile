@@ -22,7 +22,7 @@ clean:
 ## Create Objects
 
 matchedfilter.o: matchedfilter.cpp
-	$(CPPC) $^ -c
+	$(CPPC) $^ -c $(INC)
 
 crosscorr.o: crosscorr.cpp
 	$(CPPC) $^ -c $(INC)
