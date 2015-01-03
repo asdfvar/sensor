@@ -4,10 +4,11 @@ CL = ar rcs
 LIBEXE = libmatflt.a
 
 TOOLS = ../tools
+PREPROC = ../preprocessing
 
-INC = -I$(TOOLS)
+INC = -I$(TOOLS) -I$(PREPROC)
 
-OBJ = matchedfilter.o crosscorr.o
+OBJ = matchedfilter.o crosscorr.o match_filt_training.o
 
 ## BUILD ALL
 
@@ -25,4 +26,7 @@ matchedfilter.o: matchedfilter.cpp
 	$(CPPC) $^ -c $(INC)
 
 crosscorr.o: crosscorr.cpp
+	$(CPPC) $^ -c $(INC)
+
+match_filt_training.o: match_filt_training.cpp
 	$(CPPC) $^ -c $(INC)

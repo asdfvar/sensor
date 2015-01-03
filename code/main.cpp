@@ -2,6 +2,9 @@
 #include "fileio.h"
 #include "preproc.h"
 #include "matchedfilter.h"
+#include "match_filt_training.h"
+
+#define TIME_INC 0.5
 
 extern "C" {
 #include "fft.h"
@@ -37,9 +40,11 @@ int main() {
 #ifdef pc
    /* Get reference data */
 
-   matchedfilter MF1( ref_walking.c_str(), N_window );
-
+   matchedfilter MF1 (ref_walking.c_str(), N_window );
+   matchedfilter MF2 (N_window);
 #endif
+
+   match_filt_training (&MF2, &KIN, samp_freq, dt, time_window, N_window, 1.5, 192, 2);
 
 /*
  * MAIN LOOP
@@ -51,9 +56,9 @@ int main() {
 #endif
 
 #ifdef pc
-      data_ax = KIN.get_sens2_ax (start_time);
-      data_ay = KIN.get_sens2_ay (start_time);
-      data_az = KIN.get_sens2_az (start_time);
+      data_ax = KIN.get_sens_ax (start_time, 2);
+      data_ay = KIN.get_sens_ay (start_time, 2);
+      data_az = KIN.get_sens_az (start_time, 2);
 
       for (int k=0; k<N_window+2; k++) {
          ax[k] = data_ax[k];
@@ -80,16 +85,18 @@ int main() {
  * MATCHED FILTER
  */
 
-      MF1.run (ax, ay, dt, samp_freq, N_window, work_buffer);
+      MF2.run (ax, ay, dt, samp_freq, N_window, work_buffer);
 
+#if 1
       std::cout << "Signal power = " << power;
-      std::cout << " Primary correlation = " << MF1.get_corr_ax();
-      std::cout << " Secondary correlation = " << MF1.get_corr_ay() << std::endl;
+      std::cout << " Primary correlation = " << MF2.get_corr_ax();
+      std::cout << " Secondary correlation = " << MF2.get_corr_ay() << std::endl;
+#endif
 
 //   neuralnetwork ( ... );
 
 #ifdef pc
-      start_time += 0.5;
+      start_time += TIME_INC;
    }
 #endif
 

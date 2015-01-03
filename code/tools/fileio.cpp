@@ -31,44 +31,40 @@ namespace fio {
 
 /******************************************************************/
 
- float *kinIO::get_sens1_ax (float time)
+ float *kinIO::get_sens_ax (float time, int sens_num)
  {
    int k = (int)(time * samp_freq);
-   return kin_data[0] + k;
+
+   if (sens_num == 1) return kin_data[0] + k;
+   else if (sens_num == 2) return kin_data[6] + k;
  }
 
 /******************************************************************/
 
- float *kinIO::get_sens1_ay (float time)
+ float *kinIO::get_sens_ay (float time, int sens_num)
  {
-   return kin_data[1] + (int)(time * samp_freq);
+   int k = (int)(time * samp_freq);
+
+   if (sens_num == 1) return kin_data[1] + k;
+   else if (sens_num == 2) return kin_data[7] + k;
  }
 
 /******************************************************************/
 
- float *kinIO::get_sens1_az (float time)
+ float *kinIO::get_sens_az (float time, int sens_num)
  {
-   return kin_data[2] + (int)(time * samp_freq);
+   int k = (int)(time * samp_freq);
+
+   if (sens_num == 1) return kin_data[2] + k;
+   else if (sens_num == 2) return kin_data[8] + k;
  }
 
 /******************************************************************/
 
- float *kinIO::get_sens2_ax (float time)
+ float kinIO::get_total_time (void)
  {
-   return kin_data[6] + (int)(time * samp_freq);
+    return total_time;
  }
 
 /******************************************************************/
-
- float *kinIO::get_sens2_ay (float time)
- {
-   return kin_data[7] + (int)(time * samp_freq);
- }
-
-/******************************************************************/
-
- float *kinIO::get_sens2_az (float time)
- {
-   return kin_data[8] + (int)(time * samp_freq);
- }
 }

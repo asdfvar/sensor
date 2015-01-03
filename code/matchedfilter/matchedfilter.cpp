@@ -11,6 +11,50 @@ extern "C" {
 
 /******************************************************************************/
 
+matchedfilter::matchedfilter (int N_data)
+{
+
+   N_data_ref = N_data;
+
+   ref_ax = new float[N_data_ref+2];
+   ref_ay = new float[N_data_ref+2];
+
+   for (int k=0; k<N_data_ref+2; k++) {
+      ref_ax[k] = 0.0;
+      ref_ay[k] = 0.0;
+   }
+
+   correlations_computed = false;
+   ref_data_form         = TIME;
+}
+
+/******************************************************************************/
+
+void matchedfilter::load_ref (float *ax_in, float *ay_in,
+                              float dt_in, float samp_freq_in,
+                              float time_window_in, int N_window_in, int N_data_in)
+{
+
+   N_data_ref      = N_data_in;
+   N_window_ref    = N_window_in;
+   time_window_ref = time_window_in;
+   dt_ref          = dt_in;
+   samp_freq_ref   = samp_freq_in;
+
+   for (int k=0; k<N_window_ref; k++) {
+      ref_ax[k] = ax_in[k];
+      ref_ay[k] = ay_in[k];
+   }
+
+   for (int k=N_window_ref; k<N_data_ref; k++) {
+      ref_ax[k] = 0.0;
+      ref_ay[k] = 0.0;
+   }
+
+}
+
+/******************************************************************************/
+
 matchedfilter::matchedfilter (const char path[], int N_data)
 {
 
@@ -70,6 +114,7 @@ matchedfilter::matchedfilter (const char path[], int N_data)
    ref_file.close();
 
    correlations_computed = false;
+   ref_data_form         = TIME;
 
 }
 
@@ -78,8 +123,8 @@ matchedfilter::matchedfilter (const char path[], int N_data)
 matchedfilter::~matchedfilter (void)
 {
 
-   delete[] ref_ax;
-   delete[] ref_ay;
+   delete ref_ax;
+   delete ref_ay;
 
 }
 

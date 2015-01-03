@@ -4,13 +4,18 @@ class matchedfilter {
 
    public:
 
+      matchedfilter  (int N_data);
       matchedfilter  (const char path[], int N_data);
       ~matchedfilter (void);
 
       /* run the main matched filter program for this instance */
 
       int run (float *sig_ax, float *sig_ay, float dt_sig, float sig_samp_freq, int data_N,
-                float *work_buffer);
+               float *work_buffer);
+
+      void load_ref (float *ax_in, float *ay_in,
+                     float dt_in, float samp_freq_in,
+                     float time_window_in, int N_window_in, int N_data_in);
 
       float get_corr_ax (void); // Return correlation in x
       float get_corr_ay (void); // Return correlation in y
@@ -32,6 +37,7 @@ class matchedfilter {
       /* Boolean cases to make sure values and such are set before calling certain routines */
 
       bool correlations_computed;
+      data_form ref_data_form;
 
       /* Cross correlation */
 
