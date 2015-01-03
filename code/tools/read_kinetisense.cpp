@@ -23,11 +23,12 @@ int kinIO::count_kinetisense_lines(
 
    int N_lines = 0;
 
+   // first line is a header
+   std::getline (kin_data, line);
+
    while (std::getline (kin_data, line)) N_lines++;
 
    kin_data.close();
-
-   N_lines -= 1; // first line is a header
 
    return N_lines;
 }

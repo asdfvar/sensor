@@ -4,7 +4,7 @@ CL = ar rcs
 
 LIB = libsens.a
 
-OBJ = fft.o read_kinetisense.o fileio.o
+OBJ = fft.o read_kinetisense.o fileio.o gettime.o
 
 all: $(OBJ)
 	$(CL) $(LIB) $(OBJ)
@@ -19,4 +19,7 @@ read_kinetisense.o: read_kinetisense.cpp
 	$(CPPC) $^ -c
 
 fileio.o: fileio.cpp
+	$(CPPC) $^ -c
+
+gettime.o: gettime.cpp
 	$(CPPC) $^ -c

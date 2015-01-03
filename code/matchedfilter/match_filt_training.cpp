@@ -1,23 +1,24 @@
 #include "matchedfilter.h"
 #include "fileio.h"
 #include "preproc.h"
+#include "gettime.h"
 #include <iostream>
 
-#define TIME_INC 4.0
+#define BINS 200.0
 
 void match_filt_training(
               matchedfilter *MF,
-              fio::kinIO *KIN,
-              float samp_freq,
-              float dt,
-              float time_window, /* Signal window time (seconds) */
-              int   N_window, /* Signal window points (elements) */
-              float time_window_ref, /* Reference length (seconds) */
-              int   N_window_ref, /* Reference length (# elements) */
-              int   sens_num) /* Which Kinetesense sensor */
+              fio::kinIO    *KIN,
+              float          samp_freq,
+              float          dt,
+              float          time_window,      /* Signal window time (seconds)    */
+              int            N_window,         /* Signal window points (elements) */
+              float          time_window_ref,  /* Reference length (seconds)      */
+              int            N_window_ref,     /* Reference length (# elements)   */
+              int            sens_num)         /* Which Kinetesense sensor        */
 {
 
- float time_inc = (KIN->get_total_time() - time_window) / 140.0;
+ float time_inc = (KIN->get_total_time() - time_window) / BINS;
 
  float start_time_ref  = 0.0;
  float best_start_time = start_time_ref;
@@ -38,8 +39,12 @@ void match_filt_training(
 
  float power;
 
+ gettime();
+
  while (KIN->valid_start_end (start_time_ref, time_window))
  {
+
+    /* load into reference */
 
     tmp = KIN->get_sens_ax (start_time_ref, sens_num);
     for (int k=0; k<N_window+2; k++) ax[k] = tmp[k];
@@ -62,7 +67,7 @@ void match_filt_training(
 
     MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
 
-    /* Loop through signal */
+    /* Loop through signal to test this loaded reference */
 
     start_time_sig = 0.0;
     sum_corr       = 0.0;
@@ -109,7 +114,7 @@ void match_filt_training(
     start_time_ref += time_inc;
  }
 
- /* get the best section of data to load into the reference */
+ /* load the best section into the reference */
 
  tmp = KIN->get_sens_ax (best_start_time, sens_num);
  for (int k=0; k<N_window+2; k++) ax[k] = tmp[k];
@@ -132,6 +137,7 @@ void match_filt_training(
 
  MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
 
+ std::cout << "Training time = " << gettime() << std::endl;
 
  delete ax;
  delete ay;

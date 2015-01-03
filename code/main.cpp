@@ -3,6 +3,7 @@
 #include "preproc.h"
 #include "matchedfilter.h"
 #include "match_filt_training.h"
+#include "gettime.h"
 
 #define TIME_INC 0.5
 
@@ -36,6 +37,11 @@ int main() {
    float *az = new float[N_window+2];   // Workspace for the signal in z
    float *data_ax, *data_ay, *data_az;
    float *work_buffer = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
+   float proc_time;
+
+   float ref_time = 1.5;    // reference time for training
+   int   N_ref_time = (int)(ref_time * samp_freq);
+   int   sens_training = 2; // sensor used for training
 
 #ifdef pc
    /* Get reference data */
@@ -44,7 +50,8 @@ int main() {
    matchedfilter MF2 (N_window);
 #endif
 
-   match_filt_training (&MF2, &KIN, samp_freq, dt, time_window, N_window, 1.5, 192, 2);
+   match_filt_training (&MF2, &KIN, samp_freq, dt, time_window,
+                        N_window, ref_time, N_ref_time, sens_training);
 
 /*
  * MAIN LOOP
@@ -85,12 +92,15 @@ int main() {
  * MATCHED FILTER
  */
 
+      gettime();
       MF2.run (ax, ay, dt, samp_freq, N_window, work_buffer);
+      proc_time = gettime();
 
 #if 1
       std::cout << "Signal power = " << power;
       std::cout << " Primary correlation = " << MF2.get_corr_ax();
-      std::cout << " Secondary correlation = " << MF2.get_corr_ay() << std::endl;
+      std::cout << " Secondary correlation = " << MF2.get_corr_ay();
+      std::cout << " Processing time = " << proc_time << std::endl;
 #endif
 
 //   neuralnetwork ( ... );

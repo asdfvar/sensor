@@ -1,4 +1,5 @@
 #include "fileio.h"
+#include <iostream>
 
 namespace fio {
  kinIO::kinIO (const char path[] )
@@ -37,6 +38,11 @@ namespace fio {
 
    if (sens_num == 1) return kin_data[0] + k;
    else if (sens_num == 2) return kin_data[6] + k;
+   else if (sens_num == 3) return kin_data[12] + k;
+   else {
+      std::cout << "Sensor number not supported" << std::endl;
+      return 0;
+   }
  }
 
 /******************************************************************/
@@ -47,6 +53,11 @@ namespace fio {
 
    if (sens_num == 1) return kin_data[1] + k;
    else if (sens_num == 2) return kin_data[7] + k;
+   else if (sens_num == 3) return kin_data[13] + k;
+   else {
+      std::cout << "Sensor number not supported" << std::endl;
+      return 0;
+   }
  }
 
 /******************************************************************/
@@ -57,6 +68,11 @@ namespace fio {
 
    if (sens_num == 1) return kin_data[2] + k;
    else if (sens_num == 2) return kin_data[8] + k;
+   else if (sens_num == 3) return kin_data[17] + k;
+   else {
+      std::cout << "Sensor number not supported" << std::endl;
+      return 0;
+   }
  }
 
 /******************************************************************/
