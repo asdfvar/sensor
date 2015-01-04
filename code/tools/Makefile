@@ -1,6 +1,7 @@
 CC = gcc
 CPPC = g++
 CL = ar rcs
+FLAGS = -O3 -Wall
 
 LIB = libsens.a
 
@@ -13,13 +14,13 @@ clean:
 	rm $(OBJ) $(LIB)
 
 fft.o: fft.c
-	$(CC) $^ -c
+	$(CC) $^ -c $(FLAGS)
 
 read_kinetisense.o: read_kinetisense.cpp
-	$(CPPC) $^ -c
+	$(CPPC) $^ -c $(FLAGS)
 
 fileio.o: fileio.cpp
-	$(CPPC) $^ -c
+	$(CPPC) $^ -c $(FLAGS)
 
 gettime.o: gettime.cpp
-	$(CPPC) $^ -c
+	$(CPPC) $^ -c $(FLAGS)

@@ -1,5 +1,6 @@
 CPPC = g++
 CL = ar rcs
+FLAGS = -O3 -Wall
 
 LIBEXE = libmatflt.a
 
@@ -23,10 +24,10 @@ clean:
 ## Create Objects
 
 matchedfilter.o: matchedfilter.cpp
-	$(CPPC) $^ -c $(INC)
+	$(CPPC) $^ -c $(INC) $(FLAGS)
 
 crosscorr.o: crosscorr.cpp
-	$(CPPC) $^ -c $(INC)
+	$(CPPC) $^ -c $(INC) $(FLAGS)
 
 match_filt_training.o: match_filt_training.cpp
-	$(CPPC) $^ -c $(INC)
+	$(CPPC) $^ -c $(INC) $(FLAGS)
