@@ -12,7 +12,7 @@ extern "C" {
 #include <cmath>
 #include <iostream>
 
-float matchedfilter::crosscorr(float *ref,
+float crosscorr(float *ref,
                                float *sig,
                                float norm_ref_in,
                                float *norm_sig2, /* buffer space */

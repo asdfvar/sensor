@@ -42,10 +42,10 @@ class matchedfilter {
       bool correlations_computed;
       data_form ref_data_form;
 
-      /* Cross correlation */
-
-      float crosscorr(float *ref, float *signal, float norm_ref, float *buffer,
-                      float dt, float samp_freq,
-                      int N_window_ref, int N_data, data_form ref_form);
-
 };
+
+/* Cross correlation */
+
+float crosscorr(float *ref, float *signal, float norm_ref, float *buffer,
+                float dt, float samp_freq,
+                int N_window_ref, int N_data, data_form ref_form);
