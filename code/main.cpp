@@ -14,12 +14,14 @@ extern "C" {
 int main() {
 
 #ifdef pc
-   const std::string kin_data_path = "../data/Craig_Walking_tredmil.csv";
-   const std::string ref_walking   = "../data/craig_walking_tredmil_reference_signals_1_5s.csv";
+   const std::string ref_walking = "../data/craig_walking_tredmil_reference_signals_1_5s.csv";
+   const std::string files       = "files";
+   std::string data_path;
+
+   read_file_paths (files.c_str(), 0, &data_path);
 
    /* Get kinetisense data */
-
-   fio::kinIO KIN( kin_data_path.c_str() );
+   fio::kinIO KIN( data_path.c_str() );
 #endif
 
 /*

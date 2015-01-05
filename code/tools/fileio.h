@@ -1,6 +1,8 @@
 #ifndef _FILEIO_H_
 #define _FILEIO_H_
 
+#include <string>
+
 namespace fio {
  class kinIO {
    public:
@@ -57,7 +59,7 @@ namespace fio {
           const int  N_lines); /* number of lines in the file */
 
       // Overloaded function of above
-      float **read_kinetisense( const char path[] );
+      float **read_kinetisense (const char path[]);
 
       // Number of lines of data in the kinetisense csv data file
       int N;
@@ -72,5 +74,7 @@ namespace fio {
       float **kin_data;
  };
 }
+
+int read_file_paths (const char path[], int n_line, std::string *filepath);
 
 #endif
