@@ -11,10 +11,10 @@ extern "C" {
 #include "fft.h"
 }
 
-int main() {
+int main(int argc, char *argv[]) {
 
 #ifdef pc
-   const std::string ref_walking = "../data/craig_walking_tredmil_reference_signals_1_5s.csv";
+   std::string ref_walking;// = "../data/craig_walking_tredmil_reference_signals_1_5s.csv";
    const std::string files       = "files";
    std::string data_path;
 
@@ -24,6 +24,8 @@ int main() {
    fio::kinIO KIN( data_path.c_str() );
 #endif
 
+std::cout << "argc = " << argc << " argv = " << argv[1] << std::endl;
+if (argc > 1) ref_walking = argv[1];
 /*
  * PROCESS DATA
  */
@@ -51,6 +53,10 @@ int main() {
    matchedfilter MF1 (ref_walking.c_str(), N_window );
    matchedfilter MF2 (N_window);
 #endif
+
+/*
+ * Train on any new data if any
+ */
 
    match_filt_training (&MF2, &KIN, samp_freq, dt, time_window,
                         N_window, ref_time, N_ref_time, sens_training);

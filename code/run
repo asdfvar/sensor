@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./main ../data/craig_walking_tredmil_reference_signals_1_5s.csv
