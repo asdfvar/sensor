@@ -75,6 +75,4 @@ namespace fio {
  };
 }
 
-int read_file_paths (const char path[], int n_line, std::string *filepath);
-
 #endif

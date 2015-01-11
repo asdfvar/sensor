@@ -13,23 +13,6 @@ extern "C" {
 
 int main(int argc, char *argv[]) {
 
-#ifdef pc
-   std::string ref_walking;// = "../data/craig_walking_tredmil_reference_signals_1_5s.csv";
-   const std::string files       = "files";
-   std::string data_path;
-
-   read_file_paths (files.c_str(), 0, &data_path);
-
-   /* Get kinetisense data */
-   fio::kinIO KIN( data_path.c_str() );
-#endif
-
-std::cout << "argc = " << argc << " argv = " << argv[1] << std::endl;
-if (argc > 1) ref_walking = argv[1];
-/*
- * PROCESS DATA
- */
-
    float power;
    float start_time  = 0.0;             // seconds from start
    float time_window = 4.0;             // seconds to analyze a signal
@@ -48,73 +31,71 @@ if (argc > 1) ref_walking = argv[1];
    int   sens_training = 2; // sensor used for training
 
 #ifdef pc
-   /* Get reference data */
+   const std::string reference = "reference";
+   const std::string data       = "data";
 
-   matchedfilter MF1 (ref_walking.c_str(), N_window );
-   matchedfilter MF2 (N_window);
-#endif
+   std::string ref_path  = argv[2];
+   std::string data_path = argv[3];
 
-/*
- * Train on any new data if any
- */
+   /* Setup Kinetisense data */
+   fio::kinIO KIN( data_path.c_str() );
 
-   match_filt_training (&MF2, &KIN, samp_freq, dt, time_window,
-                        N_window, ref_time, N_ref_time, sens_training);
+   if (argv[1] == reference) {
 
-/*
- * MAIN LOOP
- */
+      /* Setup reference data */
+      matchedfilter MF1 (N_window);
 
-#ifdef pc
-   while (KIN.valid_start_end (start_time, time_window))
-   {
-#endif
+      match_filt_training (&MF1, &KIN, samp_freq, dt, time_window,
+                           N_window, ref_time, N_ref_time, sens_training);
 
-#ifdef pc
-      data_ax = KIN.get_sens_ax (start_time, 2);
-      data_ay = KIN.get_sens_ay (start_time, 2);
-      data_az = KIN.get_sens_az (start_time, 2);
+   } else if (argv[1] == data ) {
 
-      for (int k=0; k<N_window+2; k++) {
-         ax[k] = data_ax[k];
-         ay[k] = data_ay[k];
-         az[k] = data_az[k];
-      }
-#endif
+      matchedfilter MF1 (ref_path.c_str(), N_window );
+
+      while (KIN.valid_start_end (start_time, time_window))
+      {
+
+         data_ax = KIN.get_sens_ax (start_time, 2);
+         data_ay = KIN.get_sens_ay (start_time, 2);
+         data_az = KIN.get_sens_az (start_time, 2);
+
+         for (int k=0; k<N_window+2; k++) {
+            ax[k] = data_ax[k];
+            ay[k] = data_ay[k];
+            az[k] = data_az[k];
+         }
 
 /*
  * PRE-PROCESSING
  */
 
-      preproc(
-          ax,            /* Acceleration data in x               */
-          ay,            /* Acceleration data in y               */
-          az,            /* Acceleration data in z               */
-          &power,        /* Resulting power of the signal        */
-          dt,            /* Delta time comstant                  */
-          time_window,   /* Time window of the data              */
-          samp_freq,     /* Sampling frequency of the data       */
-          N_window);     /* Number of sample points              */
+         preproc(
+             ax,            /* Acceleration data in x               */
+             ay,            /* Acceleration data in y               */
+             az,            /* Acceleration data in z               */
+             &power,        /* Resulting power of the signal        */
+             dt,            /* Delta time comstant                  */
+             time_window,   /* Time window of the data              */
+             samp_freq,     /* Sampling frequency of the data       */
+             N_window);     /* Number of sample points              */
 
 /*
  * MATCHED FILTER
  */
 
-      gettime();
-      MF2.run (ax, ay, dt, samp_freq, N_window, work_buffer);
-      proc_time = gettime();
+         gettime();
+         MF1.run (ax, ay, dt, samp_freq, N_window, work_buffer);
+         proc_time = gettime();
 
-#if 1
-      std::cout << "Signal power = " << power;
-      std::cout << " Primary correlation = " << MF2.get_corr_ax();
-      std::cout << " Secondary correlation = " << MF2.get_corr_ay();
-      std::cout << " Processing time = " << proc_time << std::endl;
-#endif
+         std::cout << "Signal power = " << power;
+         std::cout << " Primary correlation = " << MF1.get_corr_ax();
+         std::cout << " Secondary correlation = " << MF1.get_corr_ay();
+         std::cout << " Processing time = " << proc_time << std::endl;
 
 //   neuralnetwork ( ... );
 
-#ifdef pc
-      start_time += TIME_INC;
+         start_time += TIME_INC;
+      }
    }
 #endif
 
