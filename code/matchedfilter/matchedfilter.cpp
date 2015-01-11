@@ -246,6 +246,8 @@ bool matchedfilter::write (std::string ref_file)
    out_file << ref_ay[N_window_ref-1];
    out_file.close();
 
+   std::cout << "Written reference data to: " << ref_file << std::endl;
+
    return true;
 }
 
