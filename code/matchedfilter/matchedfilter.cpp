@@ -27,6 +27,7 @@ matchedfilter::matchedfilter (int N_data)
 
    correlations_computed = false;
    ref_data_form         = TIME;
+   activity_ID = "0";
 }
 
 /******************************************************************************/
@@ -71,10 +72,11 @@ void matchedfilter::load_ref (float *ax_in, float *ay_in,
 
 /******************************************************************************/
 
-matchedfilter::matchedfilter (const char path[], int N_data)
+matchedfilter::matchedfilter (const char path[], std::string activity_ID_in, int N_data)
 {
 
    N_data_ref = N_data;
+   activity_ID = activity_ID_in;
 
    ref_ax = new float[N_data_ref+2];
    for (int k=0; k<N_data_ref+2; k++) ref_ax[k] = 0.0;
@@ -161,6 +163,13 @@ matchedfilter::~matchedfilter (void)
 
 /******************************************************************************/
 
+void matchedfilter::set_ID(std::string activity_ID_in)
+{
+   activity_ID = activity_ID_in;
+}
+
+/******************************************************************************/
+
 int matchedfilter::run (float *sig_ax, float *sig_ay, float dt_sig, float samp_freq_sig, int N_sig,
                          float *work_buffer)
 {
@@ -188,6 +197,7 @@ int matchedfilter::run (float *sig_ax, float *sig_ay, float dt_sig, float samp_f
 
    correlations_computed = true;
 
+   return 1;
 }
 
 /******************************************************************************/
@@ -198,7 +208,7 @@ float matchedfilter::get_corr_ax (void)
       return corr_ax;
    } else {
       std::cout << "Error: Correlations not computed yet" << std::endl;
-      return -1;
+      return -1.0;
    }
 }
 
@@ -210,8 +220,33 @@ float matchedfilter::get_corr_ay (void)
       return corr_ay;
    } else {
       std::cout << "Error: Correlations not computed yet" << std::endl;
-      return -1;
+      return -1.0;
    }
+}
+
+/******************************************************************************/
+
+bool matchedfilter::write (std::string ref_file)
+{
+   if (ref_data_form == FREQ) {
+      ifft(ref_ax, N_data_ref);
+      ifft(ref_ay, N_data_ref);
+      ref_data_form         = TIME;
+   }
+
+   std::ofstream out_file;
+   out_file.open (ref_file.c_str());
+   out_file << "N = " << N_window_ref << "\n";
+   out_file << "frequency = " << samp_freq_ref << "\n";
+   out_file << "time = " << time_window_ref << "\n";
+   for (int k=0; k<N_window_ref-1; k++) out_file << ref_ax[k] << ",";
+   out_file << ref_ax[N_window_ref-1];
+   out_file << "\n";
+   for (int k=0; k<N_window_ref-1; k++) out_file << ref_ay[k] << ",";
+   out_file << ref_ay[N_window_ref-1];
+   out_file.close();
+
+   return true;
 }
 
 /******************************************************************************/

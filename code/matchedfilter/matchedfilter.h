@@ -1,3 +1,4 @@
+#include <string>
 enum data_form {TIME, FREQ};
 
 class matchedfilter {
@@ -5,7 +6,7 @@ class matchedfilter {
    public:
 
       matchedfilter  (int N_data);
-      matchedfilter  (const char path[], int N_data);
+      matchedfilter  (const char path[], std::string activity_ID, int N_data);
       ~matchedfilter (void);
 
       /* run the main matched filter program for this instance */
@@ -20,13 +21,19 @@ class matchedfilter {
       float get_corr_ax (void); // Return correlation in x
       float get_corr_ay (void); // Return correlation in y
 
+      void set_ID(std::string); // set the activity ID
+
+      bool write(std::string); // write the data to file
+
    private:
 
       int   N_data_ref;       // Number of data points allocated for the reference signal
-      int   N_window_ref;     // Number of sampling points that makes up the reference signal
+      int   N_window_ref;     // Number of sampling points of the reference signal <= N_data_ref
       float dt_ref;           // Delta time intervals between samples of the reference signal
       float samp_freq_ref;    // Sampling frequency of the reference signal
       float time_window_ref;  // Time window of data making up the reference signal
+
+      std::string activity_ID;// Compendium ID of the activity
 
       float *ref_ax;          // Reference in x (Primary direction)
       float *ref_ay;          // Reference in y (Secondary direction)

@@ -4,9 +4,16 @@ if [ ! -e main ]; then
    make
 fi
 
-#process=reference
-process=data
-ref_path=../data/craig_walking_tredmil_reference_signals_1_5s.csv
-data_path=../data/Craig_Walking_tredmil.csv
+ID=17190
 
-./main $process $ref_path $data_path
+process=reference
+data_path=../data/Craig_Walking_tredmil.csv
+ref_path=../data/ref_data$ID
+
+./main $process $ID $data_path $ref_path
+
+process=data
+data_path=../data/Craig_Walking_tredmil.csv
+ref_path=../data/ref_data$ID
+
+./main $process $ID $data_path $ref_path

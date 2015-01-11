@@ -9,6 +9,7 @@
 void match_filt_training(
               matchedfilter *MF,
               fio::kinIO    *KIN,
+              std::string    activity_ID,
               float          samp_freq,
               float          dt,
               float          time_window,      /* Signal window time (seconds)    */
@@ -138,6 +139,8 @@ void match_filt_training(
  MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
 
  std::cout << "Training time = " << gettime() << std::endl;
+
+ MF->set_ID(activity_ID);
 
  delete ax;
  delete ay;

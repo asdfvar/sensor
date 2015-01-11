@@ -34,8 +34,9 @@ int main(int argc, char *argv[]) {
    const std::string reference = "reference";
    const std::string data       = "data";
 
-   std::string ref_path  = argv[2];
    std::string data_path = argv[3];
+   std::string ref_path  = argv[4];
+   std::string activity_ID = argv[2];
 
    /* Setup Kinetisense data */
    fio::kinIO KIN( data_path.c_str() );
@@ -45,12 +46,16 @@ int main(int argc, char *argv[]) {
       /* Setup reference data */
       matchedfilter MF1 (N_window);
 
-      match_filt_training (&MF1, &KIN, samp_freq, dt, time_window,
+      /* Train on the data provided */
+      match_filt_training (&MF1, &KIN, activity_ID, samp_freq, dt, time_window,
                            N_window, ref_time, N_ref_time, sens_training);
+
+      /* Write the data to file */
+      MF1.write(ref_path);
 
    } else if (argv[1] == data ) {
 
-      matchedfilter MF1 (ref_path.c_str(), N_window );
+      matchedfilter MF1 (ref_path.c_str(), activity_ID, N_window );
 
       while (KIN.valid_start_end (start_time, time_window))
       {
