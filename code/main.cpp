@@ -3,6 +3,7 @@
 #include "preproc.h"
 #include "matchedfilter.h"
 #include "match_filt_training.h"
+#include "compendium.h"
 #include "gettime.h"
 
 #define TIME_INC 0.5
@@ -30,8 +31,10 @@ int main(int argc, char *argv[]) {
    int   N_ref_time = (int)(ref_time * samp_freq);
    int   sens_training = 2; // sensor used for training
 
+   activity act;
+
 #ifdef pc
-   const std::string reference = "reference";
+   const std::string training = "training";
    const std::string data       = "data";
 
    std::string data_path = argv[3];
@@ -41,9 +44,9 @@ int main(int argc, char *argv[]) {
    /* Setup Kinetisense data */
    fio::kinIO KIN( data_path.c_str() );
 
-   if (argv[1] == reference) {
+   if (argv[1] == training) {
 
-      /* Setup reference data */
+      /* Setup training data */
       matchedfilter MF1 (N_window);
 
       /* Train on the data provided */
@@ -98,6 +101,16 @@ int main(int argc, char *argv[]) {
          std::cout << " Processing time = " << proc_time << std::endl;
 
 //   neuralnetwork ( ... );
+
+/*
+ * ENERGY EXPENDITURE
+ */
+
+         if (MF1.get_corr_ax() > 0.95 && MF1.get_corr_ay() > 0.95) {
+         act = WALKING_LVL_MOD_FIRM;
+         }
+
+         std::cout << "Energy expenditure = " << power << std::endl;
 
          start_time += TIME_INC;
       }

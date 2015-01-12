@@ -4,16 +4,35 @@ if [ ! -e main ]; then
    make
 fi
 
-ID=17190
+case $1 in
+  demo)
+   ID=17190
 
-process=reference
-data_path=../data/Craig_Walking_tredmil.csv
-ref_path=../data/ref_data$ID
+   process=training
+   data_path=../data/Craig_Walking_tredmil.csv
+   ref_path=../data/ref_data$ID
 
-./main $process $ID $data_path $ref_path
+   ./main $process $ID $data_path $ref_path
 
-process=data
-data_path=../data/Craig_Walking_tredmil.csv
-ref_path=../data/ref_data$ID
+   process=data
+   data_path=../data/Craig_Walking_tredmil.csv
+   ref_path=../data/ref_data$ID
 
-./main $process $ID $data_path $ref_path
+   ./main $process $ID $data_path $ref_path
+   ;;
+
+  *)
+
+   ID=17190
+   process=training
+   data_path=../data/walking/2015-01-03-05-46-14.csv
+   ref_path=../data/ref_data$ID
+
+   ./main $process $ID $data_path $ref_path
+
+   process=data
+   data_path=../data/walking/2015-01-03-05-55-45.csv
+   ref_path=../data/ref_data$ID
+
+   ./main $process $ID $data_path $ref_path
+esac
