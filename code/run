@@ -1,38 +1,56 @@
 #!/bin/bash
 
-if [ ! -e main ]; then
+if [ ! -e sensor ]; then
    make
 fi
 
 case $1 in
+
   demo)
-   ID=17190
+
+   ID=17190 # Compendium ID for walking
 
    process=training
-   data_path=../data/Craig_Walking_tredmil.csv
+   data_path=../data/Phase_2/csv_format/Craig/Craig_Walking_tredmil.csv
+   corr_path=../data/corr$ID
    ref_path=../data/ref_data$ID
 
-   ./main $process $ID $data_path $ref_path
+   ./sensor $process $ID $data_path $corr_path $ref_path
 
    process=data
-   data_path=../data/Craig_Walking_tredmil.csv
+   data_path=../data/Phase_2/csv_format/Craig/Craig_Walking_tredmil.csv
+   corr_path=../data/corr$ID
    ref_path=../data/ref_data$ID
 
-   ./main $process $ID $data_path $ref_path
+   ./sensor $process $ID $data_path $corr_path $ref_path
+   ;;
+
+  special)
+
+   ID=_walking_to_walking
+   process=training
+   data_path=../data/Phase_2/csv_format/Craig/walking/2015-01-03-05-46-14.csv
+   corr_path=../data/corr$ID
+   ref_path=../data/ref_data$ID
+
+   ./sensor $process $ID $data_path $corr_path $ref_path
+
+   process=data
+   data_path=../data/Phase_2/csv_format/Craig/walking/2015-01-03-05-55-45.csv
+   corr_path=../data/corr$ID
+   ref_path=../data/ref_data$ID
+
+   ./sensor $process $ID $data_path $corr_path $ref_path
+
+   ID2=_walking_to_bicycling
+   process=data
+   data_path=../data/Phase_1/Craig_Bicycling_Kin.csv
+   corr_path=../data/corr$ID2
+   ref_path=../data/ref_data$ID
+
+   ./sensor $process $ID2 $data_path $corr_path $ref_path
    ;;
 
   *)
-
-   ID=17190
-   process=training
-   data_path=../data/walking/2015-01-03-05-46-14.csv
-   ref_path=../data/ref_data$ID
-
-   ./main $process $ID $data_path $ref_path
-
-   process=data
-   data_path=../data/walking/2015-01-03-05-55-45.csv
-   ref_path=../data/ref_data$ID
-
-   ./main $process $ID $data_path $ref_path
+   echo "no run case specified"
 esac

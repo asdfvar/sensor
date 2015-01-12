@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
    float ref_time = 1.5;    // reference time for training
    int   N_ref_time = (int)(ref_time * samp_freq);
    int   sens_training = 2; // sensor used for training
+   int index = 0;
 
    activity act;
 
@@ -38,11 +39,16 @@ int main(int argc, char *argv[]) {
    const std::string data       = "data";
 
    std::string data_path = argv[3];
-   std::string ref_path  = argv[4];
+   std::string corr_path = argv[4];
+   std::string ref_path  = argv[5];
    std::string activity_ID = argv[2];
 
    /* Setup Kinetisense data */
    fio::kinIO KIN( data_path.c_str() );
+   int size = KIN.get_total_time() / TIME_INC;
+
+   float *corr_ax = new float[size];
+   float *corr_ay = new float[size];
 
    if (argv[1] == training) {
 
@@ -95,10 +101,8 @@ int main(int argc, char *argv[]) {
          MF1.run (ax, ay, dt, samp_freq, N_window, work_buffer);
          proc_time = gettime();
 
-         std::cout << "Signal power = " << power;
-         std::cout << " Primary correlation = " << MF1.get_corr_ax();
-         std::cout << " Secondary correlation = " << MF1.get_corr_ay();
-         std::cout << " Processing time = " << proc_time << std::endl;
+         corr_ax[index] = MF1.get_corr_ax();
+         corr_ay[index] = MF1.get_corr_ay();
 
 //   neuralnetwork ( ... );
 
@@ -113,9 +117,19 @@ int main(int argc, char *argv[]) {
          std::cout << "Energy expenditure = " << power << std::endl;
 
          start_time += TIME_INC;
+         index++;
       }
    }
 #endif
+
+   fio::write_correlations(corr_path, corr_ax, corr_ay, index);
+
+   delete ax;
+   delete ay;
+   delete az;
+   delete corr_ax;
+   delete corr_ay;
+   delete work_buffer;
 
    return 0;
 }

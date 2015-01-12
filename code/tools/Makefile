@@ -5,7 +5,7 @@ FLAGS = -O3 -Wall
 
 LIB = libsens.a
 
-OBJ = fft.o read_kinetisense.o fileio.o gettime.o
+OBJ = fft.o read_kinetisense.o fileio.o gettime.o write_data.o
 
 all: $(OBJ)
 	$(CL) $(LIB) $(OBJ)
@@ -23,4 +23,7 @@ fileio.o: fileio.cpp
 	$(CPPC) $^ -c $(FLAGS)
 
 gettime.o: gettime.cpp
+	$(CPPC) $^ -c $(FLAGS)
+
+write_data.o: write_data.cpp
 	$(CPPC) $^ -c $(FLAGS)

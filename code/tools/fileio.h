@@ -73,6 +73,8 @@ namespace fio {
       // Pointers to the kinetisense data
       float **kin_data;
  };
+
+ void write_correlations(const std::string path, float *corr_ax, float *corr_ay, int N);
 }
 
 #endif

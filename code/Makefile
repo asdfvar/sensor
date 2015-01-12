@@ -18,7 +18,7 @@ MAIN_DIRECTIVE = -Dpc
 
 OBJ = main.o fft.o
 
-EXE = main
+EXE = sensor
 
 # BUILD ALL
 
