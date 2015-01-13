@@ -52,5 +52,7 @@ case $1 in
    ;;
 
   *)
-   echo "no run case specified"
+   echo "No run case specified"
+   echo "Try ./run demo"
+   echo "or  ./run special"
 esac
