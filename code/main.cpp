@@ -53,18 +53,23 @@ int main(int argc, char *argv[]) {
    if (argv[1] == training) {
 
       /* Setup training data */
-      matchedfilter MF1 (N_window);
+      matchedfilter MF (N_window);
 
       /* Train on the data provided */
-      match_filt_training (&MF1, &KIN, activity_ID, samp_freq, dt, time_window,
+      match_filt_training (&MF, &KIN, activity_ID, samp_freq, dt, time_window,
                            N_window, ref_time, N_ref_time, sens_training);
 
       /* Write the data to file */
-      MF1.write(ref_path);
+      MF.write(ref_path);
 
    } else if (argv[1] == data ) {
 
-      matchedfilter MF1 (ref_path.c_str(), activity_ID, N_window );
+      matchedfilter *MF;
+
+      mf_list MF_acts;
+      MF_acts.insert ( new matchedfilter (ref_path.c_str(), activity_ID, N_window) );
+
+      MF = MF_acts.get_MF();
 
       while (KIN.valid_start_end (start_time, time_window))
       {
@@ -98,11 +103,11 @@ int main(int argc, char *argv[]) {
  */
 
          gettime();
-         MF1.run (ax, ay, dt, samp_freq, N_window, work_buffer);
+         MF->run (ax, ay, dt, samp_freq, N_window, work_buffer);
          proc_time = gettime();
 
-         corr_ax[index] = MF1.get_corr_ax();
-         corr_ay[index] = MF1.get_corr_ay();
+         corr_ax[index] = MF->get_corr_ax();
+         corr_ay[index] = MF->get_corr_ay();
 
 //   neuralnetwork ( ... );
 
@@ -110,8 +115,8 @@ int main(int argc, char *argv[]) {
  * ENERGY EXPENDITURE
  */
 
-         if (MF1.get_corr_ax() > 0.95 && MF1.get_corr_ay() > 0.95) {
-         act = WALKING_LVL_MOD_FIRM;
+         if (MF->get_corr_ax() > 0.95 && MF->get_corr_ay() > 0.95) {
+            act = WALKING_LVL_MOD_FIRM;
          }
 
          std::cout << "Energy expenditure = " << power << std::endl;

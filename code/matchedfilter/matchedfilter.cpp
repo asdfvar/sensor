@@ -252,3 +252,153 @@ bool matchedfilter::write (std::string ref_file)
 }
 
 /******************************************************************************/
+
+node::node ( matchedfilter *MF_in ) {
+   MF   = MF_in;
+   prev = 0;
+   next = 0;
+}
+
+
+/******************************************************************************/
+
+node::~node (void) {
+   delete MF;
+}
+
+/******************************************************************************/
+
+mf_list::mf_list (void) {
+   N     = 0;
+   first = last = NODE;
+}
+
+/******************************************************************************/
+/*
+ *               current
+ *                  |
+ *                  |
+ *                  v
+ *      <-> N-1 <-> N     N+1 <->
+ *                  ^      ^
+ *                  |      |
+ *                  |      |
+ *                  N'-----+
+ */
+
+void mf_list::insert (matchedfilter *MF) {
+
+   if (N == 0) {
+      NODE = new node (MF);
+      first = last = NODE;
+      NODE->prev   = 0;
+      NODE->next   = 0;
+   } else {
+      node *CURR = NODE;
+      if (CURR == first) {
+         NODE = new node (MF);
+         CURR->prev = NODE;
+         NODE->next = CURR;
+         NODE->prev = 0;
+      } else {
+         NODE = new node (MF);
+         NODE->next = CURR;
+         NODE->prev = CURR->prev;
+         CURR->prev = NODE;
+      }
+   }
+
+   N++;
+}
+
+/******************************************************************************/
+
+node *mf_list::pop (void) {
+
+   node *CURR = NODE;
+   if (NODE == first) {
+      NODE = CURR->next;
+      first = NODE;
+      if (NODE != 0) NODE->prev = CURR->prev;
+   } else if (NODE == last) {
+      NODE = CURR->prev;
+      NODE->next = CURR->next;
+   } else {
+      NODE = CURR->next;
+      NODE->prev = CURR->prev;
+      CURR->prev->next = NODE;
+   }
+
+   if (N>0) {
+      std::cout << "Removing activity from the list"
+                << std::endl;
+      N--;
+   } else {
+      std::cout << "No activities to remove" << std::endl;
+   }
+
+   return CURR;
+}
+
+/******************************************************************************/
+
+void mf_list::goto_next (void) {
+   if (NODE != last) NODE = NODE->next;
+   else std::cout << "Attempting to advance to the next "
+                  << "matched filter but already on the last one"
+                  << std::endl;
+}
+
+/******************************************************************************/
+
+bool mf_list::is_last (void) {
+   if (NODE == last) return true;
+   else return false;
+}
+
+/******************************************************************************/
+
+void mf_list::goto_prev (void) {
+   if (NODE != first) NODE = NODE->prev;
+   else std::cout << "Attempting to go to the previous "
+                  << "matched filter but already on the first one"
+                  << std::endl;
+}
+
+/******************************************************************************/
+
+void mf_list::goto_first (void) {
+   NODE = first;
+}
+
+/******************************************************************************/
+
+void mf_list::goto_last (void) {
+   NODE = last;
+}
+
+/******************************************************************************/
+
+void mf_list::append (matchedfilter *MF) {
+   if (N == 0) insert (MF);
+   else {
+      node *NEWNODE = new node (MF);
+      last->next = NEWNODE;
+      NEWNODE->prev = last;
+      last = NEWNODE;
+      N++;
+   }
+}
+
+/******************************************************************************/
+
+mf_list::~mf_list (void) {
+   std::cout << "Cleaning up the list of activities" << std::endl;
+   while (N>0) delete pop();
+}
+
+/******************************************************************************/
+
+matchedfilter *mf_list::get_MF (void) {
+   return NODE->MF;
+}

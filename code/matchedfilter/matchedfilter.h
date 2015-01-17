@@ -56,3 +56,47 @@ class matchedfilter {
 float crosscorr(float *ref, float *signal, float norm_ref, float *buffer,
                 float dt, float samp_freq,
                 int N_window_ref, int N_data, data_form ref_form);
+
+/******************************/
+
+class node {
+
+   public:
+
+      node( matchedfilter* );
+      ~node (void);
+
+      matchedfilter *MF;
+
+      node *prev;
+      node *next;
+};
+
+/******************************/
+
+class mf_list {
+
+   public:
+
+      mf_list(void);
+      ~mf_list(void);
+
+      void insert (matchedfilter*);
+      node *pop (void);
+      void goto_next(void);
+      void goto_last(void);
+      bool is_last (void);
+      void goto_prev(void);
+      void goto_first(void);
+      void append (matchedfilter*);
+      matchedfilter *get_MF (void);
+
+   private:
+
+      int  N;
+
+      node *first;
+      node *NODE;
+      node *last;
+
+};
