@@ -9,46 +9,50 @@ case $1 in
   demo)
 
    ID=17190 # Compendium ID for walking
-
    process=training
    data_path=../data/Phase_2/csv_format/Craig/Craig_Walking_tredmil.csv
-   corr_path=../data/corr$ID
-   ref_path=../data/ref_data$ID
+   ref_path=../data/ref_data
+   N=1
 
-   ./sensor $process $ID $data_path $corr_path $ref_path
+   ./sensor $process $ID $data_path $data_path $N $ref_path
 
    process=data
    data_path=../data/Phase_2/csv_format/Craig/Craig_Walking_tredmil.csv
-   corr_path=../data/corr$ID
-   ref_path=../data/ref_data$ID
+   corr_path=../data/corr
+   ref_path=../data/ref_data17190
+   N=1
 
-   ./sensor $process $ID $data_path $corr_path $ref_path
+   ./sensor $process $ID $data_path $data_path $N $ref_path
    ;;
 
   special)
 
-   ID=_walking_to_walking
+   ID=17190
    process=training
    data_path=../data/Phase_2/csv_format/Craig/walking/2015-01-03-05-46-14.csv
-   corr_path=../data/corr$ID
-   ref_path=../data/ref_data$ID
+   corr_path=../data/corr
+   ref_path=../data/ref_data
+   N=1
 
-   ./sensor $process $ID $data_path $corr_path $ref_path
+   ./sensor $process $ID $data_path $data_path $N $ref_path
+
+   ID=01015
+   process=training
+   data_path=../data/Phase_1/Craig_Bicycling_Kin.csv
+   corr_path=../data/corr
+   ref_path=../data/ref_data
+   N=1
+
+   ./sensor $process $ID $data_path $data_path $N $ref_path
 
    process=data
    data_path=../data/Phase_2/csv_format/Craig/walking/2015-01-03-05-55-45.csv
-   corr_path=../data/corr$ID
-   ref_path=../data/ref_data$ID
+   corr_path=../data/corr
+   ref_path1=../data/ref_data17190
+   ref_path2=../data/ref_data1015
+   N=2
 
-   ./sensor $process $ID $data_path $corr_path $ref_path
-
-   ID2=_walking_to_bicycling
-   process=data
-   data_path=../data/Phase_1/Craig_Bicycling_Kin.csv
-   corr_path=../data/corr$ID2
-   ref_path=../data/ref_data$ID
-
-   ./sensor $process $ID2 $data_path $corr_path $ref_path
+   ./sensor $process $ID $data_path $corr_path $N $ref_path1 $ref_path2
    ;;
 
   *)

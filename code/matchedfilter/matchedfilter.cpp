@@ -8,11 +8,11 @@ extern "C" {
 #include "fft.h"
 }
 
-#define N_headers 3
+#define N_headers 4
 
 /******************************************************************************/
 
-matchedfilter::matchedfilter (int N_data)
+matchedfilter::matchedfilter (int N_data, int activity_ID_in)
 {
 
    N_data_ref = N_data;
@@ -27,7 +27,7 @@ matchedfilter::matchedfilter (int N_data)
 
    correlations_computed = false;
    ref_data_form         = TIME;
-   activity_ID = "0";
+   activity_ID = activity_ID_in;
 }
 
 /******************************************************************************/
@@ -72,11 +72,10 @@ void matchedfilter::load_ref (float *ax_in, float *ay_in,
 
 /******************************************************************************/
 
-matchedfilter::matchedfilter (const char path[], std::string activity_ID_in, int N_data)
+matchedfilter::matchedfilter (const char path[], int N_data)
 {
 
    N_data_ref = N_data;
-   activity_ID = activity_ID_in;
 
    ref_ax = new float[N_data_ref+2];
    for (int k=0; k<N_data_ref+2; k++) ref_ax[k] = 0.0;
@@ -100,9 +99,10 @@ matchedfilter::matchedfilter (const char path[], std::string activity_ID_in, int
       name = line.substr(0, line.find(delimiter));
       value = line.substr(line.find(delimiter)+1, line.length() );
 
-      if (name.compare("N ") == 0)              N_window_ref    = atoi(value.c_str());
-      else if (name.compare("frequency ") == 0) samp_freq_ref   = atof(value.c_str());
-      else if (name.compare("time ") == 0)      time_window_ref = atof(value.c_str());
+      if (name.compare("N") == 0)              N_window_ref    = atoi(value.c_str());
+      else if (name.compare("frequency") == 0) samp_freq_ref   = atof(value.c_str());
+      else if (name.compare("time") == 0)      time_window_ref = atof(value.c_str());
+      else if (name.compare("ID") == 0)        activity_ID     = atoi(value.c_str());
    }
 
    dt_ref = 1.0 / samp_freq_ref;
@@ -163,7 +163,7 @@ matchedfilter::~matchedfilter (void)
 
 /******************************************************************************/
 
-void matchedfilter::set_ID(std::string activity_ID_in)
+void matchedfilter::set_ID(int activity_ID_in)
 {
    activity_ID = activity_ID_in;
 }
@@ -234,11 +234,14 @@ bool matchedfilter::write (std::string ref_file)
       ref_data_form         = TIME;
    }
 
+   ref_file += std::to_string(activity_ID);
+
    std::ofstream out_file;
    out_file.open (ref_file.c_str());
-   out_file << "N = " << N_window_ref << "\n";
-   out_file << "frequency = " << samp_freq_ref << "\n";
-   out_file << "time = " << time_window_ref << "\n";
+   out_file << "N=" << N_window_ref << "\n";
+   out_file << "frequency=" << samp_freq_ref << "\n";
+   out_file << "time=" << time_window_ref << "\n";
+   out_file << "ID=" << activity_ID << "\n";
    for (int k=0; k<N_window_ref-1; k++) out_file << ref_ax[k] << ",";
    out_file << ref_ax[N_window_ref-1];
    out_file << "\n";
@@ -255,6 +258,8 @@ bool matchedfilter::write (std::string ref_file)
 
 void matchedfilter::write_corr(std::string corr_file, bool init)
 {
+   
+   corr_file += std::to_string(activity_ID);
    std::ofstream out_file;
    if (init) out_file.open (corr_file.c_str());
    else      out_file.open (corr_file.c_str(), std::ios::app);
@@ -374,9 +379,6 @@ node *mf_list::pop (void) {
 
 void mf_list::goto_next (void) {
    if (NODE != last) NODE = NODE->next;
-   else std::cout << "Attempting to advance to the next "
-                  << "matched filter but already on the last one"
-                  << std::endl;
 }
 
 /******************************************************************************/
@@ -390,9 +392,6 @@ bool mf_list::is_last (void) {
 
 void mf_list::goto_prev (void) {
    if (NODE != first) NODE = NODE->prev;
-   else std::cout << "Attempting to go to the previous "
-                  << "matched filter but already on the first one"
-                  << std::endl;
 }
 
 /******************************************************************************/
@@ -432,3 +431,11 @@ mf_list::~mf_list (void) {
 matchedfilter *mf_list::get_MF (void) {
    return NODE->MF;
 }
+
+/******************************************************************************/
+
+int mf_list::get_N (void) {
+   return N;
+}
+
+/******************************************************************************/

@@ -24,7 +24,7 @@ clean:
 ## Create Objects
 
 matchedfilter.o: matchedfilter.cpp
-	$(CPPC) $^ -c $(INC) $(FLAGS)
+	$(CPPC) $^ -c -std=c++0x $(INC) $(FLAGS)
 
 crosscorr.o: crosscorr.cpp
 	$(CPPC) $^ -c $(INC) $(FLAGS)
