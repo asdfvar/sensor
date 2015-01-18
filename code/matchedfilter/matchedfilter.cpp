@@ -253,6 +253,36 @@ bool matchedfilter::write (std::string ref_file)
 
 /******************************************************************************/
 
+void matchedfilter::write_corr(std::string corr_file, bool init)
+{
+   std::ofstream out_file;
+   if (init) out_file.open (corr_file.c_str());
+   else      out_file.open (corr_file.c_str(), std::ios::app);
+   out_file << corr_ax << "," << corr_ay << "\n";
+   out_file.close();
+   
+}
+
+/******************************************************************************/
+
+void matchedfilter::print_all (void)
+{
+   std::cout << "N_data_ref = " <<  N_data_ref << std::endl;
+   std::cout << "N_window_ref = " << N_window_ref << std::endl;
+   std::cout << "dt_ref = " << dt_ref << std::endl;
+   std::cout << "samp_freq_ref = " << samp_freq_ref << std::endl;
+   std::cout << "time_window_ref = " << time_window_ref << std::endl;
+   std::cout << "activity_ID = " << activity_ID << std::endl;
+   std::cout << "ref_ax = " << *ref_ax << std::endl;
+   std::cout << "ref_ay = " << *ref_ay << std::endl;
+   std::cout << "nor_ref_ax = " << norm_ref_ax << std::endl;
+   std::cout << "norm_ref_ay = " << norm_ref_ay << std::endl;
+   std::cout << "corr_ax = " << corr_ax << std::endl;
+   std::cout << "corr_ay = " << corr_ay << std::endl;
+}
+
+/******************************************************************************/
+
 node::node ( matchedfilter *MF_in ) {
    MF   = MF_in;
    prev = 0;
