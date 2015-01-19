@@ -51,6 +51,10 @@ int main(int argc, char *argv[]) {
    /* Setup Kinetisense data */
    fio::kinIO KIN( data_path.c_str() );
 
+   /*****************
+    * Training Mode *
+    *****************/
+
    if (mode == training) {
 
       /* Setup training data */
@@ -62,6 +66,10 @@ int main(int argc, char *argv[]) {
 
       /* Write the data to file */
       MF.write(ref_path);
+
+   /************************
+    * Data processing Mode *
+    ************************/
 
    } else if (mode == data ) {
 
