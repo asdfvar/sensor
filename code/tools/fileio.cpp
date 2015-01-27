@@ -1,5 +1,6 @@
 #include "fileio.h"
 #include <iostream>
+#include <fstream>
 
 namespace fio {
  kinIO::kinIO (const char path[] )
@@ -83,4 +84,43 @@ namespace fio {
  }
 
 /******************************************************************/
+
+ void write_val(float val, std::string out_file_path)
+ {
+
+   static bool init = true;
+
+   std::ofstream out_file;
+   if (init) {
+      out_file.open (out_file_path.c_str());
+      init = false;
+   } else {
+      out_file.open (out_file_path.c_str(), std::ios::app);
+   }
+   out_file << val << "\n";
+   out_file.close();
+
+ }
+
+/******************************************************************/
+
+ void write_val(int val, std::string out_file_path)
+ {
+
+   static bool init = true;
+
+   std::ofstream out_file;
+   if (init) {
+      out_file.open (out_file_path.c_str());
+      init = false;
+   } else {
+      out_file.open (out_file_path.c_str(), std::ios::app);
+   }
+   out_file << val << "\n";
+   out_file.close();
+
+ }
+
+/******************************************************************/
+
 }

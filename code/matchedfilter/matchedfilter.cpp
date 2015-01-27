@@ -256,13 +256,18 @@ bool matchedfilter::write (std::string ref_file)
 
 /******************************************************************************/
 
-void matchedfilter::write_corr(std::string corr_file, bool init)
+void matchedfilter::write_corr(std::string corr_file)
 {
    
+   static bool init = true;
    corr_file += std::to_string(activity_ID);
    std::ofstream out_file;
-   if (init) out_file.open (corr_file.c_str());
-   else      out_file.open (corr_file.c_str(), std::ios::app);
+   if (init) {
+      out_file.open (corr_file.c_str());
+      init = false;
+   } else {
+      out_file.open (corr_file.c_str(), std::ios::app);
+   }
    out_file << corr_ax << "," << corr_ay << "\n";
    out_file.close();
    

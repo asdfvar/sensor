@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
    int   N_ref_time = (int)(ref_time * samp_freq);
    int   sens_training = 2; // sensor used for training
    int itt = 0;
-   std::string tmp = argv[5];
+   std::string tmp = argv[4];
    int N_references = atoi(tmp.c_str());
 
    activity act;
@@ -44,9 +44,10 @@ int main(int argc, char *argv[]) {
 
    std::string mode        = argv[1];
    std::string data_path   = argv[3];
-   std::string corr_path   = argv[4];
-   std::string ref_path    = argv[6];
+   std::string ref_path    = argv[5];
    std::string activity_ID = argv[2];
+
+   std::string corr_file   = "output/correlations";
 
    /* Setup Kinetisense data */
    fio::kinIO KIN( data_path.c_str() );
@@ -78,11 +79,11 @@ int main(int argc, char *argv[]) {
       mf_list MF_activities;
 
       for (int i_ref=0; i_ref<N_references; i_ref++) {
-         ref_path = argv[i_ref+6];
+         ref_path = argv[i_ref+5];
          MF_activities.append ( new matchedfilter (ref_path.c_str(), N_window) );
       }
 
-      for (itt=0; KIN.valid_start_end (start_time, time_window); itt++)
+      for (itt=0; KIN.valid_start_end (start_time, time_window); itt++, start_time += TIME_INC)
       {
 
          data_ax = KIN.get_sens_ax (start_time, 2);
@@ -114,17 +115,14 @@ int main(int argc, char *argv[]) {
  */
 
          // Loop through the activities
-         for (int k=0; k<MF_activities.get_N(); k++) {
+         for (int k=0; k<MF_activities.get_N(); k++, MF_activities.goto_next()) {
             MF = MF_activities.get_MF();
 
             gettime();
             MF->run (ax, ay, dt, samp_freq, N_window, work_buffer);
             proc_time = gettime();
 
-            if (itt == 0) MF->write_corr(corr_path, true);
-            else          MF->write_corr(corr_path, false);
-
-            MF_activities.goto_next();
+            MF->write_corr (corr_file);
          }
          MF_activities.goto_first();
 
@@ -138,7 +136,10 @@ int main(int argc, char *argv[]) {
             act = WALKING_LVL_MOD_FIRM;
          }
 
-         start_time += TIME_INC;
+         fio::write_val (power, "output/power");
+         fio::write_val (act,   "output/activity");
+         fio::write_val (power, "output/energy");
+
       }
    }
 #endif

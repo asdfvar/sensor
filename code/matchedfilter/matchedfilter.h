@@ -24,7 +24,7 @@ class matchedfilter {
       void set_ID(int); // set the activity ID
 
       bool write(std::string); // write the data to file
-      void write_corr (std::string file, bool init);
+      void write_corr (std::string file);
       void print_all (void);
 
    private:
