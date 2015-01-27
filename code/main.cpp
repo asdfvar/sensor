@@ -83,6 +83,8 @@ int main(int argc, char *argv[]) {
          MF_activities.append ( new matchedfilter (ref_path.c_str(), N_window) );
       }
 
+      float ave_preproc_time = 0.0f;
+
       for (itt=0; KIN.valid_start_end (start_time, time_window); itt++, start_time += TIME_INC)
       {
 
@@ -100,6 +102,7 @@ int main(int argc, char *argv[]) {
  * PRE-PROCESSING
  */
 
+         gettime();
          preproc(
              ax,            /* Acceleration data in x               */
              ay,            /* Acceleration data in y               */
@@ -109,6 +112,8 @@ int main(int argc, char *argv[]) {
              time_window,   /* Time window of the data              */
              samp_freq,     /* Sampling frequency of the data       */
              N_window);     /* Number of sample points              */
+         proc_time = gettime();
+         ave_preproc_time += proc_time;
 
 /*
  * MATCHED FILTER
@@ -141,6 +146,9 @@ int main(int argc, char *argv[]) {
          fio::write_val (power, "output/energy");
 
       }
+
+      ave_preproc_time /= (float) itt;
+      std::cout << "average pre-processing time = " << ave_preproc_time << std::endl;
    }
 #endif
 
