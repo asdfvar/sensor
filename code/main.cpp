@@ -7,6 +7,7 @@
 #include "match_filt_training.h"
 #include "compendium.h"
 #include "gettime.h"
+#include "taper.h"
 
 #define TIME_INC 0.5
 
@@ -16,15 +17,17 @@ extern "C" {
 
 int main(int argc, char *argv[]) {
 
+#ifdef pc
    float power;
    float start_time  = 0.0;             // seconds from start
    float time_window = 4.0;             // seconds to analyze a signal
    float samp_freq   = 128.0;           // Hz
    float dt          = 1.0 / samp_freq; // seconds
    int   N_window    = (int) (samp_freq * time_window); // Number of data points of the signal
-   float *ax = new float[N_window+2];   // Workspace for the signal in x
-   float *ay = new float[N_window+2];   // Workspace for the signal in y
-   float *az = new float[N_window+2];   // Workspace for the signal in z
+   float *ax    = new float[N_window+2];   // Workspace for the signal in x
+   float *ay    = new float[N_window+2];   // Workspace for the signal in y
+   float *az    = new float[N_window+2];   // Workspace for the signal in z
+   float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
    float *data_ax, *data_ay, *data_az;
    float *work_buffer = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
    float proc_time;
@@ -37,8 +40,17 @@ int main(int argc, char *argv[]) {
    int N_references = atoi(tmp.c_str());
 
    activity act;
+   float cutoff_freq = 40.0; // Hz
+   float freq_range  = 4.0;  // Hz
 
-#ifdef pc
+   taper_f(taper,
+           time_window,
+           cutoff_freq,
+           freq_range,
+           samp_freq,
+           dt,
+           N_window);
+
    const std::string training = "training";
    const std::string data     = "data";
 
@@ -62,7 +74,7 @@ int main(int argc, char *argv[]) {
       matchedfilter MF (N_window, atoi(activity_ID.c_str()));
 
       /* Train on the data provided */
-      match_filt_training (&MF, &KIN, samp_freq, dt, time_window,
+      match_filt_training (&MF, &KIN, taper, samp_freq, dt, time_window,
                            N_window, ref_time, N_ref_time, sens_training);
 
       /* Write the data to file */
@@ -75,7 +87,6 @@ int main(int argc, char *argv[]) {
    } else if (mode == data ) {
 
       matchedfilter *MF;
-
       mf_list MF_activities;
 
       for (int i_ref=0; i_ref<N_references; i_ref++) {
@@ -84,6 +95,7 @@ int main(int argc, char *argv[]) {
       }
 
       float ave_preproc_time = 0.0f;
+      bool initial_write = true;
 
       for (itt=0; KIN.valid_start_end (start_time, time_window); itt++, start_time += TIME_INC)
       {
@@ -124,7 +136,7 @@ int main(int argc, char *argv[]) {
             MF = MF_activities.get_MF();
 
             gettime();
-            MF->run (ax, ay, dt, samp_freq, N_window, work_buffer);
+            MF->run (ax, ay, dt, samp_freq, N_window, taper, work_buffer);
             proc_time = gettime();
 
             MF->write_corr (corr_file);
@@ -141,9 +153,10 @@ int main(int argc, char *argv[]) {
             act = WALKING_LVL_MOD_FIRM;
          }
 
-         fio::write_val (power, "output/power");
-         fio::write_val (act,   "output/activity");
-         fio::write_val (power, "output/energy");
+         fio::write_val (power, "output/power",    initial_write);
+         fio::write_val (act,   "output/activity", initial_write);
+         fio::write_val (power, "output/energy",   initial_write);
+         initial_write = false;
 
       }
 

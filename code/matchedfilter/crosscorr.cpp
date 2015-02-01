@@ -12,13 +12,15 @@ extern "C" {
 #include <cmath>
 #include <iostream>
 
-float crosscorr(float *ref,
-                               float *sig,
-                               float norm_ref_in,
-                               float *norm_sig2, /* buffer space */
-                               float dt, float samp_freq,
-                               int N_window_ref, int N_data,
-                               data_form ref_form)
+float crosscorr(
+            float *ref,
+            float *sig,
+            float norm_ref_in,
+            float *taper,
+            float *norm_sig2, /* buffer space */
+            float dt, float samp_freq,
+            int N_window_ref, int N_data,
+            data_form ref_form)
 {
 
    float tmp;
@@ -48,6 +50,11 @@ float crosscorr(float *ref,
       tmp = ref[k]*sig[k] + ref[k+1]*sig[k+1];
       sig[k+1] = ref[k]*sig[k+1] - ref[k+1]*sig[k];
       sig[k] = tmp;
+   }
+
+   /* Apply the taper to remove higher frequencies */
+   for (k = 0; k < N_data+2; k++) {
+      sig[k] *= taper[k];
    }
 
    /* At this point, sig represents the cross correlation squared between

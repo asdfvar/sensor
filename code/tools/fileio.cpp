@@ -85,34 +85,30 @@ namespace fio {
 
 /******************************************************************/
 
- void write_val(float val, std::string out_file_path)
+ void write_val(float val, std::string out_file_path, bool init)
  {
-
-   static bool init = true;
 
    std::ofstream out_file;
    if (init) {
       out_file.open (out_file_path.c_str());
-      init = false;
+      std::cout << "Writing data to " << out_file_path << std::endl;
    } else {
       out_file.open (out_file_path.c_str(), std::ios::app);
    }
    out_file << val << "\n";
    out_file.close();
 
+
  }
 
 /******************************************************************/
 
- void write_val(int val, std::string out_file_path)
+ void write_val(int val, std::string out_file_path, bool init)
  {
-
-   static bool init = true;
 
    std::ofstream out_file;
    if (init) {
       out_file.open (out_file_path.c_str());
-      init = false;
    } else {
       out_file.open (out_file_path.c_str(), std::ios::app);
    }

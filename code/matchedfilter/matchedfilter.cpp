@@ -170,8 +170,14 @@ void matchedfilter::set_ID(int activity_ID_in)
 
 /******************************************************************************/
 
-int matchedfilter::run (float *sig_ax, float *sig_ay, float dt_sig, float samp_freq_sig, int N_sig,
-                         float *work_buffer)
+int matchedfilter::run (
+           float *sig_ax,
+           float *sig_ay,
+           float dt_sig,
+           float samp_freq_sig,
+           int N_sig,
+           float *taper,
+           float *work_buffer)
 {
 
    if (dt_sig != dt_ref) {
@@ -189,10 +195,10 @@ int matchedfilter::run (float *sig_ax, float *sig_ay, float dt_sig, float samp_f
       return -1;
    }
 
-   corr_ax = crosscorr(ref_ax, sig_ax, norm_ref_ax, work_buffer, dt_sig, samp_freq_sig,
+   corr_ax = crosscorr(ref_ax, sig_ax, norm_ref_ax, taper, work_buffer, dt_sig, samp_freq_sig,
                         N_window_ref, N_sig, FREQ);
 
-   corr_ay = crosscorr(ref_ay, sig_ay, norm_ref_ay, work_buffer, dt_sig, samp_freq_sig,
+   corr_ay = crosscorr(ref_ay, sig_ay, norm_ref_ay, taper, work_buffer, dt_sig, samp_freq_sig,
                         N_window_ref, N_sig, FREQ);
 
    correlations_computed = true;

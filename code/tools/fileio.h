@@ -76,8 +76,8 @@ namespace fio {
 
  void write_correlations(const std::string path, float *corr_ax, float *corr_ay, int N);
 
- void write_val(int val, std::string power_file);
- void write_val(float val, std::string power_file);
+ void write_val(int val,   std::string power_file, bool init);
+ void write_val(float val, std::string power_file, bool init);
 }
 
 #endif

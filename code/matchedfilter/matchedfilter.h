@@ -11,7 +11,8 @@ class matchedfilter {
 
       /* run the main matched filter program for this instance */
 
-      int run (float *sig_ax, float *sig_ay, float dt_sig, float sig_samp_freq, int data_N,
+      int run (float *sig_ax, float *sig_ay, float dt_sig,
+               float sig_samp_freq, int data_N, float *taper,
                float *work_buffer);
 
       void load_ref (float *ax_in, float *ay_in,
@@ -55,7 +56,7 @@ class matchedfilter {
 
 /* Cross correlation */
 
-float crosscorr(float *ref, float *signal, float norm_ref, float *buffer,
+float crosscorr(float *ref, float *signal, float norm_ref, float *taper, float *buffer,
                 float dt, float samp_freq,
                 int N_window_ref, int N_data, data_form ref_form);
 
