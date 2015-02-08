@@ -153,9 +153,9 @@ int main(int argc, char *argv[]) {
             act = WALKING_LVL_MOD_FIRM;
          }
 
-         fio::write_val (power, "output/power" + tag,    activity_ID, initial_write);
-         fio::write_val (act,   "output/activity" + tag, activity_ID, initial_write);
-         fio::write_val (power, "output/energy" + tag,   activity_ID, initial_write);
+         fio::write_val (power, "output/power" + tag,    initial_write);
+         fio::write_val (act,   "output/activity" + tag, initial_write);
+         fio::write_val (power, "output/energy" + tag,   initial_write);
          initial_write = false;
 
       }
