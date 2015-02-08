@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
    float *ay    = new float[N_window+2];   // Workspace for the signal in y
    float *az    = new float[N_window+2];   // Workspace for the signal in z
    float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
+   bool  apply_taper = true;
    float *data_ax, *data_ay, *data_az;
    float *work_buffer = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
    float proc_time;
@@ -36,12 +37,12 @@ int main(int argc, char *argv[]) {
    int   N_ref_time = (int)(ref_time * samp_freq);
    int   sens_training = 2; // sensor used for training
    int itt = 0;
-   std::string tmp = argv[4];
+   std::string tmp = argv[5];
    int N_references = atoi(tmp.c_str());
 
    activity act;
    float cutoff_freq = 40.0; // Hz
-   float freq_range  = 4.0;  // Hz
+   float freq_range  = 0.0;  // Hz
 
    taper_f(taper,
            time_window,
@@ -55,11 +56,10 @@ int main(int argc, char *argv[]) {
    const std::string data     = "data";
 
    std::string mode        = argv[1];
-   std::string data_path   = argv[3];
-   std::string ref_path    = argv[5];
-   std::string activity_ID = argv[2];
-
-   std::string corr_file   = "output/correlations";
+   std::string data_path   = argv[4];
+   std::string ref_path    = argv[6];
+   std::string activity_ID = argv[3];
+   std::string tag         = argv[2];
 
    /* Setup Kinetisense data */
    fio::kinIO KIN( data_path.c_str() );
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
       matchedfilter MF (N_window, atoi(activity_ID.c_str()));
 
       /* Train on the data provided */
-      match_filt_training (&MF, &KIN, taper, samp_freq, dt, time_window,
+      match_filt_training (&MF, &KIN, taper, apply_taper, samp_freq, dt, time_window,
                            N_window, ref_time, N_ref_time, sens_training);
 
       /* Write the data to file */
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
       mf_list MF_activities;
 
       for (int i_ref=0; i_ref<N_references; i_ref++) {
-         ref_path = argv[i_ref+5];
+         ref_path = argv[i_ref+6];
          MF_activities.append ( new matchedfilter (ref_path.c_str(), N_window) );
       }
 
@@ -136,10 +136,10 @@ int main(int argc, char *argv[]) {
             MF = MF_activities.get_MF();
 
             gettime();
-            MF->run (ax, ay, dt, samp_freq, N_window, taper, work_buffer);
+            MF->run (ax, ay, dt, samp_freq, N_window, taper, apply_taper, work_buffer);
             proc_time = gettime();
 
-            MF->write_corr (corr_file);
+            MF->write_corr ("output/correlations", tag);
          }
          MF_activities.goto_first();
 
@@ -153,9 +153,9 @@ int main(int argc, char *argv[]) {
             act = WALKING_LVL_MOD_FIRM;
          }
 
-         fio::write_val (power, "output/power",    initial_write);
-         fio::write_val (act,   "output/activity", initial_write);
-         fio::write_val (power, "output/energy",   initial_write);
+         fio::write_val (power, "output/power" + tag,    activity_ID, initial_write);
+         fio::write_val (act,   "output/activity" + tag, activity_ID, initial_write);
+         fio::write_val (power, "output/energy" + tag,   activity_ID, initial_write);
          initial_write = false;
 
       }

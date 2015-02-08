@@ -177,6 +177,7 @@ int matchedfilter::run (
            float samp_freq_sig,
            int N_sig,
            float *taper,
+           bool apply_taper,
            float *work_buffer)
 {
 
@@ -195,10 +196,10 @@ int matchedfilter::run (
       return -1;
    }
 
-   corr_ax = crosscorr(ref_ax, sig_ax, norm_ref_ax, taper, work_buffer, dt_sig, samp_freq_sig,
+   corr_ax = crosscorr(ref_ax, sig_ax, norm_ref_ax, taper, apply_taper, work_buffer, dt_sig, samp_freq_sig,
                         N_window_ref, N_sig, FREQ);
 
-   corr_ay = crosscorr(ref_ay, sig_ay, norm_ref_ay, taper, work_buffer, dt_sig, samp_freq_sig,
+   corr_ay = crosscorr(ref_ay, sig_ay, norm_ref_ay, taper, apply_taper, work_buffer, dt_sig, samp_freq_sig,
                         N_window_ref, N_sig, FREQ);
 
    correlations_computed = true;
@@ -262,10 +263,11 @@ bool matchedfilter::write (std::string ref_file)
 
 /******************************************************************************/
 
-void matchedfilter::write_corr(std::string corr_file)
+void matchedfilter::write_corr(std::string corr_file, std::string tag)
 {
    
    static bool init = true;
+   corr_file += tag;
    corr_file += std::to_string(activity_ID);
    std::ofstream out_file;
    if (init) {

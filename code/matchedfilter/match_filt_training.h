@@ -2,6 +2,7 @@ void match_filt_training(
               matchedfilter *MF,
               fio::kinIO *KIN,
               float *taper,
+              bool  apply_taper,
               float samp_freq,
               float dt,
               float time_window, /* Signal window time (seconds) */

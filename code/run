@@ -5,54 +5,59 @@ if [ ! -e sensor ]; then
 fi
 
 if [ ! -d output ]; then
-   mkdir output
+   mkdir -v output
 fi
 
 case $1 in
 
   demo)
 
+   tag=_demo
    ID=17190 # Compendium ID for walking
    process=training
    data_path=../data/Phase_2/csv_format/Craig/Craig_Walking_tredmil.csv
    ref_path=../data/ref_data
    N=1
 
-   ./sensor $process $ID $data_path $N $ref_path
+   ./sensor $process $tag $ID $data_path $N $ref_path
 
+   tag=_demo
    process=data
    data_path=../data/Phase_2/csv_format/Craig/Craig_Walking_tredmil.csv
    ref_path=../data/ref_data17190
    N=1
 
-   ./sensor $process $ID $data_path $N $ref_path
+   ./sensor $process $tag $ID $data_path $N $ref_path
    ;;
 
   special)
 
+   tag=_special
    ID=17190
    process=training
    data_path=../data/Phase_2/csv_format/Craig/walking/2015-01-03-05-46-14.csv
    ref_path=../data/ref_data
    N=1
 
-   ./sensor $process $ID $data_path $N $ref_path
+   ./sensor $process $tag $ID $data_path $N $ref_path
 
-   ID=01015
+   tag=_special
+   ID=1015
    process=training
    data_path=../data/Phase_1/Craig_Bicycling_Kin.csv
    ref_path=../data/ref_data
    N=1
 
-   ./sensor $process $ID $data_path $N $ref_path
+   ./sensor $process $tag $ID $data_path $N $ref_path
 
+   tag=_special
    process=data
    data_path=../data/Phase_2/csv_format/Craig/walking/2015-01-03-05-55-45.csv
    ref_path1=../data/ref_data17190
    ref_path2=../data/ref_data1015
    N=2
 
-   ./sensor $process $ID $data_path $N $ref_path1 $ref_path2
+   ./sensor $process $tag $ID $data_path $N $ref_path1 $ref_path2
    ;;
 
   *)

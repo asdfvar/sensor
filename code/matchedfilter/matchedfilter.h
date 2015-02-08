@@ -13,7 +13,7 @@ class matchedfilter {
 
       int run (float *sig_ax, float *sig_ay, float dt_sig,
                float sig_samp_freq, int data_N, float *taper,
-               float *work_buffer);
+               bool apply_taper, float *work_buffer);
 
       void load_ref (float *ax_in, float *ay_in,
                      float dt_in, float samp_freq_in,
@@ -25,7 +25,7 @@ class matchedfilter {
       void set_ID(int); // set the activity ID
 
       bool write(std::string); // write the data to file
-      void write_corr (std::string file);
+      void write_corr (std::string file, std::string ID);
       void print_all (void);
 
    private:
@@ -56,8 +56,8 @@ class matchedfilter {
 
 /* Cross correlation */
 
-float crosscorr(float *ref, float *signal, float norm_ref, float *taper, float *buffer,
-                float dt, float samp_freq,
+float crosscorr(float *ref, float *signal, float norm_ref, float *taper, bool apply_taper,
+                float *buffer, float dt, float samp_freq,
                 int N_window_ref, int N_data, data_form ref_form);
 
 /******************************/

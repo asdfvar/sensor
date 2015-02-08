@@ -17,6 +17,7 @@ float crosscorr(
             float *sig,
             float norm_ref_in,
             float *taper,
+            bool  apply_taper,
             float *norm_sig2, /* buffer space */
             float dt, float samp_freq,
             int N_window_ref, int N_data,
@@ -53,8 +54,10 @@ float crosscorr(
    }
 
    /* Apply the taper to remove higher frequencies */
-   for (k = 0; k < N_data+2; k++) {
-      sig[k] *= taper[k];
+   if (apply_taper) {
+      for (k = 0; k < N_data+2; k++) {
+         sig[k] *= taper[k];
+      }
    }
 
    /* At this point, sig represents the cross correlation squared between

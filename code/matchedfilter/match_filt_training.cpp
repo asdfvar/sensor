@@ -10,6 +10,7 @@ void match_filt_training(
               matchedfilter *MF,
               fio::kinIO    *KIN,
               float         *taper,
+              bool           apply_taper,
               float          samp_freq,
               float          dt,
               float          time_window,      /* Signal window time (seconds)    */
@@ -94,7 +95,7 @@ void match_filt_training(
            samp_freq,     /* Sampling frequency of the data       */
            N_window);     /* Number of sample points              */
 
-       MF->run (ax, ay, dt, samp_freq, N_window, taper, work_buf);
+       MF->run (ax, ay, dt, samp_freq, N_window, taper, apply_taper, work_buf);
 
        sum_corr += MF->get_corr_ax () * MF->get_corr_ay() ;
 
