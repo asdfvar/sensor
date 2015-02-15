@@ -18,11 +18,11 @@ extern "C" {
 int main(int argc, char *argv[]) {
 
 #ifdef pc
-   std::string input_file = argv[2];
-   std::string refs_file  = argv[3];
-   activity act;
+   std::string    input_file = argv[1];
+   std::string    refs_file  = argv[2];
+   activity       act;
    fio::inputFile InFile(input_file);
-   fio::readRefs InRefs(refs_file);
+   fio::readRefs  InRefs(refs_file);
 
    std::string tag         = InFile.get_parameter_s("tag"        ); // tag name for this run
    float time_window       = InFile.get_parameter_f("time_window"); // seconds to analyze a signal
@@ -31,8 +31,7 @@ int main(int argc, char *argv[]) {
    float samp_freq         = InFile.get_parameter_f("samp_freq"  ); // Hz
    float ref_time          = InFile.get_parameter_f("ref_time"   ); // reference time for training
    std::string data_path   = InFile.get_parameter_s("data_path"  );
-   std::string ref_path    = InFile.get_parameter_s("ref_path"   ); // used for training
-   std::string activity_ID = InFile.get_parameter_s("activity_ID"); // used for training
+   std::string ref_path;
    float dt              = 1.0 / samp_freq; // seconds
    float start_time      = 0.0;             // seconds from start
    int   N_window        = (int) (samp_freq * time_window); // Number of data points of the signal
@@ -49,6 +48,7 @@ int main(int argc, char *argv[]) {
    float proc_time;
    int   itt = 0;
 
+   if (cutoff_freq < 0) apply_taper = false;
 
    taper_f(taper,
            time_window,
@@ -57,9 +57,6 @@ int main(int argc, char *argv[]) {
            samp_freq,
            dt,
            N_window);
-
-   const std::string training = "training";
-   const std::string data     = "data";
 
    /* Setup Kinetisense data */
    fio::kinIO KIN( data_path.c_str() );

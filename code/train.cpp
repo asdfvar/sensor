@@ -18,13 +18,9 @@ extern "C" {
 int main(int argc, char *argv[]) {
 
 #ifdef pc
-   std::string input_file = argv[2];
-   std::string refs_file  = argv[3];
-   activity act;
+   std::string    input_file = argv[1];
    fio::inputFile InFile(input_file);
-   fio::readRefs InRefs(refs_file);
 
-   std::string tag         = InFile.get_parameter_s("tag"        ); // tag name for this run
    float time_window       = InFile.get_parameter_f("time_window"); // seconds to analyze a signal
    float freq_range        = InFile.get_parameter_f("freq_range" ); // Hz
    float cutoff_freq       = InFile.get_parameter_f("cutoff_freq"); // Hz
@@ -48,6 +44,8 @@ int main(int argc, char *argv[]) {
    float *data_ax, *data_ay, *data_az;
    float proc_time;
    int   itt = 0;
+
+   if (cutoff_freq < 0) apply_taper = false;
 
    taper_f(taper,
            time_window,

@@ -44,7 +44,7 @@ clean:
 	make -C $(MATCHFILTER) clean
 	make -C $(PREPROC) clean
 	make -C $(TOOLS) clean
-	rm $(EXE) $(MAIN_OBJ) $(TRAIN_OBJ)
+	rm $(EXE) $(TRAIN) $(MAIN_OBJ) $(TRAIN_OBJ)
 
 train.o: train.cpp
 	$(CPPC) $(MAIN_DIRECTIVE) $^ -c $(INC)
