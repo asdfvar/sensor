@@ -2,6 +2,7 @@
 #define _FILEIO_H_
 
 #include <string>
+#include <fstream>
 
 namespace fio {
  class kinIO {
@@ -78,6 +79,41 @@ namespace fio {
 
  void write_val(int val,   std::string power_file, bool init);
  void write_val(float val, std::string power_file, bool init);
+
+ class inputFile {
+
+   public:
+
+      inputFile(std::string in_file);
+     ~inputFile(void);
+
+      float get_parameter_f (std::string parameter);
+      int   get_parameter_i (std::string parameter);
+      std::string get_parameter_s (std::string parameter);
+
+   private:
+
+      std::string in_file;
+      std::ifstream input;
+
+ };
+
+ class readRefs {
+
+    public:
+
+       readRefs(std::string in_file);
+      ~readRefs(void);
+
+       int get_Nrefs(void);
+       std::string get_ref_path(int i_th);
+
+    private:
+
+       char *buffer;
+       int length;
+       int N_refs;
+ };
 }
 
 #endif

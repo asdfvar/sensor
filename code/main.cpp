@@ -18,31 +18,38 @@ extern "C" {
 int main(int argc, char *argv[]) {
 
 #ifdef pc
-   float power;
-   float start_time  = 0.0;             // seconds from start
-   float time_window = 4.0;             // seconds to analyze a signal
-   float samp_freq   = 128.0;           // Hz
-   float dt          = 1.0 / samp_freq; // seconds
-   int   N_window    = (int) (samp_freq * time_window); // Number of data points of the signal
+   std::string mode = argv[1];
+   std::string input_file = argv[2];
+   std::string refs_file  = argv[3];
+   activity act;
+   fio::inputFile InFile(input_file);
+   fio::readRefs InRefs(refs_file);
+
+   std::string tag         = InFile.get_parameter_s("tag"        ); // tag name for this run
+   float time_window       = InFile.get_parameter_f("time_window"); // seconds to analyze a signal
+   float freq_range        = InFile.get_parameter_f("freq_range" ); // Hz
+   float cutoff_freq       = InFile.get_parameter_f("cutoff_freq"); // Hz
+   float samp_freq         = InFile.get_parameter_f("samp_freq"  ); // Hz
+   float ref_time          = InFile.get_parameter_f("ref_time"   ); // reference time for training
+   std::string data_path   = InFile.get_parameter_s("data_path"  );
+   std::string ref_path    = InFile.get_parameter_s("ref_path"   ); // used for training
+   std::string activity_ID = InFile.get_parameter_s("activity_ID"); // used for training
+   float dt              = 1.0 / samp_freq; // seconds
+   float start_time      = 0.0;             // seconds from start
+   int   N_window        = (int) (samp_freq * time_window); // Number of data points of the signal
    float *ax    = new float[N_window+2];   // Workspace for the signal in x
    float *ay    = new float[N_window+2];   // Workspace for the signal in y
    float *az    = new float[N_window+2];   // Workspace for the signal in z
    float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
    bool  apply_taper = true;
-   float *data_ax, *data_ay, *data_az;
-   float *work_buffer = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
-   float proc_time;
-
-   float ref_time = 1.5;    // reference time for training
    int   N_ref_time = (int)(ref_time * samp_freq);
    int   sens_training = 2; // sensor used for training
-   int itt = 0;
-   std::string tmp = argv[5];
-   int N_references = atoi(tmp.c_str());
+   float *work_buffer = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
+   float power;
+   float *data_ax, *data_ay, *data_az;
+   float proc_time;
+   int   itt = 0;
 
-   activity act;
-   float cutoff_freq = 40.0; // Hz
-   float freq_range  = 0.0;  // Hz
 
    taper_f(taper,
            time_window,
@@ -54,12 +61,6 @@ int main(int argc, char *argv[]) {
 
    const std::string training = "training";
    const std::string data     = "data";
-
-   std::string mode        = argv[1];
-   std::string data_path   = argv[4];
-   std::string ref_path    = argv[6];
-   std::string activity_ID = argv[3];
-   std::string tag         = argv[2];
 
    /* Setup Kinetisense data */
    fio::kinIO KIN( data_path.c_str() );
@@ -89,8 +90,8 @@ int main(int argc, char *argv[]) {
       matchedfilter *MF;
       mf_list MF_activities;
 
-      for (int i_ref=0; i_ref<N_references; i_ref++) {
-         ref_path = argv[i_ref+6];
+      for (int i_ref=1; i_ref<=InRefs.get_Nrefs(); i_ref++) {
+         ref_path = InRefs.get_ref_path(i_ref);
          MF_activities.append ( new matchedfilter (ref_path.c_str(), N_window) );
       }
 
@@ -153,9 +154,9 @@ int main(int argc, char *argv[]) {
             act = WALKING_LVL_MOD_FIRM;
          }
 
-         fio::write_val (power, "output/power" + tag,    initial_write);
+         fio::write_val (power, "output/power"    + tag,    initial_write);
          fio::write_val (act,   "output/activity" + tag, initial_write);
-         fio::write_val (power, "output/energy" + tag,   initial_write);
+         fio::write_val (power, "output/energy"   + tag,   initial_write);
          initial_write = false;
 
       }

@@ -170,6 +170,13 @@ void matchedfilter::set_ID(int activity_ID_in)
 
 /******************************************************************************/
 
+int matchedfilter::get_ID(void)
+{
+   return activity_ID;
+}
+
+/******************************************************************************/
+
 int matchedfilter::run (
            float *sig_ax,
            float *sig_ay,
@@ -378,8 +385,8 @@ node *mf_list::pop (void) {
    }
 
    if (N>0) {
-      std::cout << "Removing activity from the list"
-                << std::endl;
+      std::cout << "Removing activity " << CURR->MF->get_ID()
+      << " from the list" << std::endl;
       N--;
    } else {
       std::cout << "No activities to remove" << std::endl;

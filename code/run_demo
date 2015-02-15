@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ ! -e sensor ]; then
+   make
+fi
+
+if [ ! -d output ]; then
+   mkdir -v output
+fi
+
+process=training
+input_file=input_demo
+refs_path=ref_demo
+
+./sensor $process $input_file $refs_path
+
+process=data
+input_file=input_demo
+refs_path=ref_demo
+
+./sensor $process $input_file $refs_path
