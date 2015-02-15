@@ -16,17 +16,27 @@ LIBS = -lmatflt -lsens -lpreproc
 
 MAIN_DIRECTIVE = -Dpc
 
-OBJ = main.o fft.o
+MAIN_OBJ  = main.o  fft.o
+TRAIN_OBJ = train.o fft.o
 
-EXE = sensor
+EXE   = sensor
+TRAIN = train
 
 # BUILD ALL
 
-all: $(OBJ)
+all: $(EXE) $(TRAIN)
+
+$(EXE): $(COMPONENTS) $(MAIN_OBJ)
 	cd $(MATCHFILTER) && $(MAKE)
 	cd $(PREPROC) && $(MAKE)
 	cd $(TOOLS) && $(MAKE)
-	$(CPPC) $(OBJ) $(FLAGS) -o $(EXE) $(INC) $(LIBPATH) $(LIBS)
+	$(CPPC) $(MAIN_OBJ) $(FLAGS) -o $(EXE) $(INC) $(LIBPATH) $(LIBS)
+
+$(TRAIN): $(COMPONENTS) $(TRAIN_OBJ)
+	cd $(MATCHFILTER) && $(MAKE)
+	cd $(PREPROC) && $(MAKE)
+	cd $(TOOLS) && $(MAKE)
+	$(CPPC) $(TRAIN_OBJ) $(FLAGS) -o $(TRAIN) $(INC) $(LIBPATH) $(LIBS)
 
 # CLEAN ALL
 
@@ -34,7 +44,10 @@ clean:
 	make -C $(MATCHFILTER) clean
 	make -C $(PREPROC) clean
 	make -C $(TOOLS) clean
-	rm $(EXE) $(OBJ)
+	rm $(EXE) $(MAIN_OBJ) $(TRAIN_OBJ)
+
+train.o: train.cpp
+	$(CPPC) $(MAIN_DIRECTIVE) $^ -c $(INC)
 
 main.o: main.cpp
 	$(CPPC) $(MAIN_DIRECTIVE) $^ -c $(INC)

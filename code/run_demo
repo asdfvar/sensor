@@ -12,7 +12,7 @@ process=training
 input_file=input_demo
 refs_path=ref_demo
 
-./sensor $process $input_file $refs_path
+./train $process $input_file $refs_path
 
 process=data
 input_file=input_demo
