@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
    float cutoff_freq       = InFile.get_parameter_f("cutoff_freq"); // Hz
    float samp_freq         = InFile.get_parameter_f("samp_freq"  ); // Hz
    float ref_time          = InFile.get_parameter_f("ref_time"   ); // reference time for training
+   float threshold         = InFile.get_parameter_f("threshold"  );
    std::string data_path   = InFile.get_parameter_s("data_path"  );
    std::string ref_path;
    float dt              = 1.0 / samp_freq; // seconds
