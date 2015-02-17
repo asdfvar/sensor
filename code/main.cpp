@@ -5,6 +5,7 @@
 #include "preproc.h"
 #include "matchedfilter.h"
 #include "match_filt_training.h"
+#include "energy_expenditure.h"
 #include "compendium.h"
 #include "gettime.h"
 #include "taper.h"
@@ -20,7 +21,7 @@ int main(int argc, char *argv[]) {
 #ifdef pc
    std::string    input_file = argv[1];
    std::string    refs_file  = argv[2];
-   activity       act;
+   int            act;
    fio::inputFile InFile(input_file);
    fio::readRefs  InRefs(refs_file);
 
@@ -33,6 +34,10 @@ int main(int argc, char *argv[]) {
    float threshold         = InFile.get_parameter_f("threshold"  );
    std::string data_path   = InFile.get_parameter_s("data_path"  );
    std::string ref_path;
+   float age    = 30.0;     // yrs
+   float weight = 70.0;  // kg
+   float height = 180.0; // cm
+   SEX   sex    = MALE;
    float dt              = 1.0 / samp_freq; // seconds
    float start_time      = 0.0;             // seconds from start
    int   N_window        = (int) (samp_freq * time_window); // Number of data points of the signal
@@ -44,10 +49,12 @@ int main(int argc, char *argv[]) {
    int   N_ref_time = (int)(ref_time * samp_freq);
    int   sens_training = 2; // sensor used for training
    float *work_buffer = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
-   float power;
+   float power, energy;
    float *data_ax, *data_ay, *data_az;
    float proc_time;
-   int   itt = 0;
+   int   itt = 0, max_index;
+   float corr;
+   float tmp;
 
    if (cutoff_freq < 0) apply_taper = false;
 
@@ -71,7 +78,7 @@ int main(int argc, char *argv[]) {
    }
 
    float ave_preproc_time = 0.0f;
-   bool initial_write = true;
+   bool  initial_write = true;
 
    for (itt=0; KIN.valid_start_end (start_time, time_window); itt++, start_time += TIME_INC)
    {
@@ -95,7 +102,7 @@ int main(int argc, char *argv[]) {
           ax,            /* Acceleration data in x               */
           ay,            /* Acceleration data in y               */
           az,            /* Acceleration data in z               */
-         &power,        /* Resulting power of the signal        */
+         &power,         /* Resulting power of the signal        */
           dt,            /* Delta time comstant                  */
           time_window,   /* Time window of the data              */
           samp_freq,     /* Sampling frequency of the data       */
@@ -107,8 +114,11 @@ int main(int argc, char *argv[]) {
  * MATCHED FILTER
  */
 
-      // Loop through the activities
+      // run the matched filter through the activities
+      corr = 0.0f;
+      max_index = 0;
       for (int k=0; k<MF_activities.get_N(); k++, MF_activities.goto_next()) {
+
          MF = MF_activities.get_MF();
 
          gettime();
@@ -116,24 +126,48 @@ int main(int argc, char *argv[]) {
          proc_time = gettime();
 
          MF->write_corr ("output/correlations", tag);
+
+         // find which activity has the highest correlation
+         tmp = 0.5f * (MF->get_corr_ax() + MF->get_corr_ay());
+         if ( tmp > corr ) {
+            corr = tmp;
+            max_index = k;
+         }
       }
       MF_activities.goto_first();
-
-//   neuralnetwork ( ... );
 
 /*
  * ENERGY EXPENDITURE
  */
 
-      if (MF->get_corr_ax() > 0.95 && MF->get_corr_ay() > 0.95) {
-         act = WALKING_LVL_MOD_FIRM;
+      // figure out if the highest correlating activity is a good match
+      for (int k=0; k<max_index; k++, MF_activities.goto_next()) {}
+
+      MF = MF_activities.get_MF();
+      corr = 0.5f * (MF->get_corr_ax() + MF->get_corr_ay());
+
+      if (corr >= threshold) {
+         // good match
+         act = MF->get_ID();
+      } else {
+         // no good match
+         act = NONE;
       }
 
-      fio::write_val (power, "output/power"    + tag,    initial_write);
-      fio::write_val (act,   "output/activity" + tag, initial_write);
-      fio::write_val (power, "output/energy"   + tag,   initial_write);
-      initial_write = false;
+      energy = energy_expenditure (weight,
+                                   height,
+                                   age,
+                                   sex,
+                                   act,
+                                   power,
+                                   time_window);
 
+      fio::write_val (power,  "output/power"    + tag, initial_write);
+      fio::write_val (act,    "output/activity" + tag, initial_write);
+      fio::write_val (energy, "output/energy"   + tag, initial_write);
+
+      initial_write = false;
+      MF_activities.goto_first();
    }
 
    ave_preproc_time /= (float) itt;

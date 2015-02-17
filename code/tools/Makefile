@@ -6,7 +6,7 @@ FLAGS = -O3 -Wall
 LIB = libsens.a
 
 OBJ = fft.o read_kinetisense.o fileio.o gettime.o write_data.o \
-      taper.o
+      taper.o energy_expenditure.o
 
 all: $(OBJ)
 	$(CL) $(LIB) $(OBJ)
@@ -30,4 +30,7 @@ write_data.o: write_data.cpp
 	$(CPPC) $^ -c $(FLAGS)
 
 taper.o: taper.cpp
+	$(CPPC) $^ -c $(FLAGS)
+
+energy_expenditure.o: energy_expenditure.cpp
 	$(CPPC) $^ -c $(FLAGS)

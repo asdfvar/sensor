@@ -3,12 +3,26 @@
 #include <string>
 #include <fstream>
 #include <stdlib.h>
+#include <stdio.h>
 #include <cmath>
 extern "C" {
 #include "fft.h"
 }
 
 #define N_headers 4
+
+/*
+ * Function to replace std::to_string which has
+ * a problem in Cygwin
+ */
+static std::string to_string ( int val )
+{
+   char tmp[200];
+   sprintf(tmp, "%d", val);
+   std::string s(tmp);
+
+   return s;
+}
 
 /******************************************************************************/
 
@@ -203,11 +217,13 @@ int matchedfilter::run (
       return -1;
    }
 
-   corr_ax = crosscorr(ref_ax, sig_ax, norm_ref_ax, taper, apply_taper, work_buffer, dt_sig, samp_freq_sig,
-                        N_window_ref, N_sig, FREQ);
+   corr_ax = crosscorr(ref_ax, sig_ax, norm_ref_ax, taper, apply_taper,
+                       work_buffer, dt_sig, samp_freq_sig,
+                       N_window_ref, N_sig, FREQ);
 
-   corr_ay = crosscorr(ref_ay, sig_ay, norm_ref_ay, taper, apply_taper, work_buffer, dt_sig, samp_freq_sig,
-                        N_window_ref, N_sig, FREQ);
+   corr_ay = crosscorr(ref_ay, sig_ay, norm_ref_ay, taper, apply_taper,
+                       work_buffer, dt_sig, samp_freq_sig,
+                       N_window_ref, N_sig, FREQ);
 
    correlations_computed = true;
 
@@ -248,7 +264,7 @@ bool matchedfilter::write (std::string ref_file)
       ref_data_form         = TIME;
    }
 
-   ref_file += std::to_string(activity_ID);
+   ref_file += to_string(activity_ID);
 
    std::ofstream out_file;
    out_file.open (ref_file.c_str());
@@ -275,7 +291,7 @@ void matchedfilter::write_corr(std::string corr_file, std::string tag)
    
    static bool init = true;
    corr_file += tag;
-   corr_file += std::to_string(activity_ID);
+   corr_file += to_string(activity_ID);
    std::ofstream out_file;
    if (init) {
       out_file.open (corr_file.c_str());
@@ -292,18 +308,18 @@ void matchedfilter::write_corr(std::string corr_file, std::string tag)
 
 void matchedfilter::print_all (void)
 {
-   std::cout << "N_data_ref = " <<  N_data_ref << std::endl;
-   std::cout << "N_window_ref = " << N_window_ref << std::endl;
-   std::cout << "dt_ref = " << dt_ref << std::endl;
-   std::cout << "samp_freq_ref = " << samp_freq_ref << std::endl;
+   std::cout << "N_data_ref = "      <<  N_data_ref << std::endl;
+   std::cout << "N_window_ref = "    << N_window_ref << std::endl;
+   std::cout << "dt_ref = "          << dt_ref << std::endl;
+   std::cout << "samp_freq_ref = "   << samp_freq_ref << std::endl;
    std::cout << "time_window_ref = " << time_window_ref << std::endl;
-   std::cout << "activity_ID = " << activity_ID << std::endl;
-   std::cout << "ref_ax = " << *ref_ax << std::endl;
-   std::cout << "ref_ay = " << *ref_ay << std::endl;
-   std::cout << "nor_ref_ax = " << norm_ref_ax << std::endl;
-   std::cout << "norm_ref_ay = " << norm_ref_ay << std::endl;
-   std::cout << "corr_ax = " << corr_ax << std::endl;
-   std::cout << "corr_ay = " << corr_ay << std::endl;
+   std::cout << "activity_ID = "     << activity_ID << std::endl;
+   std::cout << "ref_ax = "          << *ref_ax << std::endl;
+   std::cout << "ref_ay = "          << *ref_ay << std::endl;
+   std::cout << "nor_ref_ax = "      << norm_ref_ax << std::endl;
+   std::cout << "norm_ref_ay = "     << norm_ref_ay << std::endl;
+   std::cout << "corr_ax = "         << corr_ax << std::endl;
+   std::cout << "corr_ay = "         << corr_ay << std::endl;
 }
 
 /******************************************************************************/

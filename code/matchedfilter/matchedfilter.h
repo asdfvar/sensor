@@ -22,7 +22,7 @@ class matchedfilter {
       float get_corr_ax (void); // Return correlation in x
       float get_corr_ay (void); // Return correlation in y
 
-      void set_ID(int); // set the activity ID
+      void set_ID(int);  // set the activity ID
       int  get_ID(void); // get the activity ID
 
       bool write(std::string); // write the data to file
