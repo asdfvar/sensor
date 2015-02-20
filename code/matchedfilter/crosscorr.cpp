@@ -19,16 +19,29 @@ float crosscorr(
             float *taper,
             bool  apply_taper,
             float *norm_sig2, /* buffer space */
-            float dt, float samp_freq,
-            int N_window_ref, int N_data,
+            float dt,
+            float samp_freq,
+            int N_window_ref,
+            int N_data,
             data_form ref_form)
 {
 
    float tmp;
    int k;
+   float local_ref_norm;
+
+   if (apply_taper) {
+      // FFT the signals
+      fft(sig, N_data);
+
+      /* Apply the taper to remove higher frequencies */
+      for (k = 0; k < N_data+2; k++) sig[k] *= taper[k];
+
+      ifft(sig, N_data);
+   }
 
    /* Compute the norm squared of the reference
-      signal and the signal */
+      and the signal */
    norm_sig2[0] = 0.0;
    for (k = 0; k < N_window_ref; k++){
       norm_sig2[0] += sig[k]*sig[k];
@@ -45,19 +58,30 @@ float crosscorr(
    if(ref_form == TIME) fft(ref, N_data);
    fft(sig, N_data);
 
+   if (apply_taper) {
+
+      for (k = 0; k < N_data+2; k++) ref[k] *= taper[k];
+
+      local_ref_norm = 0.0f;
+
+      // Use Parceval's theorem from DC to nyquist (+)
+      for (k = 0; k < N_data + 2; k++) local_ref_norm += ref[k]*ref[k];
+      // Use Parceval's theorem on the negative frequencies (-)
+      for (k = 2; k < N_data; k++) local_ref_norm += ref[k]*ref[k];
+
+      local_ref_norm /= (float)N_data;
+      local_ref_norm = sqrtf(local_ref_norm);
+
+   } else {
+      local_ref_norm = norm_ref_in;
+   }
+
    /* Conjugate multiply the reference (conjugate)
       to the signal and overwrite the signal */
    for (k = 0; k < N_data+2; k+=2) {
       tmp = ref[k]*sig[k] + ref[k+1]*sig[k+1];
       sig[k+1] = ref[k]*sig[k+1] - ref[k+1]*sig[k];
       sig[k] = tmp;
-   }
-
-   /* Apply the taper to remove higher frequencies */
-   if (apply_taper) {
-      for (k = 0; k < N_data+2; k++) {
-         sig[k] *= taper[k];
-      }
    }
 
    /* At this point, sig represents the cross correlation squared between
@@ -68,7 +92,7 @@ float crosscorr(
    /* Normalize the correlation */
 
    for (k = 0; k < N_data - N_window_ref + 1; k++)
-      sig[k] /= sqrtf( norm_sig2[k] ) * norm_ref_in;
+      sig[k] /= sqrtf( norm_sig2[k] ) * local_ref_norm;
 
    /* We don't care about circular shifts */
    for (k = N_data - N_window_ref + 1; k < N_data; k++)
