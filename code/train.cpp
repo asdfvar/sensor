@@ -15,9 +15,9 @@ extern "C" {
 #include "fft.h"
 }
 
+#ifdef pc
 int main(int argc, char *argv[]) {
 
-#ifdef pc
    std::string    input_file = argv[1];
    fio::inputFile InFile(input_file);
 
@@ -32,14 +32,10 @@ int main(int argc, char *argv[]) {
    float dt              = 1.0 / samp_freq; // seconds
    float start_time      = 0.0;             // seconds from start
    int   N_window        = (int) (samp_freq * time_window); // Number of data points of the signal
-   float *ax    = new float[N_window+2];   // Workspace for the signal in x
-   float *ay    = new float[N_window+2];   // Workspace for the signal in y
-   float *az    = new float[N_window+2];   // Workspace for the signal in z
    float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
    bool  apply_taper = true;
    int   N_ref_time = (int)(ref_time * samp_freq);
    int   sens_training = 2; // sensor used for training
-   float *work_buffer = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
    float power;
    float *data_ax, *data_ay, *data_az;
    float proc_time;
@@ -68,13 +64,8 @@ int main(int argc, char *argv[]) {
    /* Write the data to file */
    MF.write(ref_path);
 
-#endif
-
-   delete[] ax;
-   delete[] ay;
-   delete[] az;
-   delete[] work_buffer;
    delete[] taper;
 
    return 0;
 }
+#endif

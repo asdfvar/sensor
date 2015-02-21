@@ -141,9 +141,9 @@ void match_filt_training(
 
  std::cout << "Training time = " << gettime() << std::endl;
 
- delete ax;
- delete ay;
- delete az;
- delete work_buf;
+ delete[] ax;
+ delete[] ay;
+ delete[] az;
+ delete[] work_buf;
 
 }

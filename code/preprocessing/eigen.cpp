@@ -179,6 +179,7 @@ int eigen(const float mat[3][3], float *eigVl, float *eigVec)
    do {
 
       /* Q */
+      /* Q is found using the Gram-Schmidt process on A and normalized */
 
       // q1
       for (k = 0; k < 3; k++) q1[k] = a1[k];
@@ -207,6 +208,7 @@ int eigen(const float mat[3][3], float *eigVl, float *eigVec)
       for (k = 0; k < 3; k++) q3[k] /= norm;
 
       /* R */
+      /* R is found now that we have Q and A */
 
       // r1
       R[0][0] = 0.0;
@@ -241,6 +243,7 @@ int eigen(const float mat[3][3], float *eigVl, float *eigVec)
       err = 0.0;
       for (k = 0; k < 3; k++) err += (prev[k] - eigVl[k]) * (prev[k] - eigVl[k]);
       for (k = 0; k < 3; k++) prev[k] = eigVl[k];
+      // Look into Gershgorin circle theorem as an alternative method of convergence
 
       count++;
 

@@ -16,9 +16,9 @@ extern "C" {
 #include "fft.h"
 }
 
+#ifdef pc
 int main(int argc, char *argv[]) {
 
-#ifdef pc
    std::string    input_file = argv[1];
    std::string    refs_file  = argv[2];
    int            act;
@@ -34,10 +34,10 @@ int main(int argc, char *argv[]) {
    float threshold         = InFile.get_parameter_f("threshold"  );
    std::string data_path   = InFile.get_parameter_s("data_path"  );
    std::string ref_path;
-   float age    = 30.0;     // yrs
+   float age    = 30.0;  // yrs
    float weight = 70.0;  // kg
    float height = 180.0; // cm
-   SEX   sex    = MALE;
+   int   sex    = MALE;
    float dt              = 1.0 / samp_freq; // seconds
    float start_time      = 0.0;             // seconds from start
    int   N_window        = (int) (samp_freq * time_window); // Number of data points of the signal
@@ -45,10 +45,10 @@ int main(int argc, char *argv[]) {
    float *ay    = new float[N_window+2];   // Workspace for the signal in y
    float *az    = new float[N_window+2];   // Workspace for the signal in z
    float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
-   bool  apply_taper = true;
-   int   N_ref_time = (int)(ref_time * samp_freq);
+   bool  apply_taper   = true;
+   int   N_ref_time    = (int)(ref_time * samp_freq);
    int   sens_training = 2; // sensor used for training
-   float *work_buffer = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
+   float *work_buffer  = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
    float power, energy;
    float *data_ax, *data_ay, *data_az;
    float proc_time;
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
  */
 
       // run the matched filter through the activities
-      corr = 0.0f;
+      corr = -1.1f; // -1 is the lowest obtainable minimum
       max_index = 0;
       for (int k=0; k<MF_activities.get_N(); k++, MF_activities.goto_next()) {
 
@@ -140,7 +140,6 @@ int main(int argc, char *argv[]) {
  * ENERGY EXPENDITURE
  */
 
-      // figure out if the highest correlating activity is a good match
       for (int k=0; k<max_index; k++, MF_activities.goto_next()) {}
 
       MF = MF_activities.get_MF();
@@ -172,7 +171,6 @@ int main(int argc, char *argv[]) {
 
    ave_preproc_time /= (float) itt;
    std::cout << "average pre-processing time = " << ave_preproc_time << std::endl;
-#endif
 
    delete[] ax;
    delete[] ay;
@@ -182,3 +180,4 @@ int main(int argc, char *argv[]) {
 
    return 0;
 }
+#endif
