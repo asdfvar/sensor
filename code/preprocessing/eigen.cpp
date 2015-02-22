@@ -16,6 +16,7 @@
 
 #include <cmath>
 #include <iostream>
+#include "eigen.h"
 
 /* Some anscillary functions are provided first */
 
@@ -34,9 +35,6 @@
  * C can be computed in place.
  * Only supports up to 3x3.
 */
-
-#define MAX_COUNT 1000
-#define MIN_ERR 0.000001
 
 static void matrix_mult_transpose(float *C, const float *A, const float *Bt,
                                   const int N) {
@@ -172,9 +170,10 @@ int eigen(const float mat[3][3], float *eigVl, float *eigVec)
    }
 
    // Parameters used for convergence computation
-   float prev[3] = {0.0, 0.0, 0.0};
-   float err;
    unsigned int count = 0;
+
+   float R1, R2, R3;
+   float maxR;
 
    do {
 
@@ -239,15 +238,19 @@ int eigen(const float mat[3][3], float *eigVl, float *eigVec)
       // Extract the eigenvalues
       for (k = 0; k < 3; k++) eigVl[k] = A[k][k];
 
-      // Compute the difference between this set of eigenvvalues from the previous
-      err = 0.0;
-      for (k = 0; k < 3; k++) err += (prev[k] - eigVl[k]) * (prev[k] - eigVl[k]);
-      for (k = 0; k < 3; k++) prev[k] = eigVl[k];
       // Look into Gershgorin circle theorem as an alternative method of convergence
+      R1  = ABS(A[0][1]);
+      R1 += ABS(A[0][2]);
+      R2  = ABS(A[1][0]);
+      R2 += ABS(A[1][2]);
+      R3  = ABS(A[2][0]);
+      R3 += ABS(A[2][1]);
+      maxR = (R1 > R2) ? R1 : R2;
+      maxR = (maxR > R3) ? maxR : R3;
 
       count++;
 
-   } while (err > MIN_ERR && count < MAX_COUNT);
+   } while (maxR > MIN_ERR && count < MAX_COUNT);
 
    if ( count >= MAX_COUNT )
       std::cout << "Warning: Eigenvalues and eigenvectors may not have converged" << std::endl;
