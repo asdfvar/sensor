@@ -42,9 +42,6 @@ void taper_f(
       }
 
       for (k=2*(cutoff_index + freq_range_N_hlf); k<N+2; k++) taper[k] = 0.0f;
-   } else {
-      std::cout << "Desired cut-off frequency and taper range " <<
-                   "does not fit within the time window boundaries" << std::endl;
    }
 
 }

@@ -68,6 +68,7 @@ void match_filt_training(
         N_window);     /* Number of sample points              */
 
     MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
+    MF->apply_fft(N_window);
 
     /* Loop through signal to test this loaded reference */
 
@@ -138,6 +139,7 @@ void match_filt_training(
      N_window);     /* Number of sample points              */
 
  MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
+ MF->apply_fft(N_window);
 
  std::cout << "Training time = " << gettime() << std::endl;
 

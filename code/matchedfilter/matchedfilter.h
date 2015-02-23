@@ -26,8 +26,14 @@ class matchedfilter {
       int  get_ID(void); // get the activity ID
 
       bool write(std::string); // write the data to file
-      void write_corr (std::string file, std::string ID);
+      void write_corr (std::string file, bool initial_write);
       void print_all (void);
+      void apply_taper (
+                                 float *taper_buff,
+                                 float cutoff_freq,
+                                 float freq_range);
+      void apply_fft(int N);
+      void apply_ifft(int N);
 
    private:
 
@@ -37,7 +43,7 @@ class matchedfilter {
       float samp_freq_ref;    // Sampling frequency of the reference signal
       float time_window_ref;  // Time window of data making up the reference signal
 
-      int   activity_ID;// Compendium ID of the activity
+      int   activity_ID;      // Compendium ID of the activity
 
       float *ref_ax;          // Reference in x (Primary direction)
       float *ref_ay;          // Reference in y (Secondary direction)
@@ -59,7 +65,7 @@ class matchedfilter {
 
 float crosscorr(float *ref, float *signal, float norm_ref, float *taper, bool apply_taper,
                 float *buffer, float dt, float samp_freq,
-                int N_window_ref, int N_data, data_form ref_form);
+                int N_window_ref, int N_data);
 
 /******************************/
 

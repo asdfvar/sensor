@@ -55,6 +55,7 @@ int main(int argc, char *argv[]) {
    int   itt = 0, max_index;
    float corr;
    float tmp;
+   matchedfilter *MF;
 
    if (cutoff_freq < 0) apply_taper = false;
 
@@ -69,12 +70,14 @@ int main(int argc, char *argv[]) {
    /* Setup Kinetisense data */
    fio::kinIO KIN( data_path.c_str() );
 
-   matchedfilter *MF;
    mf_list MF_activities;
 
    for (int i_ref=1; i_ref<=InRefs.get_Nrefs(); i_ref++) {
       ref_path = InRefs.get_ref_path(i_ref);
-      MF_activities.append ( new matchedfilter (ref_path.c_str(), N_window) );
+      MF = new matchedfilter (ref_path.c_str(), N_window);
+      MF->apply_taper (work_buffer, cutoff_freq, freq_range);
+      MF->apply_fft(N_window);
+      MF_activities.append ( MF );
    }
 
    float ave_preproc_time = 0.0f;
@@ -125,7 +128,7 @@ int main(int argc, char *argv[]) {
          MF->run (ax, ay, dt, samp_freq, N_window, taper, apply_taper, work_buffer);
          proc_time = gettime();
 
-         MF->write_corr ("output/correlations", tag);
+         MF->write_corr ("output/correlations" + tag, initial_write);
 
          // find which activity has the highest correlation
          tmp = 0.5f * (MF->get_corr_ax() + MF->get_corr_ay());

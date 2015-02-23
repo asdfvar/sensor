@@ -1,4 +1,5 @@
 #include "matchedfilter.h"
+#include "taper.h"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -78,10 +79,7 @@ void matchedfilter::load_ref (float *ax_in, float *ay_in,
    norm_ref_ax = sqrtf( norm_ref_ax );
    norm_ref_ay = sqrtf( norm_ref_ay );
 
-   fft(ref_ax, N_data_ref);
-   fft(ref_ay, N_data_ref);
-
-   ref_data_form         = FREQ;
+   ref_data_form         = TIME;
 }
 
 /******************************************************************************/
@@ -158,11 +156,75 @@ matchedfilter::matchedfilter (const char path[], int N_data)
 
    correlations_computed = false;
 
-   fft(ref_ax, N_data_ref);
-   fft(ref_ay, N_data_ref);
+   ref_data_form         = TIME;
 
-   ref_data_form         = FREQ;
+}
 
+/******************************************************************************/
+
+void matchedfilter::apply_taper (float *taper_buff,
+                                 float cutoff_freq,
+                                 float freq_range)
+{
+
+   int k;
+
+   taper_f(taper_buff,
+           time_window_ref,
+           cutoff_freq,
+           freq_range,
+           samp_freq_ref,
+           dt_ref,
+           N_window_ref);
+
+   if (ref_data_form == TIME) {
+      fft(ref_ax, N_window_ref);
+      fft(ref_ay, N_window_ref);
+      ref_data_form = FREQ;
+   }
+
+   for (k = 0; k < N_window_ref+2; k++) ref_ax[k] *= taper_buff[k];
+   for (k = 0; k < N_window_ref+2; k++) ref_ay[k] *= taper_buff[k];
+
+   norm_ref_ax = 0.0f;
+   // Use Parceval's theorem from DC to nyquist (+)
+   for (k = 0; k < N_window_ref + 2; k++) norm_ref_ax += ref_ax[k]*ref_ax[k];
+   // Use Parceval's theorem on the negative frequencies (-)
+   for (k = 2; k < N_window_ref; k++) norm_ref_ax += ref_ax[k]*ref_ax[k];
+   norm_ref_ax /= (float)N_window_ref;
+   norm_ref_ax = sqrtf(norm_ref_ax);
+
+   norm_ref_ay = 0.0f;
+   // Use Parceval's theorem from DC to nyquist (+)
+   for (k = 0; k < N_window_ref + 2; k++) norm_ref_ay += ref_ay[k]*ref_ay[k];
+   // Use Parceval's theorem on the negative frequencies (-)
+   for (k = 2; k < N_window_ref; k++) norm_ref_ay += ref_ay[k]*ref_ay[k];
+   norm_ref_ay /= (float)N_window_ref;
+   norm_ref_ay = sqrtf(norm_ref_ay);
+
+   if (ref_data_form == FREQ) {
+      ifft(ref_ax, N_window_ref);
+      ifft(ref_ay, N_window_ref);
+      ref_data_form = TIME;
+   }
+
+   return;
+}
+
+/******************************************************************************/
+
+void matchedfilter::apply_fft(int N)
+{
+   fft(ref_ax, N);
+   fft(ref_ay, N);
+}
+
+/******************************************************************************/
+
+void matchedfilter::apply_ifft(int N)
+{
+   ifft(ref_ax, N);
+   ifft(ref_ay, N);
 }
 
 /******************************************************************************/
@@ -219,13 +281,16 @@ int matchedfilter::run (
 
    corr_ax = crosscorr(ref_ax, sig_ax, norm_ref_ax, taper, apply_taper,
                        work_buffer, dt_sig, samp_freq_sig,
-                       N_window_ref, N_sig, FREQ);
+                       N_window_ref, N_sig);
 
    corr_ay = crosscorr(ref_ay, sig_ay, norm_ref_ay, taper, apply_taper,
                        work_buffer, dt_sig, samp_freq_sig,
-                       N_window_ref, N_sig, FREQ);
+                       N_window_ref, N_sig);
 
    correlations_computed = true;
+
+   if (corr_ax > 1.0) std::cout << "Correlation in x = " << corr_ax << " > 1.0" << std::endl;
+   if (corr_ay > 1.0) std::cout << "Correlation in y = " << corr_ay << " > 1.0" << std::endl;
 
    return 1;
 }
@@ -286,11 +351,9 @@ bool matchedfilter::write (std::string ref_file)
 
 /******************************************************************************/
 
-void matchedfilter::write_corr(std::string corr_file, std::string tag)
+void matchedfilter::write_corr(std::string corr_file, bool init)
 {
-   
-   static bool init = true;
-   corr_file += tag;
+
    corr_file += to_string(activity_ID);
    std::ofstream out_file;
    if (init) {

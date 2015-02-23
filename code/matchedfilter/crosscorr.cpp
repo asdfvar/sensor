@@ -22,16 +22,14 @@ float crosscorr(
             float dt,
             float samp_freq,
             int N_window_ref,
-            int N_data,
-            data_form ref_form)
+            int N_data)
 {
 
    float tmp;
    int k;
-   float local_ref_norm;
 
    if (apply_taper) {
-      // FFT the signals
+      // FFT the signal
       fft(sig, N_data);
 
       /* Apply the taper to remove higher frequencies */
@@ -40,8 +38,7 @@ float crosscorr(
       ifft(sig, N_data);
    }
 
-   /* Compute the norm squared of the reference
-      and the signal */
+   /* Compute the norm squared of the signal */
    norm_sig2[0] = 0.0;
    for (k = 0; k < N_window_ref; k++){
       norm_sig2[0] += sig[k]*sig[k];
@@ -55,26 +52,7 @@ float crosscorr(
    }
 
    // FFT both signals
-   if(ref_form == TIME) fft(ref, N_data);
    fft(sig, N_data);
-
-   if (apply_taper) {
-
-      for (k = 0; k < N_data+2; k++) ref[k] *= taper[k];
-
-      local_ref_norm = 0.0f;
-
-      // Use Parceval's theorem from DC to nyquist (+)
-      for (k = 0; k < N_data + 2; k++) local_ref_norm += ref[k]*ref[k];
-      // Use Parceval's theorem on the negative frequencies (-)
-      for (k = 2; k < N_data; k++) local_ref_norm += ref[k]*ref[k];
-
-      local_ref_norm /= (float)N_data;
-      local_ref_norm = sqrtf(local_ref_norm);
-
-   } else {
-      local_ref_norm = norm_ref_in;
-   }
 
    /* Conjugate multiply the reference (conjugate)
       to the signal and overwrite the signal */
@@ -92,7 +70,7 @@ float crosscorr(
    /* Normalize the correlation */
 
    for (k = 0; k < N_data - N_window_ref + 1; k++)
-      sig[k] /= sqrtf( norm_sig2[k] ) * local_ref_norm;
+      sig[k] /= (sqrtf( norm_sig2[k] ) * norm_ref_in);
 
    /* We don't care about circular shifts */
    for (k = N_data - N_window_ref + 1; k < N_data; k++)
@@ -110,9 +88,6 @@ float crosscorr(
 
    int   shift = max_ind; // The number of cells the reference must shift to best match the signal
    float corr  = max;     // The normalized correlation after matching the reference to the signal
-
-   /* Bring the reference signal back to temporal units */
-   if(ref_form == TIME) ifft(ref, N_data);
 
    return corr;
 

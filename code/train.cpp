@@ -61,6 +61,8 @@ int main(int argc, char *argv[]) {
    match_filt_training (&MF, &KIN, taper, apply_taper, samp_freq, dt, time_window,
                         N_window, ref_time, N_ref_time, sens_training);
 
+   MF.apply_ifft (N_window);
+
    /* Write the data to file */
    MF.write(ref_path);
 
