@@ -41,7 +41,6 @@ matchedfilter::matchedfilter (int N_data, int activity_ID_in)
    }
 
    correlations_computed = false;
-   ref_data_form         = TIME;
    activity_ID = activity_ID_in;
 }
 
@@ -79,7 +78,6 @@ void matchedfilter::load_ref (float *ax_in, float *ay_in,
    norm_ref_ax = sqrtf( norm_ref_ax );
    norm_ref_ay = sqrtf( norm_ref_ay );
 
-   ref_data_form         = TIME;
 }
 
 /******************************************************************************/
@@ -156,8 +154,6 @@ matchedfilter::matchedfilter (const char path[], int N_data)
 
    correlations_computed = false;
 
-   ref_data_form         = TIME;
-
 }
 
 /******************************************************************************/
@@ -177,11 +173,8 @@ void matchedfilter::apply_taper (float *taper_buff,
            dt_ref,
            N_window_ref);
 
-   if (ref_data_form == TIME) {
-      fft(ref_ax, N_window_ref);
-      fft(ref_ay, N_window_ref);
-      ref_data_form = FREQ;
-   }
+   fft(ref_ax, N_window_ref);
+   fft(ref_ay, N_window_ref);
 
    for (k = 0; k < N_window_ref+2; k++) ref_ax[k] *= taper_buff[k];
    for (k = 0; k < N_window_ref+2; k++) ref_ay[k] *= taper_buff[k];
@@ -202,11 +195,8 @@ void matchedfilter::apply_taper (float *taper_buff,
    norm_ref_ay /= (float)N_window_ref;
    norm_ref_ay = sqrtf(norm_ref_ay);
 
-   if (ref_data_form == FREQ) {
-      ifft(ref_ax, N_window_ref);
-      ifft(ref_ay, N_window_ref);
-      ref_data_form = TIME;
-   }
+   ifft(ref_ax, N_window_ref);
+   ifft(ref_ay, N_window_ref);
 
    return;
 }
@@ -323,11 +313,6 @@ float matchedfilter::get_corr_ay (void)
 
 bool matchedfilter::write (std::string ref_file)
 {
-   if (ref_data_form == FREQ) {
-      ifft(ref_ax, N_data_ref);
-      ifft(ref_ay, N_data_ref);
-      ref_data_form         = TIME;
-   }
 
    ref_file += to_string(activity_ID);
 

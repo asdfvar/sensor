@@ -1,6 +1,4 @@
 #include <string>
-enum data_form {TIME, FREQ};
-
 class matchedfilter {
 
    public:
@@ -57,7 +55,6 @@ class matchedfilter {
       /* Boolean cases to make sure values and such are set before calling certain routines */
 
       bool correlations_computed;
-      data_form ref_data_form;
 
 };
 
