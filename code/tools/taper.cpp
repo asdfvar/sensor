@@ -5,6 +5,7 @@
 
 #include <cmath>
 #include <iostream>
+#include "fft.h"
 
 #define PIO2 1.5707963267948966
 
@@ -43,5 +44,17 @@ void taper_f(
 
       for (k=2*(cutoff_index + freq_range_N_hlf); k<N+2; k++) taper[k] = 0.0f;
    }
+
+}
+
+void apply_taper (float *sig, float *taper, int N) {
+
+      // FFT the signal
+      fft(sig, N);
+
+      /* Apply the taper to remove higher frequencies */
+      for (int k = 0; k < N+2; k++) sig[k] *= taper[k];
+
+      ifft(sig, N);
 
 }

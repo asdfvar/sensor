@@ -96,7 +96,7 @@ void match_filt_training(
            samp_freq,     /* Sampling frequency of the data       */
            N_window);     /* Number of sample points              */
 
-       MF->run (ax, ay, dt, samp_freq, N_window, taper, apply_taper, work_buf);
+       MF->run (ax, ay, dt, samp_freq, N_window, work_buf);
 
        sum_corr += MF->get_corr_ax () * MF->get_corr_ay() ;
 

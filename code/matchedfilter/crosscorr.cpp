@@ -16,8 +16,6 @@ float crosscorr(
             float *ref,
             float *sig,
             float norm_ref_in,
-            float *taper,
-            bool  apply_taper,
             float *norm_sig2, /* buffer space */
             float dt,
             float samp_freq,
@@ -27,16 +25,6 @@ float crosscorr(
 
    float tmp;
    int k;
-
-   if (apply_taper) {
-      // FFT the signal
-      fft(sig, N_data);
-
-      /* Apply the taper to remove higher frequencies */
-      for (k = 0; k < N_data+2; k++) sig[k] *= taper[k];
-
-      ifft(sig, N_data);
-   }
 
    /* Compute the norm squared of the signal */
    norm_sig2[0] = 0.0;

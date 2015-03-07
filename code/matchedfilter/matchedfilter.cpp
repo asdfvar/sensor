@@ -249,8 +249,6 @@ int matchedfilter::run (
            float dt_sig,
            float samp_freq_sig,
            int N_sig,
-           float *taper,
-           bool apply_taper,
            float *work_buffer)
 {
 
@@ -269,18 +267,18 @@ int matchedfilter::run (
       return -1;
    }
 
-   corr_ax = crosscorr(ref_ax, sig_ax, norm_ref_ax, taper, apply_taper,
+   corr_ax = crosscorr(ref_ax, sig_ax, norm_ref_ax,
                        work_buffer, dt_sig, samp_freq_sig,
                        N_window_ref, N_sig);
 
-   corr_ay = crosscorr(ref_ay, sig_ay, norm_ref_ay, taper, apply_taper,
+   corr_ay = crosscorr(ref_ay, sig_ay, norm_ref_ay,
                        work_buffer, dt_sig, samp_freq_sig,
                        N_window_ref, N_sig);
 
    correlations_computed = true;
 
-   if (corr_ax > 1.0) std::cout << "Correlation in x = " << corr_ax << " > 1.0" << std::endl;
-   if (corr_ay > 1.0) std::cout << "Correlation in y = " << corr_ay << " > 1.0" << std::endl;
+   if (corr_ax > 1.00001) std::cout << "Correlation in x = " << corr_ax << " > 1.0" << std::endl;
+   if (corr_ay > 1.00001) std::cout << "Correlation in y = " << corr_ay << " > 1.0" << std::endl;
 
    return 1;
 }

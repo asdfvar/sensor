@@ -6,3 +6,5 @@ void taper_f(
        float samp_freq,
        float dt,
        int   N);
+
+void apply_taper (float *sig, float *taper, int N);

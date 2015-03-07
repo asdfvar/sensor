@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
    float *ay    = new float[N_window+2];   // Workspace for the signal in y
    float *az    = new float[N_window+2];   // Workspace for the signal in z
    float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
-   bool  apply_taper   = true;
+   bool  Do_taper   = true;
    int   N_ref_time    = (int)(ref_time * samp_freq);
    int   sens_training = 2; // sensor used for training
    float *work_buffer  = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
    float tmp;
    matchedfilter *MF;
 
-   if (cutoff_freq < 0) apply_taper = false;
+   if (cutoff_freq < 0) Do_taper = false;
 
    taper_f(taper,
            time_window,
@@ -113,6 +113,10 @@ int main(int argc, char *argv[]) {
       proc_time = gettime();
       ave_preproc_time += proc_time;
 
+      if (Do_taper) {
+         apply_taper (ax, taper, N_window);
+         apply_taper (ay, taper, N_window);
+      }
 /*
  * MATCHED FILTER
  */
@@ -125,7 +129,7 @@ int main(int argc, char *argv[]) {
          MF = MF_activities.get_MF();
 
          gettime();
-         MF->run (ax, ay, dt, samp_freq, N_window, taper, apply_taper, work_buffer);
+         MF->run (ax, ay, dt, samp_freq, N_window, work_buffer);
          proc_time = gettime();
 
          MF->write_corr ("output/correlations" + tag, initial_write);
