@@ -25,19 +25,19 @@ int main(int argc, char *argv[]) {
    fio::inputFile InFile(input_file);
    fio::readRefs  InRefs(refs_file);
 
-   std::string tag         = InFile.get_parameter_s("tag"        ); // tag name for this run
-   float time_window       = InFile.get_parameter_f("time_window"); // seconds to analyze a signal
-   float freq_range        = InFile.get_parameter_f("freq_range" ); // Hz
-   float cutoff_freq       = InFile.get_parameter_f("cutoff_freq"); // Hz
-   float samp_freq         = InFile.get_parameter_f("samp_freq"  ); // Hz
-   float ref_time          = InFile.get_parameter_f("ref_time"   ); // reference time for training
-   float threshold         = InFile.get_parameter_f("threshold"  );
-   std::string data_path   = InFile.get_parameter_s("data_path"  );
+   std::string tag         = InFile.get_parameter_s  ("tag"        ); // tag name for this run
+   float time_window       = InFile.get_parameter_f  ("time_window"); // seconds to analyze a signal
+   float freq_range        = InFile.get_parameter_f  ("freq_range" ); // Hz
+   float cutoff_freq       = InFile.get_parameter_f  ("cutoff_freq"); // Hz
+   float samp_freq         = InFile.get_parameter_f  ("samp_freq"  ); // Hz
+   float ref_time          = InFile.get_parameter_f  ("ref_time"   ); // reference time for training
+   float threshold         = InFile.get_parameter_f  ("threshold"  );
+   int   sex               = InFile.get_parameter_sex("sex"        );
+   float age               = InFile.get_parameter_f  ("age"        ); // yrs
+   float weight            = InFile.get_parameter_f  ("weight"     ); // kg
+   float height            = InFile.get_parameter_f  ("height"     ); // cm
+   std::string data_path   = InFile.get_parameter_s  ("data_path"  );
    std::string ref_path;
-   float age    = 30.0;  // yrs
-   float weight = 70.0;  // kg
-   float height = 180.0; // cm
-   int   sex    = MALE;
    float dt              = 1.0 / samp_freq; // seconds
    float start_time      = 0.0;             // seconds from start
    int   N_window        = (int) (samp_freq * time_window); // Number of data points of the signal

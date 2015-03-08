@@ -1,4 +1,5 @@
 #include "fileio.h"
+#include "energy_expenditure.h"
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -196,6 +197,7 @@ namespace fio {
        return atof(value.c_str());
     }
 
+    return -1;
  }
 
 /******************************************************************/
@@ -228,6 +230,47 @@ namespace fio {
        return value;
     }
 
+    return "-1";
+ }
+
+/******************************************************************/
+
+ int inputFile::get_parameter_sex(std::string parameter) {
+
+    input.seekg(0, input.beg);
+
+    std::string line;
+    std::string inp_parameter;
+    std::string delimiter = "=";
+    std::string value;
+    int delimiter_pos;
+
+    int inc=0;
+    do {
+       std::getline (input, line);
+       delimiter_pos = line.find(delimiter);
+       inp_parameter = line.substr(0, delimiter_pos);
+       inc++;
+    } while (parameter != inp_parameter && !input.eof() && inc<999);
+
+    if (input.eof()) {
+       std::cout << "Parameter (int) not found" << std::endl;
+       return -1;
+    } else if (inc==999) {
+       std::cout << "Max attempts to read parameter (int) made" << std::endl;
+    } else {
+       value = line.substr(delimiter_pos+1, line.length());
+       if (value == "M")
+          return MALE;
+       else if (value == "F")
+          return FEMALE;
+       else {
+          std::cout << "Sex not specified" << std::endl;
+          return -1;
+       }
+    }
+
+    return -1;
  }
 
 

@@ -87,8 +87,9 @@ namespace fio {
       inputFile(std::string in_file);
      ~inputFile(void);
 
-      float get_parameter_f (std::string parameter);
-      int   get_parameter_i (std::string parameter);
+      float get_parameter_f       (std::string parameter);
+      int   get_parameter_i       (std::string parameter);
+      int   get_parameter_sex     (std::string parameter);
       std::string get_parameter_s (std::string parameter);
 
    private:
