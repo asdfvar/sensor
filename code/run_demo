@@ -8,11 +8,9 @@ if [ ! -d output ]; then
    mkdir -v output
 fi
 
-process=training
-input_file=input_demo
+input_file=input_train_demo
 ./train $input_file
 
-process=data
 input_file=input_demo
 refs_path=ref_demo
 ./sensor $input_file $refs_path
