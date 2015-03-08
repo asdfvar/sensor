@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
    float start_time      = 0.0;             // seconds from start
    int   N_window        = (int) (samp_freq * time_window); // Number of data points of the signal
    float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
-   bool  apply_taper = true;
+   bool  Do_taper = true;
    int   N_ref_time = (int)(ref_time * samp_freq);
    int   sens_training = 2; // sensor used for training
    float power;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
    float proc_time;
    int   itt = 0;
 
-   if (cutoff_freq < 0) apply_taper = false;
+   if (cutoff_freq < 0) Do_taper = false;
 
    taper_f(taper,
            time_window,
@@ -58,10 +58,9 @@ int main(int argc, char *argv[]) {
    matchedfilter MF (N_window, atoi(activity_ID.c_str()));
 
    /* Train on the data provided */
-   match_filt_training (&MF, &KIN, taper, apply_taper, samp_freq, dt, time_window,
-                        N_window, ref_time, N_ref_time, sens_training);
-
-   MF.apply_ifft (N_window);
+   match_filt_training (&MF, &KIN, taper, Do_taper, cutoff_freq, freq_range,
+                        samp_freq, dt, time_window, N_window, ref_time,
+                        N_ref_time, sens_training);
 
    /* Write the data to file */
    MF.write(ref_path);

@@ -248,7 +248,7 @@ int matchedfilter::run (
            float *sig_ay,
            float dt_sig,
            float samp_freq_sig,
-           int N_sig,
+           int   N_sig,
            float *work_buffer)
 {
 
@@ -277,8 +277,8 @@ int matchedfilter::run (
 
    correlations_computed = true;
 
-   if (corr_ax > 1.00001) std::cout << "Correlation in x = " << corr_ax << " > 1.0" << std::endl;
-   if (corr_ay > 1.00001) std::cout << "Correlation in y = " << corr_ay << " > 1.0" << std::endl;
+   if (corr_ax > 1.000001) std::cout << "Correlation in x = " << corr_ax << " > 1.0" << std::endl;
+   if (corr_ay > 1.000001) std::cout << "Correlation in y = " << corr_ay << " > 1.0" << std::endl;
 
    return 1;
 }

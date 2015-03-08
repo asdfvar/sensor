@@ -2,6 +2,7 @@
 #include "fileio.h"
 #include "preproc.h"
 #include "gettime.h"
+#include "taper.h"
 #include <iostream>
 
 #define BINS 200.0
@@ -10,7 +11,9 @@ void match_filt_training(
               matchedfilter *MF,
               fio::kinIO    *KIN,
               float         *taper,
-              bool           apply_taper,
+              float          cutoff_freq,
+              float          freq_range,
+              bool           Do_taper,
               float          samp_freq,
               float          dt,
               float          time_window,      /* Signal window time (seconds)    */
@@ -68,6 +71,7 @@ void match_filt_training(
         N_window);     /* Number of sample points              */
 
     MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
+    if (Do_taper) MF->apply_taper (work_buf, cutoff_freq, freq_range);
     MF->apply_fft(N_window);
 
     /* Loop through signal to test this loaded reference */
@@ -95,6 +99,11 @@ void match_filt_training(
            time_window,   /* Time window of the data              */
            samp_freq,     /* Sampling frequency of the data       */
            N_window);     /* Number of sample points              */
+
+       if (Do_taper) {
+          apply_taper (ax, taper, N_window);
+          apply_taper (ay, taper, N_window);
+       }
 
        MF->run (ax, ay, dt, samp_freq, N_window, work_buf);
 
@@ -139,7 +148,6 @@ void match_filt_training(
      N_window);     /* Number of sample points              */
 
  MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
- MF->apply_fft(N_window);
 
  std::cout << "Training time = " << gettime() << std::endl;
 

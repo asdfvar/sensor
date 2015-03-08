@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
    for (int i_ref=1; i_ref<=InRefs.get_Nrefs(); i_ref++) {
       ref_path = InRefs.get_ref_path(i_ref);
       MF = new matchedfilter (ref_path.c_str(), N_window);
-      MF->apply_taper (work_buffer, cutoff_freq, freq_range);
+      if (Do_taper) MF->apply_taper (work_buffer, cutoff_freq, freq_range);
       MF->apply_fft(N_window);
       MF_activities.append ( MF );
    }
