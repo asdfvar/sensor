@@ -51,7 +51,6 @@ int main(int argc, char *argv[]) {
    float *work_buffer  = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
    float power, energy;
    float *data_ax, *data_ay, *data_az;
-   float proc_time;
    int   itt = 0, max_index;
    float corr;
    float tmp;
@@ -80,7 +79,9 @@ int main(int argc, char *argv[]) {
       MF_activities.append ( MF );
    }
 
+   float proc_time;
    float ave_preproc_time = 0.0f;
+   float ave_mf_time      = 0.0f;
    bool  initial_write = true;
 
    for (itt=0; KIN.valid_start_end (start_time, time_window); itt++, start_time += TIME_INC)
@@ -131,6 +132,7 @@ int main(int argc, char *argv[]) {
          gettime();
          MF->run (ax, ay, dt, samp_freq, N_window, work_buffer);
          proc_time = gettime();
+         ave_mf_time += proc_time;
 
          MF->write_corr ("output/correlations" + tag, initial_write);
 
@@ -178,6 +180,8 @@ int main(int argc, char *argv[]) {
 
    ave_preproc_time /= (float) itt;
    std::cout << "average pre-processing time = " << ave_preproc_time << std::endl;
+   ave_mf_time /= (float) itt;
+   std::cout << "average matched-filter time = " << ave_mf_time << std::endl;
 
    delete[] ax;
    delete[] ay;

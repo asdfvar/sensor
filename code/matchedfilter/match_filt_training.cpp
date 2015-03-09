@@ -11,9 +11,9 @@ void match_filt_training(
               matchedfilter *MF,
               fio::kinIO    *KIN,
               float         *taper,
+              bool           Do_taper,
               float          cutoff_freq,
               float          freq_range,
-              bool           Do_taper,
               float          samp_freq,
               float          dt,
               float          time_window,      /* Signal window time (seconds)    */
@@ -127,6 +127,9 @@ void match_filt_training(
  }
 
  /* load the best section into the reference */
+
+ std::cout << "Reference choosen from start time: " << best_start_time << " From "
+           << KIN->get_total_time() << " Total seconds of data" << std::endl;
 
  tmp = KIN->get_sens_ax (best_start_time, sens_num);
  for (int k=0; k<N_window+2; k++) ax[k] = tmp[k];
