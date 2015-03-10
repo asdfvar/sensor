@@ -111,13 +111,13 @@ int main(int argc, char *argv[]) {
           time_window,   /* Time window of the data              */
           samp_freq,     /* Sampling frequency of the data       */
           N_window);     /* Number of sample points              */
-      proc_time = gettime();
-      ave_preproc_time += proc_time;
 
       if (Do_taper) {
          apply_taper (ax, taper, N_window);
          apply_taper (ay, taper, N_window);
       }
+      proc_time = gettime();
+      ave_preproc_time += proc_time;
 /*
  * MATCHED FILTER
  */

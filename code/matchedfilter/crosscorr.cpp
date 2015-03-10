@@ -19,8 +19,8 @@ float crosscorr(
             float *norm_sig2, /* buffer space */
             float dt,
             float samp_freq,
-            int N_window_ref,
-            int N_data)
+            int   N_window_ref,
+            int   N_data)
 {
 
    float tmp;
@@ -55,24 +55,38 @@ float crosscorr(
 
    ifft(sig, N_data);
 
-   /* Normalize the correlation */
+   /* lower bound the correlation by zero prior to squaring it */
+
+   for (k = 0; k < N_data; k++) sig[k] = (sig[k] > 0.0f) ? sig[k] : 0.0f;
+
+   /* Normalize the correlation and square its magnitude */
 
    for (k = 0; k < N_data - N_window_ref + 1; k++)
-      sig[k] /= (sqrtf( norm_sig2[k] ) * norm_ref_in);
+      sig[k] *= sig[k];
+
+   norm_ref_in *= norm_ref_in;
+
+   /* using the square of the correlation allows us to minimize the cost
+      of invoking the square root repeatedly*/
 
    /* We don't care about circular shifts */
-   for (k = N_data - N_window_ref + 1; k < N_data; k++)
-      sig[k] = 0.0;
+   int N_data_ref = N_data - N_window_ref + 1;
 
-   float max = sig[0];
-   int max_ind = 0;
+   for (k = 0; k < N_data_ref; k++) norm_sig2[k] *= norm_ref_in;
 
-   for (k = 1; k < N_data - N_window_ref + 1; k++) {
+   for (k = 0; k < N_data_ref; k++) sig[k] /= norm_sig2[k];
+
+   float max     = sig[0];
+   int   max_ind = 0;
+
+   for (k = 1; k < N_data_ref; k++) {
       if (sig[k] > max){
          max = sig[k];
          max_ind = k;
       }
    }
+
+   max = sqrtf(max);
 
    int   shift = max_ind; // The number of cells the reference must shift to best match the signal
    float corr  = max;     // The normalized correlation after matching the reference to the signal
