@@ -3,6 +3,7 @@
 #include "preproc.h"
 #include "gettime.h"
 #include "taper.h"
+#include "filter.h"
 #include <iostream>
 
 #define BINS 200.0
@@ -101,8 +102,13 @@ void match_filt_training(
            N_window);     /* Number of sample points              */
 
        if (Do_taper) {
+#if 0
           apply_taper (ax, taper, N_window);
           apply_taper (ay, taper, N_window);
+#else
+          apply_filter (ax, 1, N_window);
+          apply_filter (ay, 1, N_window);
+#endif
        }
 
        MF->run (ax, ay, dt, samp_freq, N_window, work_buf);

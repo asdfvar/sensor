@@ -9,6 +9,7 @@
 #include "compendium.h"
 #include "gettime.h"
 #include "taper.h"
+#include "filter.h"
 
 #define TIME_INC 0.5
 
@@ -82,7 +83,7 @@ int main(int argc, char *argv[]) {
    float proc_time;
    float ave_preproc_time = 0.0f;
    float ave_mf_time      = 0.0f;
-   bool  initial_write = true;
+   bool  initial_write    = true;
 
    for (itt=0; KIN.valid_start_end (start_time, time_window); itt++, start_time += TIME_INC)
    {
@@ -113,8 +114,13 @@ int main(int argc, char *argv[]) {
           N_window);     /* Number of sample points              */
 
       if (Do_taper) {
+#if 0
          apply_taper (ax, taper, N_window);
          apply_taper (ay, taper, N_window);
+#else
+         apply_filter (ax, 1, N_window);
+         apply_filter (ay, 1, N_window);
+#endif
       }
       proc_time = gettime();
       ave_preproc_time += proc_time;

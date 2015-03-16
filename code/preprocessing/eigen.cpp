@@ -7,8 +7,7 @@
  * The input matrix is copied to a temporary array A.
  * Then the Q and R decomposition is computed from A (A = QR).
  * A new A term is computed via A := RQ.
- * Then the above 2 lines are repeated until the diagonal terms of A
- * differ from the previous iteration by some tolerance.
+ * Then the above 2 lines are repeated until a desired convergence is aquired.
  * The eigenvalues are the diagonal terms of A and the
  * eigenvectors are the columns of the product of all the Q terms in succession
  * V = Q_0 * Q_1 * ... * Q_n
@@ -238,7 +237,7 @@ int eigen(const float mat[3][3], float *eigVl, float *eigVec)
       // Extract the eigenvalues
       for (k = 0; k < 3; k++) eigVl[k] = A[k][k];
 
-      // Look into Gershgorin circle theorem as an alternative method of convergence
+      // Gershgorin circle theorem is used as the method of convergence
       R1  = ABS(A[0][1]);
       R1 += ABS(A[0][2]);
       R2  = ABS(A[1][0]);
