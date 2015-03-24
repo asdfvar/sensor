@@ -48,6 +48,10 @@ float energy_expenditure (
          MET = 8.0;
          break;
 
+      case JOGGING:
+         MET = 7.0;
+         break;
+
       default: /* NONE */
          MET = 1.0;
    }
