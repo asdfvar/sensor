@@ -23,23 +23,27 @@ float crosscorr(
             int   N_data)
 {
 
-   float tmp;
+   float tmp, tmp2;
    int k;
 
    /* Compute the norm squared of the signal */
-   norm_sig2[0] = 0.0;
+   for (k = 0; k < N_data; k++){
+      norm_sig2[k] = sig[k] * sig[k];
+   }
+
+   tmp = 0.0f;
    for (k = 0; k < N_window_ref; k++){
-      norm_sig2[0] += sig[k]*sig[k];
+      tmp += norm_sig2[k];
    }
 
-   /* Fill the buffer with the normalizing factors of the signal */
-   for (k = 1; k < N_data - N_window_ref + 1; k++) {
-      norm_sig2[k] = norm_sig2[k-1]     -
-                    sig[k-1] * sig[k-1] +
-                    sig[k+N_window_ref-1] * sig[k+N_window_ref-1];
+   for (k = 0; k < N_data - N_window_ref; k++) {
+      tmp2          = norm_sig2[k];
+      norm_sig2[k]  = tmp;
+      tmp          += norm_sig2[k+N_window_ref] - tmp2;
    }
+   norm_sig2[k] = tmp;
 
-   // FFT both signals
+   // FFT
    fft(sig, N_data);
 
    /* Conjugate multiply the reference (conjugate)
@@ -56,7 +60,6 @@ float crosscorr(
    ifft(sig, N_data);
 
    /* lower bound the correlation by zero prior to squaring it */
-
    for (k = 0; k < N_data; k++) sig[k] = (sig[k] > 0.0f) ? sig[k] : 0.0f;
 
    /* Normalize the correlation and square its magnitude */
