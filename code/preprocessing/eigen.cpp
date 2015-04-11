@@ -35,7 +35,9 @@
  * Only supports up to 3x3.
 */
 
-static void matrix_mult_transpose(float *C, const float *A, const float *Bt,
+static void matrix_mult_transpose(float       *__restrict__ C,
+                                  const float *__restrict__ A,
+                                  const float *__restrict__ Bt,
                                   const int N) {
 
    float tmp[3];
@@ -65,8 +67,10 @@ static void matrix_mult_transpose(float *C, const float *A, const float *Bt,
  *
 */
 
-static void transpose_matrix_mult_transpose(float *Ct, const float *A, const float *Bt,
-                                  const int N) {
+static void transpose_matrix_mult_transpose(float       *__restrict__ Ct,
+                                            const float *__restrict__ A,
+                                            const float *__restrict__ Bt,
+                                            const int N) {
 
    for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
@@ -104,7 +108,9 @@ static void transpose_matrix_mult_transpose(float *Ct, const float *A, const flo
  * of iterations.
  */
 
-int eigen(const float mat[3][3], float *eigVl, float *eigVec)
+int eigen(const float mat[3][3],
+          float *__restrict__ eigVl,
+          float *__restrict__ eigVec)
 {
 
    int i,j,k;
