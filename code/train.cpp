@@ -30,16 +30,11 @@ int main(int argc, char *argv[]) {
    std::string ref_path    = InFile.get_parameter_s("ref_path"   ); // used for training
    std::string activity_ID = InFile.get_parameter_s("activity_ID"); // used for training
    float dt              = 1.0 / samp_freq; // seconds
-   float start_time      = 0.0;             // seconds from start
    int   N_window        = (int) (samp_freq * time_window); // Number of data points of the signal
    float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
    bool  Do_taper = true;
    int   N_ref_time = (int)(ref_time * samp_freq);
    int   sens_training = 2; // sensor used for training
-   float power;
-   float *data_ax, *data_ay, *data_az;
-   float proc_time;
-   int   itt = 0;
 
    if (cutoff_freq < 0) Do_taper = false;
 

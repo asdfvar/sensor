@@ -24,10 +24,10 @@
 #include "eigen.h"
 
 int preproc(
-     float *ax,             /* Acceleration data in x          */
-     float *ay,             /* Acceleration data in y          */
-     float *az,             /* Acceleration data in z          */
-     float *power,          /* Resulting power of the signal   */
+     float *__restrict__ ax,             /* Acceleration data in x          */
+     float *__restrict__ ay,             /* Acceleration data in y          */
+     float *__restrict__ az,             /* Acceleration data in z          */
+     float *__restrict__ power,          /* Resulting power of the signal   */
      const float dt,        /* Delta time comstant             */
      const float window,    /* Time window of the data         */
      const float samp_freq, /* Sampling frequency of the data  */

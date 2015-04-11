@@ -13,10 +13,10 @@ extern "C" {
 #include <iostream>
 
 float crosscorr(
-            float *ref,
-            float *sig,
+            float *__restrict__ ref,
+            float *__restrict__ sig,
             float norm_ref_in,
-            float *norm_sig2, /* buffer space */
+            float *__restrict__ norm_sig2, /* buffer space */
             float dt,
             float samp_freq,
             int   N_window_ref,

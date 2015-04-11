@@ -33,12 +33,12 @@ void match_filt_training(
  float sum_corr          = 0.0;
  float best_correlations = 0.0;
 
- float *ax = new float[N_window+2];   // Workspace for the signal in x
- float *ay = new float[N_window+2];   // Workspace for the signal in y
- float *az = new float[N_window+2];   // Workspace for the signal in z
+ float *__restrict__ ax = new float[N_window+2];   // Workspace for the signal in x
+ float *__restrict__ ay = new float[N_window+2];   // Workspace for the signal in y
+ float *__restrict__ az = new float[N_window+2];   // Workspace for the signal in z
 
- float *work_buf = new float[N_window+2];
- float *tmp;
+ float *__restrict__ work_buf = new float[N_window+2];
+ float *__restrict__ tmp;
 
  float prev_perc_done = 0.0;
  float curr_perc_done = 0.0;
