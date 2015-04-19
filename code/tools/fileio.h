@@ -16,9 +16,13 @@ namespace fio {
       bool valid_start_end (float start, float window);
 
       // Returns a pointer to the acceleration data in x,y,z respectively of sensor 1
-      float *get_sens_ax (float start, int sens_num);
-      float *get_sens_ay (float start, int sens_num);
-      float *get_sens_az (float start, int sens_num);
+      float *access_sens_ax (float start, int sens_num);
+      float *access_sens_ay (float start, int sens_num);
+      float *access_sens_az (float start, int sens_num);
+
+      float load_sens_ax (float *ax, float time, int sens_num, int N);
+      float load_sens_ay (float *ay, float time, int sens_num, int N);
+      float load_sens_az (float *az, float time, int sens_num, int N);
 
       float get_total_time (void);
 

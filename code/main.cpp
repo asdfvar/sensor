@@ -89,15 +89,9 @@ int main(int argc, char *argv[]) {
    for (itt=0; KIN.valid_start_end (start_time, time_window); itt++, start_time += TIME_INC)
    {
 
-      data_ax = KIN.get_sens_ax (start_time, 2);
-      data_ay = KIN.get_sens_ay (start_time, 2);
-      data_az = KIN.get_sens_az (start_time, 2);
-
-      for (int k=0; k<N_window+2; k++) {
-         ax[k] = data_ax[k];
-         ay[k] = data_ay[k];
-         az[k] = data_az[k];
-      }
+      KIN.load_sens_ax (ax, start_time, 2, N_window);
+      KIN.load_sens_ay (ay, start_time, 2, N_window);
+      KIN.load_sens_az (az, start_time, 2, N_window);
 
 /*
  * PRE-PROCESSING

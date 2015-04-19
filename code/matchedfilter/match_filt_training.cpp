@@ -39,7 +39,6 @@ void match_filt_training(
  float *__restrict__ az = new float[N_window+2];   // Workspace for the signal in z
 
  float *__restrict__ buf = new float[N_window+2];
- float *__restrict__ tmp;
 
  float prev_perc_done = 0.0;
  float curr_perc_done = 0.0;
@@ -53,14 +52,9 @@ void match_filt_training(
 
     /* load into reference */
 
-    tmp = KIN->get_sens_ax (start_time_ref, sens_num);
-    for (int k=0; k<N_window+2; k++) ax[k] = tmp[k];
-
-    tmp = KIN->get_sens_ay (start_time_ref, sens_num);
-    for (int k=0; k<N_window+2; k++) ay[k] = tmp[k];
-
-    tmp = KIN->get_sens_az (start_time_ref, sens_num);
-    for (int k=0; k<N_window+2; k++) az[k] = tmp[k];
+    KIN->load_sens_ax (ax, start_time_ref, 2, N_window);
+    KIN->load_sens_ay (ay, start_time_ref, 2, N_window);
+    KIN->load_sens_az (az, start_time_ref, 2, N_window);
 
     preproc(
         ax,            /* Acceleration data in x               */
@@ -83,14 +77,9 @@ void match_filt_training(
     while (KIN->valid_start_end (start_time_sig, time_window))
     {
 
-       tmp = KIN->get_sens_ax (start_time_sig, sens_num);
-       for (int k=0; k<N_window+2; k++) ax[k] = tmp[k];
-
-       tmp = KIN->get_sens_ay (start_time_sig, sens_num);
-       for (int k=0; k<N_window+2; k++) ay[k] = tmp[k];
-
-       tmp = KIN->get_sens_az (start_time_sig, sens_num);
-       for (int k=0; k<N_window+2; k++) az[k] = tmp[k];
+       KIN->load_sens_ax (ax, start_time_sig, 2, N_window);
+       KIN->load_sens_ay (ay, start_time_sig, 2, N_window);
+       KIN->load_sens_az (az, start_time_sig, 2, N_window);
 
        preproc(
            ax,            /* Acceleration data in x               */
@@ -144,14 +133,9 @@ void match_filt_training(
  std::cout << "Reference choosen from start time: " << best_start_time << " From "
            << KIN->get_total_time() << " Total seconds of data" << std::endl;
 
- tmp = KIN->get_sens_ax (best_start_time, sens_num);
- for (int k=0; k<N_window+2; k++) ax[k] = tmp[k];
-
- tmp = KIN->get_sens_ay (best_start_time, sens_num);
- for (int k=0; k<N_window+2; k++) ay[k] = tmp[k];
-
- tmp = KIN->get_sens_az (best_start_time, sens_num);
- for (int k=0; k<N_window+2; k++) az[k] = tmp[k];
+ KIN->load_sens_ax (ax, best_start_time, 2, N_window);
+ KIN->load_sens_ay (ay, best_start_time, 2, N_window);
+ KIN->load_sens_az (az, best_start_time, 2, N_window);
 
  preproc(
      ax,            /* Acceleration data in x               */

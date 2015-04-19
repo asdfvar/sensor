@@ -35,7 +35,7 @@ namespace fio {
 
 /******************************************************************/
 
- float *kinIO::get_sens_ax (float time, int sens_num)
+ float *kinIO::access_sens_ax (float time, int sens_num)
  {
    int k = (int)(time * samp_freq);
 
@@ -50,7 +50,7 @@ namespace fio {
 
 /******************************************************************/
 
- float *kinIO::get_sens_ay (float time, int sens_num)
+ float *kinIO::access_sens_ay (float time, int sens_num)
  {
    int k = (int)(time * samp_freq);
 
@@ -65,7 +65,7 @@ namespace fio {
 
 /******************************************************************/
 
- float *kinIO::get_sens_az (float time, int sens_num)
+ float *kinIO::access_sens_az (float time, int sens_num)
  {
    int k = (int)(time * samp_freq);
 
@@ -76,6 +76,39 @@ namespace fio {
       std::cout << "Sensor number not supported" << std::endl;
       return 0;
    }
+ }
+
+/******************************************************************/
+
+ float kinIO::load_sens_ax (float *__restrict__ ax, float time, int sens_num, int N)
+ {
+   int k_start = (int)(time * samp_freq);
+
+    if (sens_num == 1)      for (int k=0; k<N; k++) ax[k] = kin_data[0][k + k_start];
+    else if (sens_num == 2) for (int k=0; k<N; k++) ax[k] = kin_data[6][k + k_start];
+    else if (sens_num == 3) for (int k=0; k<N; k++) ax[k] = kin_data[12][k + k_start];
+ }
+
+/******************************************************************/
+
+ float kinIO::load_sens_ay (float *__restrict__ ay, float time, int sens_num, int N)
+ {
+   int k_start = (int)(time * samp_freq);
+
+    if (sens_num == 1)      for (int k=0; k<N; k++) ay[k] = kin_data[1][k + k_start];
+    else if (sens_num == 2) for (int k=0; k<N; k++) ay[k] = kin_data[7][k + k_start];
+    else if (sens_num == 3) for (int k=0; k<N; k++) ay[k] = kin_data[13][k + k_start];
+ }
+
+/******************************************************************/
+
+ float kinIO::load_sens_az (float *__restrict__ az, float time, int sens_num, int N)
+ {
+   int k_start = (int)(time * samp_freq);
+
+    if (sens_num == 1)      for (int k=0; k<N; k++) az[k] = kin_data[2][k + k_start];
+    else if (sens_num == 2) for (int k=0; k<N; k++) az[k] = kin_data[8][k + k_start];
+    else if (sens_num == 3) for (int k=0; k<N; k++) az[k] = kin_data[17][k + k_start];
  }
 
 /******************************************************************/
