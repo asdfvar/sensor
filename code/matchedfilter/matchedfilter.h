@@ -1,4 +1,5 @@
 #include <string>
+
 class matchedfilter {
 
    public:
@@ -16,8 +17,19 @@ class matchedfilter {
                      float dt_in, float samp_freq_in,
                      float time_window_in, int N_window_in, int N_data_in);
 
+      float *access_ax (void);
+      float *access_ay (void);
+
+      float get_norm_ax (void);
+      float get_norm_ay (void);
+
+      void set_corr_ax (float corr);
+      void set_corr_ay (float corr);
+
       float get_corr_ax (void); // Return correlation in x
       float get_corr_ay (void); // Return correlation in y
+
+      int get_N_window (void);
 
       void set_ID(int);  // set the activity ID
       int  get_ID(void); // get the activity ID
@@ -25,10 +37,9 @@ class matchedfilter {
       bool write(std::string); // write the data to file
       void write_corr (std::string file, bool initial_write);
       void print_all (void);
-      void apply_taper (
-                                 float *taper_buff,
-                                 float cutoff_freq,
-                                 float freq_range);
+      void apply_taper (float *taper_buff,
+                        float cutoff_freq,
+                        float freq_range);
       void apply_fft(int N);
       void apply_ifft(int N);
 
@@ -53,7 +64,8 @@ class matchedfilter {
 
       /* Boolean cases to make sure values and such are set before calling certain routines */
 
-      bool correlations_computed;
+      bool corr_ax_computed;
+      bool corr_ay_computed;
 
 };
 

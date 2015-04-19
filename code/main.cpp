@@ -10,6 +10,7 @@
 #include "gettime.h"
 #include "taper.h"
 #include "filter.h"
+#include "run_mf.h"
 
 #define TIME_INC 0.5
 
@@ -136,7 +137,15 @@ int main(int argc, char *argv[]) {
          MF = MF_activities.get_MF();
 
          gettime();
-         MF->run (ax, ay, dt, samp_freq, N_window, work_buffer);
+
+         run_mf (MF,
+                 ax,
+                 ay,
+                 dt,
+                 samp_freq,
+                 N_window,
+                 work_buffer);
+
          proc_time = gettime();
          ave_mf_time += proc_time;
 

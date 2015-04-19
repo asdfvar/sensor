@@ -1,4 +1,5 @@
 #include "matchedfilter.h"
+#include "run_mf.h"
 #include "fileio.h"
 #include "preproc.h"
 #include "gettime.h"
@@ -37,7 +38,7 @@ void match_filt_training(
  float *__restrict__ ay = new float[N_window+2];   // Workspace for the signal in y
  float *__restrict__ az = new float[N_window+2];   // Workspace for the signal in z
 
- float *__restrict__ work_buf = new float[N_window+2];
+ float *__restrict__ buf = new float[N_window+2];
  float *__restrict__ tmp;
 
  float prev_perc_done = 0.0;
@@ -72,7 +73,7 @@ void match_filt_training(
         N_window);     /* Number of sample points              */
 
     MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
-    if (Do_taper) MF->apply_taper (work_buf, cutoff_freq, freq_range);
+    if (Do_taper) MF->apply_taper (buf, cutoff_freq, freq_range);
     MF->apply_fft(N_window);
 
     /* Loop through signal to test this loaded reference */
@@ -111,7 +112,13 @@ void match_filt_training(
 #endif
        }
 
-       MF->run (ax, ay, dt, samp_freq, N_window, work_buf);
+       run_mf (MF,
+               ax,
+               ay,
+               dt,
+               samp_freq,
+               N_window,
+               buf);
 
        sum_corr += MF->get_corr_ax () * MF->get_corr_ay() ;
 
@@ -163,6 +170,6 @@ void match_filt_training(
  delete[] ax;
  delete[] ay;
  delete[] az;
- delete[] work_buf;
+ delete[] buf;
 
 }

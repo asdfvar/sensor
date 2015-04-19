@@ -14,3 +14,11 @@ input_file=input_train_demo
 input_file=input_demo
 refs_path=ref_demo
 ./sensor $input_file $refs_path
+
+
+# used to help simplify using diff
+cat output/activity_demo > output/all_of_it
+cat output/correlations_demo17190 >> output/all_of_it
+cat output/energy_demo >> output/all_of_it
+cat output/power_demo >> output/all_of_it
+cat output/ref_data17190 >> output/all_of_it

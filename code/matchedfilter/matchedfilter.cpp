@@ -40,7 +40,8 @@ matchedfilter::matchedfilter (int N_data, int activity_ID_in)
       ref_ay[k] = 0.0;
    }
 
-   correlations_computed = false;
+   corr_ax_computed = false;
+   corr_ay_computed = false;
    activity_ID = activity_ID_in;
 }
 
@@ -152,7 +153,8 @@ matchedfilter::matchedfilter (const char path[], int N_data)
    norm_ref_ax = sqrtf( norm_ref_ax );
    norm_ref_ay = sqrtf( norm_ref_ay );
 
-   correlations_computed = false;
+   corr_ax_computed = false;
+   corr_ay_computed = false;
 
 }
 
@@ -275,7 +277,8 @@ int matchedfilter::run (
                        work_buffer, dt_sig, samp_freq_sig,
                        N_window_ref, N_sig);
 
-   correlations_computed = true;
+   corr_ax_computed = true;
+   corr_ay_computed = true;
 
    if (corr_ax > 1.000001) std::cout << "Correlation in x = " << corr_ax << " > 1.0" << std::endl;
    if (corr_ay > 1.000001) std::cout << "Correlation in y = " << corr_ay << " > 1.0" << std::endl;
@@ -287,7 +290,7 @@ int matchedfilter::run (
 
 float matchedfilter::get_corr_ax (void)
 {
-   if (correlations_computed) {
+   if (corr_ax_computed) {
       return corr_ax;
    } else {
       std::cout << "Error: Correlations not computed yet" << std::endl;
@@ -299,7 +302,7 @@ float matchedfilter::get_corr_ax (void)
 
 float matchedfilter::get_corr_ay (void)
 {
-   if (correlations_computed) {
+   if (corr_ay_computed) {
       return corr_ay;
    } else {
       std::cout << "Error: Correlations not computed yet" << std::endl;
@@ -366,6 +369,63 @@ void matchedfilter::print_all (void)
    std::cout << "norm_ref_ay = "     << norm_ref_ay << std::endl;
    std::cout << "corr_ax = "         << corr_ax << std::endl;
    std::cout << "corr_ay = "         << corr_ay << std::endl;
+}
+
+/******************************************************************************/
+
+float *matchedfilter::access_ax (void)
+{
+   return ref_ax;
+}
+
+/******************************************************************************/
+
+float *matchedfilter::access_ay (void)
+{
+   return ref_ay;
+}
+
+/******************************************************************************/
+
+float matchedfilter::get_norm_ax (void)
+{
+   return norm_ref_ax;
+}
+
+/******************************************************************************/
+
+float matchedfilter::get_norm_ay (void)
+{
+   return norm_ref_ay;
+}
+
+/******************************************************************************/
+
+int matchedfilter::get_N_window (void)
+{
+   return N_window_ref;
+}
+
+/******************************************************************************/
+
+void matchedfilter::set_corr_ax (float corr)
+{
+   corr_ax = corr;
+
+   corr_ax_computed = true;
+
+   if (corr_ax > 1.0f) std::cout << "Correlation in x = " << corr_ax << " > 1.0" << std::endl;
+}
+
+/******************************************************************************/
+
+void matchedfilter::set_corr_ay (float corr)
+{
+   corr_ay = corr;
+
+   corr_ay_computed = true;
+
+   if (corr_ay > 1.0f) std::cout << "Correlation in y = " << corr_ay << " > 1.0" << std::endl;
 }
 
 /******************************************************************************/
