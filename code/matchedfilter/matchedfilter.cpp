@@ -245,49 +245,6 @@ int matchedfilter::get_ID(void)
 
 /******************************************************************************/
 
-int matchedfilter::run (
-           float *sig_ax,
-           float *sig_ay,
-           float dt_sig,
-           float samp_freq_sig,
-           int   N_sig,
-           float *work_buffer)
-{
-
-   if (dt_sig != dt_ref) {
-      std::cout << "Error: Reference and signal delta time measurements do not match" << std::endl;
-      return -1;
-   }
-
-   if (samp_freq_sig != samp_freq_ref) {
-      std::cout << "Error: Reference and signal sampling frequencies do not match" << std::endl;
-      return -1;
-   }
-
-   if (N_sig != N_data_ref) {
-      std::cout << "Error: Reference and signal do not have the same allocated space" << std::endl;
-      return -1;
-   }
-
-   corr_ax = crosscorr(ref_ax, sig_ax, norm_ref_ax,
-                       work_buffer, dt_sig, samp_freq_sig,
-                       N_window_ref, N_sig);
-
-   corr_ay = crosscorr(ref_ay, sig_ay, norm_ref_ay,
-                       work_buffer, dt_sig, samp_freq_sig,
-                       N_window_ref, N_sig);
-
-   corr_ax_computed = true;
-   corr_ay_computed = true;
-
-   if (corr_ax > 1.000001) std::cout << "Correlation in x = " << corr_ax << " > 1.0" << std::endl;
-   if (corr_ay > 1.000001) std::cout << "Correlation in y = " << corr_ay << " > 1.0" << std::endl;
-
-   return 1;
-}
-
-/******************************************************************************/
-
 float matchedfilter::get_corr_ax (void)
 {
    if (corr_ax_computed) {

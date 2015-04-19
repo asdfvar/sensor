@@ -8,11 +8,6 @@ class matchedfilter {
       matchedfilter  (const char path[], int N_data);
       ~matchedfilter (void);
 
-      /* run the main matched filter program for this instance */
-
-      int run (float *sig_ax, float *sig_ay, float dt_sig,
-               float sig_samp_freq, int data_N, float *work_buffer);
-
       void load_ref (float *ax_in, float *ay_in,
                      float dt_in, float samp_freq_in,
                      float time_window_in, int N_window_in, int N_data_in);
