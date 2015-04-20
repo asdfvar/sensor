@@ -27,6 +27,10 @@ int main(int argc, char *argv[]) {
    fio::inputFile InFile(input_file);
    fio::readRefs  InRefs(refs_file);
 
+   fio::parameters PARAMETERS (input_file);
+
+   PARAMETERS.print();
+
    std::string tag         = InFile.get_parameter_s  ("tag"        ); // tag name for this run
    float time_window       = InFile.get_parameter_f  ("time_window"); // seconds to analyze a signal
    float freq_range        = InFile.get_parameter_f  ("freq_range" ); // Hz

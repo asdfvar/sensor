@@ -80,7 +80,7 @@ namespace fio {
 
 /******************************************************************/
 
- float kinIO::load_sens_ax (float *__restrict__ ax, float time, int sens_num, int N)
+ void kinIO::load_sens_ax (float *__restrict__ ax, float time, int sens_num, int N)
  {
    int k_start = (int)(time * samp_freq);
 
@@ -91,7 +91,7 @@ namespace fio {
 
 /******************************************************************/
 
- float kinIO::load_sens_ay (float *__restrict__ ay, float time, int sens_num, int N)
+ void kinIO::load_sens_ay (float *__restrict__ ay, float time, int sens_num, int N)
  {
    int k_start = (int)(time * samp_freq);
 
@@ -102,7 +102,7 @@ namespace fio {
 
 /******************************************************************/
 
- float kinIO::load_sens_az (float *__restrict__ az, float time, int sens_num, int N)
+ void kinIO::load_sens_az (float *__restrict__ az, float time, int sens_num, int N)
  {
    int k_start = (int)(time * samp_freq);
 
@@ -169,7 +169,8 @@ namespace fio {
 
 /******************************************************************/
 
- float inputFile::get_parameter_f(std::string parameter) {
+ float inputFile::get_parameter_f(std::string parameter)
+ {
 
     input.seekg(0);
 
@@ -202,7 +203,8 @@ namespace fio {
 
 /******************************************************************/
 
- int inputFile::get_parameter_i(std::string parameter) {
+ int inputFile::get_parameter_i(std::string parameter)
+ {
 
     input.seekg(0, input.beg);
 
@@ -235,7 +237,8 @@ namespace fio {
 
 /******************************************************************/
 
- std::string inputFile::get_parameter_s(std::string parameter) {
+ std::string inputFile::get_parameter_s(std::string parameter)
+ {
 
     input.seekg(0, input.beg);
 
@@ -268,7 +271,8 @@ namespace fio {
 
 /******************************************************************/
 
- int inputFile::get_parameter_sex(std::string parameter) {
+ int inputFile::get_parameter_sex(std::string parameter)
+ {
 
     input.seekg(0, input.beg);
 
@@ -379,4 +383,219 @@ namespace fio {
 
 /******************************************************************/
 
+ parameters::parameters (std::string path) {
+
+    input.open ( path.c_str() );
+
+    tag         = get_parameter_s   ("tag"        );
+    b_tag = (tag != "-1") ? true : false;
+    time_window = get_parameter_f   ("time_window"); // seconds to analyze a signal
+    b_time_window = (time_window != -1.0f) ? true : false;
+    freq_range  = get_parameter_f   ("freq_range" ); // Hz
+    b_freq_range = (freq_range != -1.0f) ? true : false;
+    cutoff_freq = get_parameter_f   ("cutoff_freq"); // Hz
+    b_cutoff_freq = (cutoff_freq != -1.0f) ? true : false;
+    samp_freq   = get_parameter_f   ("samp_freq"  ); // Hz
+    b_samp_freq = (samp_freq != -1.0f) ? true : false;
+    ref_time    = get_parameter_f   ("ref_time"   ); // reference time for training
+    b_ref_time = (ref_time != -1.0f) ? true : false;
+    threshold   = get_parameter_f   ("threshold"  );
+    b_threshold = (threshold != -1.0f) ? true : false;
+    sex         = get_parameter_sex ("sex"        );
+    b_sex = (sex != -1) ? true : false;
+    age         = get_parameter_f   ("age"        ); // yrs
+    b_age = (age != -1.0f) ? true : false;
+    weight      = get_parameter_f   ("weight"     ); // kg
+    b_weight = (weight != -1.0f) ? true : false;
+    height      = get_parameter_f   ("height"     ); // cm
+    b_height = (height != -1.0f) ? true : false;
+    data_path   = get_parameter_s   ("data_path"  );
+    b_data_path = (data_path != "-1") ? true : false;
+    ref_path    = get_parameter_s   ("ref_path"   ); // used for training
+    b_ref_path = (ref_path != "-1") ? true : false;
+    activity_ID = get_parameter_s   ("activity_ID"); // used for training
+    b_activity_ID = (activity_ID != "-1") ? true : false;
+
+    input.close();
+
+    if (b_samp_freq) dt = 1.0f / samp_freq; else dt = -1.0f; // seconds
+    Do_taper        = (b_cutoff_freq) ? true : false;
+    sens_training   = 2;
+
+ }
+
+/******************************************************************/
+
+ void parameters::print (void)
+ {
+
+    std::cout << std::endl;
+    if (b_tag)         std::cout << "tag = "         << tag         << std::endl;
+    if (b_time_window) std::cout << "time_window = " << time_window << std::endl;
+    if (b_freq_range)  std::cout << "freq_range = "  << freq_range  << std::endl;
+    if (b_cutoff_freq) std::cout << "cutoff_freq = " << cutoff_freq << std::endl;
+    if (b_samp_freq)   std::cout << "samp_freq = "   << samp_freq   << std::endl;
+    if (b_ref_time)    std::cout << "ref_time = "    << ref_time    << std::endl;
+    if (b_threshold)   std::cout << "threshold = "   << threshold   << std::endl;
+    if (b_sex)         std::cout << "sex = "         << sex         << std::endl;
+    if (b_age)         std::cout << "age = "         << age         << std::endl;
+    if (b_weight)      std::cout << "weight = "      << weight      << std::endl;
+    if (b_height)      std::cout << "height = "      << height      << std::endl;
+    if (b_data_path)   std::cout << "data_path = "   << data_path   << std::endl;
+    if (b_ref_path)    std::cout << "ref_path = "    << ref_path    << std::endl;
+    if (b_activity_ID) std::cout << "activity_ID = " << activity_ID << std::endl;
+    if (b_samp_freq)   std::cout << "dt = "          << dt          << std::endl;
+    if (Do_taper)      std::cout << "applying data smoothing"       << std::endl;
+                       std::cout << "Kinetisense sensor " << sens_training << std::endl;
+    std::cout << std::endl;
+
+ }
+
+/******************************************************************/
+
+ float parameters::get_parameter_f (std::string parameter)
+ {
+
+    input.seekg(0);
+
+    std::string line;
+    std::string inp_parameter;
+    std::string delimiter = "=";
+    std::string value;
+    int delimiter_pos;
+
+    int inc=0;
+    do {
+       std::getline (input, line);
+       delimiter_pos = line.find(delimiter);
+       inp_parameter = line.substr(0, delimiter_pos);
+       inc++;
+    } while (parameter != inp_parameter && !input.eof() && inc<999);
+
+    if (input.eof()) {
+       std::cout << parameter << " not found" << std::endl;
+       return -1.0;
+    } else if (inc==999) {
+       std::cout << "Max attempts to read " << parameter << " made" << std::endl;
+    } else {
+       value = line.substr(delimiter_pos+1, line.length());
+       return atof(value.c_str());
+    }
+
+    return -1.0;
+ }
+
+/******************************************************************/
+
+ int parameters::get_parameter_i (std::string parameter)
+ {
+
+    input.seekg(0, input.beg);
+
+    std::string line;
+    std::string inp_parameter;
+    std::string delimiter = "=";
+    std::string value;
+    int delimiter_pos;
+
+    int inc=0;
+    do {
+       std::getline (input, line);
+       delimiter_pos = line.find(delimiter);
+       inp_parameter = line.substr(0, delimiter_pos);
+       inc++;
+    } while (parameter != inp_parameter && !input.eof() && inc<999);
+
+    if (input.eof()) {
+       std::cout << parameter << " not found" << std::endl;
+       return -1;
+    } else if (inc==999) {
+       std::cout << "Max attempts to read " << parameter << " made" << std::endl;
+    } else {
+       value = line.substr(delimiter_pos+1, line.length());
+       return atof(value.c_str());
+    }
+
+    return -1;
+ }
+
+/******************************************************************/
+
+ std::string parameters::get_parameter_s (std::string parameter)
+ {
+
+    input.seekg(0, input.beg);
+
+    std::string line;
+    std::string inp_parameter;
+    std::string delimiter = "=";
+    std::string value;
+    int delimiter_pos;
+
+    int inc=0;
+    do {
+       std::getline (input, line);
+       delimiter_pos = line.find(delimiter);
+       inp_parameter = line.substr(0, delimiter_pos);
+       inc++;
+    } while (parameter != inp_parameter && !input.eof() && inc<999);
+
+    if (input.eof()) {
+       std::cout << parameter << " not found" << std::endl;
+       return "-1";
+    } else if (inc==999) {
+       std::cout << "Max attempts to read " << parameter << " made" << std::endl;
+    } else {
+       value = line.substr(delimiter_pos+1, line.length());
+       return value;
+    }
+
+    return "-1";
+ }
+
+/******************************************************************/
+
+ int parameters::get_parameter_sex (std::string parameter)
+ {
+
+    input.seekg(0, input.beg);
+
+    std::string line;
+    std::string inp_parameter;
+    std::string delimiter = "=";
+    std::string value;
+    int delimiter_pos;
+
+    int inc=0;
+    do {
+       std::getline (input, line);
+       delimiter_pos = line.find(delimiter);
+       inp_parameter = line.substr(0, delimiter_pos);
+       inc++;
+    } while (parameter != inp_parameter && !input.eof() && inc<999);
+
+    if (input.eof()) {
+       std::cout << parameter << " not found" << std::endl;
+       return -1;
+    } else if (inc==999) {
+       std::cout << "Max attempts to read " << parameter << " made" << std::endl;
+    } else {
+       value = line.substr(delimiter_pos+1, line.length());
+       if (value == "M")
+          return MALE;
+       else if (value == "F")
+          return FEMALE;
+       else {
+          std::cout << "Sex not specified" << std::endl;
+          return -1;
+       }
+    }
+
+    return -1;
+ }
+
+
+
+/******************************************************************/
 }
+

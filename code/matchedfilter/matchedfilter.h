@@ -1,3 +1,6 @@
+#ifndef MATCHEDFILTER_H
+#define MATCHEDFILTER_H
+
 #include <string>
 
 class matchedfilter {
@@ -114,3 +117,5 @@ class mf_list {
       node *last;
 
 };
+
+#endif

@@ -1,11 +1,12 @@
-#ifndef _FILEIO_H_
-#define _FILEIO_H_
+#ifndef FILEIO_H
+#define FILEIO_H
 
 #include <string>
 #include <fstream>
 
 namespace fio {
  class kinIO {
+
    public:
 
       kinIO ( const char path[] );
@@ -20,9 +21,9 @@ namespace fio {
       float *access_sens_ay (float start, int sens_num);
       float *access_sens_az (float start, int sens_num);
 
-      float load_sens_ax (float *ax, float time, int sens_num, int N);
-      float load_sens_ay (float *ay, float time, int sens_num, int N);
-      float load_sens_az (float *az, float time, int sens_num, int N);
+      void load_sens_ax (float *ax, float time, int sens_num, int N);
+      void load_sens_ay (float *ay, float time, int sens_num, int N);
+      void load_sens_az (float *az, float time, int sens_num, int N);
 
       float get_total_time (void);
 
@@ -119,6 +120,75 @@ namespace fio {
        int length;
        int N_refs;
  };
+
+/*****************************************************/
+
+ class parameters {
+
+   public:
+
+      parameters (std::string path);
+
+      void print (void);
+
+   private:
+
+   std::ifstream input;
+
+/*
+   Matched Filter processing:
+        tag
+        time_window
+        freq_range
+        cutoff_freq
+        samp_freq
+        ref_time
+        threshold
+        sex
+        age
+        weight
+        height
+        data_path
+
+   Matched Filter training:
+        time_window
+        freq_range
+        cutoff_freq
+        samp_freq
+        ref_time
+        data_path
+        ref_path
+        activity_ID
+*/
+
+   std::string tag;         bool b_tag;
+   float time_window;       bool b_time_window;
+   float freq_range;        bool b_freq_range;
+   float cutoff_freq;       bool b_cutoff_freq;
+   float samp_freq;         bool b_samp_freq;
+   float ref_time;          bool b_ref_time;
+   float threshold;         bool b_threshold;
+   int   sex;               bool b_sex;
+   float age;               bool b_age;
+   float weight;            bool b_weight;
+   float height;            bool b_height;
+   std::string data_path;   bool b_data_path;
+   std::string ref_path;    bool b_ref_path;
+   std::string activity_ID; bool b_activity_ID;
+
+   float dt;
+   bool  Do_taper;
+   int   sens_training;
+
+   float        get_parameter_f   ( std::string parameter);
+   int          get_parameter_i   ( std::string parameter);
+   std::string  get_parameter_s   ( std::string parameter);
+   int          get_parameter_sex ( std::string parameter);
+
+ };
+
+/*****************************************************/
+
 }
 
 #endif
