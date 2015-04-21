@@ -388,38 +388,39 @@ namespace fio {
     input.open ( path.c_str() );
 
     tag         = get_parameter_s   ("tag"        );
-    b_tag = (tag != "-1") ? true : false;
     time_window = get_parameter_f   ("time_window"); // seconds to analyze a signal
-    b_time_window = (time_window != -1.0f) ? true : false;
     freq_range  = get_parameter_f   ("freq_range" ); // Hz
-    b_freq_range = (freq_range != -1.0f) ? true : false;
     cutoff_freq = get_parameter_f   ("cutoff_freq"); // Hz
-    b_cutoff_freq = (cutoff_freq != -1.0f) ? true : false;
     samp_freq   = get_parameter_f   ("samp_freq"  ); // Hz
-    b_samp_freq = (samp_freq != -1.0f) ? true : false;
     ref_time    = get_parameter_f   ("ref_time"   ); // reference time for training
-    b_ref_time = (ref_time != -1.0f) ? true : false;
     threshold   = get_parameter_f   ("threshold"  );
-    b_threshold = (threshold != -1.0f) ? true : false;
     sex         = get_parameter_sex ("sex"        );
-    b_sex = (sex != -1) ? true : false;
     age         = get_parameter_f   ("age"        ); // yrs
-    b_age = (age != -1.0f) ? true : false;
     weight      = get_parameter_f   ("weight"     ); // kg
-    b_weight = (weight != -1.0f) ? true : false;
     height      = get_parameter_f   ("height"     ); // cm
-    b_height = (height != -1.0f) ? true : false;
     data_path   = get_parameter_s   ("data_path"  );
-    b_data_path = (data_path != "-1") ? true : false;
     ref_path    = get_parameter_s   ("ref_path"   ); // used for training
-    b_ref_path = (ref_path != "-1") ? true : false;
     activity_ID = get_parameter_s   ("activity_ID"); // used for training
-    b_activity_ID = (activity_ID != "-1") ? true : false;
+
+    b_tag         = (tag != "-1")          ? true : false;
+    b_time_window = (time_window >= 0.0f)  ? true : false;
+    b_freq_range  = (freq_range >= 0.0f)   ? true : false;
+    b_cutoff_freq = (cutoff_freq >= 0.0f)  ? true : false;
+    b_samp_freq   = (samp_freq >= 0.0f)    ? true : false;
+    b_ref_time    = (ref_time >= 0.0f)     ? true : false;
+    b_threshold   = (threshold >= 0.0f)    ? true : false;
+    b_sex         = (sex != -1)            ? true : false;
+    b_age         = (age >= 0.0f)          ? true : false;
+    b_weight      = (weight >= 0.0f)       ? true : false;
+    b_height      = (height >= 0.0f)       ? true : false;
+    b_data_path   = (data_path != "-1")    ? true : false;
+    b_ref_path    = (ref_path != "-1")     ? true : false;
+    b_activity_ID = (activity_ID != "-1")  ? true : false;
 
     input.close();
 
     if (b_samp_freq) dt = 1.0f / samp_freq; else dt = -1.0f; // seconds
-    Do_taper        = (b_cutoff_freq) ? true : false;
+    b_taper        = (b_cutoff_freq) ? true : false;
     sens_training   = 2;
 
  }
@@ -445,7 +446,7 @@ namespace fio {
     if (b_ref_path)    std::cout << "ref_path = "    << ref_path    << std::endl;
     if (b_activity_ID) std::cout << "activity_ID = " << activity_ID << std::endl;
     if (b_samp_freq)   std::cout << "dt = "          << dt          << std::endl;
-    if (Do_taper)      std::cout << "applying data smoothing"       << std::endl;
+    if (b_taper)       std::cout << "applying data smoothing"       << std::endl;
                        std::cout << "Kinetisense sensor " << sens_training << std::endl;
     std::cout << std::endl;
 
@@ -594,8 +595,104 @@ namespace fio {
     return -1;
  }
 
+/******************************************************************/
 
+ float parameters::get_dt (void)
+ {
+    return dt;
+ }
 
 /******************************************************************/
-}
 
+ float parameters::get_samp_freq (void)
+ {
+    return samp_freq;
+ }
+
+/******************************************************************/
+
+ int parameters::get_N_window (void)
+ {
+    return (int)(samp_freq * time_window);
+ }
+
+/******************************************************************/
+
+ bool parameters::Do_taper (void)
+ {
+    return b_taper;
+ }
+
+/******************************************************************/
+
+ float parameters::get_freq_range (void)
+ {
+    return freq_range;
+ }
+
+/******************************************************************/
+
+ float parameters::get_cutoff_freq (void)
+ {
+    return cutoff_freq;
+ }
+
+/******************************************************************/
+
+ float parameters::get_time_window (void)
+ {
+    return time_window;
+ }
+
+/******************************************************************/
+
+ float parameters::get_threshold (void)
+ {
+    return threshold;
+ }
+
+/******************************************************************/
+
+ int parameters::get_sex (void)
+ {
+    return sex;
+ }
+
+/******************************************************************/
+
+ float parameters::get_age (void)
+ {
+    return age;
+ }
+
+/******************************************************************/
+
+ float parameters::get_weight (void)
+ {
+    return weight;
+ }
+
+/******************************************************************/
+
+ float parameters::get_height (void)
+ {
+    return height;
+ }
+
+/******************************************************************/
+
+ std::string parameters::get_tag (void)
+ {
+    return tag;
+ }
+
+/******************************************************************/
+
+ std::string parameters::get_data_path (void)
+ {
+    return data_path;
+ }
+
+/******************************************************************/
+
+}

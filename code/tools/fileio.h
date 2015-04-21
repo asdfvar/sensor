@@ -85,6 +85,8 @@ namespace fio {
  void write_val(int val,   std::string power_file, bool init);
  void write_val(float val, std::string power_file, bool init);
 
+/*****************************************************/
+
  class inputFile {
 
    public:
@@ -103,6 +105,8 @@ namespace fio {
       std::ifstream input;
 
  };
+
+/*****************************************************/
 
  class readRefs {
 
@@ -129,7 +133,22 @@ namespace fio {
 
       parameters (std::string path);
 
-      void print (void);
+      void  print (void);
+
+      float get_dt (void);
+      float get_time_window (void);
+      float get_samp_freq (void);
+      float get_freq_range (void);
+      float get_cutoff_freq (void);
+      float get_threshold (void);
+      int   get_N_window (void);
+      int   get_sex (void);
+      float get_age (void);
+      float get_weight (void);
+      float get_height (void);
+      bool  Do_taper (void);
+      std::string get_tag (void);
+      std::string get_data_path (void);
 
    private:
 
@@ -142,7 +161,6 @@ namespace fio {
         freq_range
         cutoff_freq
         samp_freq
-        ref_time
         threshold
         sex
         age
@@ -177,7 +195,7 @@ namespace fio {
    std::string activity_ID; bool b_activity_ID;
 
    float dt;
-   bool  Do_taper;
+   bool  b_taper;
    int   sens_training;
 
    float        get_parameter_f   ( std::string parameter);

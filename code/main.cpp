@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 
    std::string    input_file = argv[1];
    std::string    refs_file  = argv[2];
-   int            act;
+
    fio::inputFile InFile(input_file);
    fio::readRefs  InRefs(refs_file);
 
@@ -31,58 +31,58 @@ int main(int argc, char *argv[]) {
 
    PARAMETERS.print();
 
-   std::string tag         = InFile.get_parameter_s  ("tag"        ); // tag name for this run
-   float time_window       = InFile.get_parameter_f  ("time_window"); // seconds to analyze a signal
-   float freq_range        = InFile.get_parameter_f  ("freq_range" ); // Hz
-   float cutoff_freq       = InFile.get_parameter_f  ("cutoff_freq"); // Hz
-   float samp_freq         = InFile.get_parameter_f  ("samp_freq"  ); // Hz
-   float ref_time          = InFile.get_parameter_f  ("ref_time"   ); // reference time for training
-   float threshold         = InFile.get_parameter_f  ("threshold"  );
-   int   sex               = InFile.get_parameter_sex("sex"        );
-   float age               = InFile.get_parameter_f  ("age"        ); // yrs
-   float weight            = InFile.get_parameter_f  ("weight"     ); // kg
-   float height            = InFile.get_parameter_f  ("height"     ); // cm
-   std::string data_path   = InFile.get_parameter_s  ("data_path"  );
-   std::string ref_path;
-   float dt              = 1.0 / samp_freq; // seconds
-   float start_time      = 0.0;             // seconds from start
-   int   N_window        = (int) (samp_freq * time_window); // Number of data points of the signal
+   std::string data_path   = PARAMETERS.get_data_path();
+   float start_time      = 0.0f;             // seconds from start
+   int   N_window        = PARAMETERS.get_N_window(); // Number of data points of the signal
    float *ax    = new float[N_window+2];   // Workspace for the signal in x
    float *ay    = new float[N_window+2];   // Workspace for the signal in y
    float *az    = new float[N_window+2];   // Workspace for the signal in z
+#ifdef TAPER
    float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
-   bool  Do_taper   = true;
-   int   N_ref_time    = (int)(ref_time * samp_freq);
+#endif
    int   sens_training = 2; // sensor used for training
-   float *work_buffer  = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
+   float *buf  = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
    float power, energy;
    float *data_ax, *data_ay, *data_az;
    int   itt = 0, max_index;
    float corr;
+   int   act;
    float tmp;
    matchedfilter *MF;
 
-   if (cutoff_freq < 0) Do_taper = false;
-
+#ifdef TAPER
    taper_f(taper,
-           time_window,
-           cutoff_freq,
-           freq_range,
-           samp_freq,
-           dt,
+           PARAMETERS.get_time_window(),
+           PARAMETERS.get_cutoff_freq(),
+           PARAMETERS.get_freq_range(),
+           PARAMETERS.get_samp_freq(),
+           PARAMETERS.get_dt(),
            N_window);
+#endif
 
    /* Setup Kinetisense data */
+
    fio::kinIO KIN( data_path.c_str() );
 
+   /* Setup the matched filters */
+
    mf_list MF_activities;
+   std::string ref_path;
 
    for (int i_ref=1; i_ref<=InRefs.get_Nrefs(); i_ref++) {
+
       ref_path = InRefs.get_ref_path(i_ref);
       MF = new matchedfilter (ref_path.c_str(), N_window);
-      if (Do_taper) MF->apply_taper (work_buffer, cutoff_freq, freq_range);
+
+      if (PARAMETERS.Do_taper()) {
+           MF->apply_taper (buf,
+                            PARAMETERS.get_cutoff_freq(),
+                            PARAMETERS.get_freq_range());
+      }
+
       MF->apply_fft(N_window);
       MF_activities.append ( MF );
+
    }
 
    float proc_time;
@@ -90,16 +90,18 @@ int main(int argc, char *argv[]) {
    float ave_mf_time      = 0.0f;
    bool  initial_write    = true;
 
-   for (itt=0; KIN.valid_start_end (start_time, time_window); itt++, start_time += TIME_INC)
+   /* Iterate through the data */
+
+   for (itt=0; KIN.valid_start_end (start_time, PARAMETERS.get_time_window()); itt++, start_time += TIME_INC)
    {
 
       KIN.load_sens_ax (ax, start_time, 2, N_window);
       KIN.load_sens_ay (ay, start_time, 2, N_window);
       KIN.load_sens_az (az, start_time, 2, N_window);
 
-/*
- * PRE-PROCESSING
- */
+      /*
+       * PRE-PROCESSING
+       */
 
       gettime();
       preproc(
@@ -107,13 +109,13 @@ int main(int argc, char *argv[]) {
           ay,            /* Acceleration data in y               */
           az,            /* Acceleration data in z               */
          &power,         /* Resulting power of the signal        */
-          dt,            /* Delta time comstant                  */
-          time_window,   /* Time window of the data              */
-          samp_freq,     /* Sampling frequency of the data       */
+          PARAMETERS.get_dt(),            /* Delta time comstant                  */
+          PARAMETERS.get_time_window(),   /* Time window of the data              */
+          PARAMETERS.get_samp_freq(),     /* Sampling frequency of the data       */
           N_window);     /* Number of sample points              */
 
-      if (Do_taper) {
-#if 0
+      if (PARAMETERS.Do_taper()) {
+#ifdef TAPER
          apply_taper (ax, taper, N_window);
          apply_taper (ay, taper, N_window);
 #else
@@ -123,9 +125,10 @@ int main(int argc, char *argv[]) {
       }
       proc_time = gettime();
       ave_preproc_time += proc_time;
-/*
- * MATCHED FILTER
- */
+
+      /*
+       * MATCHED FILTER
+       */
 
       // run the matched filter through the activities
       corr = -1.1f; // -1 is the lowest obtainable minimum
@@ -139,15 +142,15 @@ int main(int argc, char *argv[]) {
          run_mf (MF,
                  ax,
                  ay,
-                 dt,
-                 samp_freq,
+                 PARAMETERS.get_dt(),
+                 PARAMETERS.get_samp_freq(),
                  N_window,
-                 work_buffer);
+                 buf);
 
          proc_time = gettime();
          ave_mf_time += proc_time;
 
-         MF->write_corr ("output/correlations" + tag, initial_write);
+         MF->write_corr ("output/correlations" + PARAMETERS.get_tag(), initial_write);
 
          // find which activity has the highest correlation
          tmp = 0.5f * (MF->get_corr_ax() + MF->get_corr_ay());
@@ -158,16 +161,16 @@ int main(int argc, char *argv[]) {
       }
       MF_activities.goto_first();
 
-/*
- * ENERGY EXPENDITURE
- */
+      /*
+       * ENERGY EXPENDITURE
+       */
 
       for (int k=0; k<max_index; k++, MF_activities.goto_next()) {}
 
       MF = MF_activities.get_MF();
       corr = 0.5f * (MF->get_corr_ax() + MF->get_corr_ay());
 
-      if (corr >= threshold) {
+      if (corr >= PARAMETERS.get_threshold()) {
          // good match
          act = MF->get_ID();
       } else {
@@ -175,17 +178,17 @@ int main(int argc, char *argv[]) {
          act = NONE;
       }
 
-      energy = energy_expenditure (weight,
-                                   height,
-                                   age,
-                                   sex,
+      energy = energy_expenditure (PARAMETERS.get_weight(),
+                                   PARAMETERS.get_height(),
+                                   PARAMETERS.get_age(),
+                                   PARAMETERS.get_sex(),
                                    act,
                                    power,
-                                   time_window);
+                                   PARAMETERS.get_time_window());
 
-      fio::write_val (power,  "output/power"    + tag, initial_write);
-      fio::write_val (act,    "output/activity" + tag, initial_write);
-      fio::write_val (energy, "output/energy"   + tag, initial_write);
+      fio::write_val (power,  "output/power"    + PARAMETERS.get_tag(), initial_write);
+      fio::write_val (act,    "output/activity" + PARAMETERS.get_tag(), initial_write);
+      fio::write_val (energy, "output/energy"   + PARAMETERS.get_tag(), initial_write);
 
       initial_write = false;
       MF_activities.goto_first();
@@ -199,8 +202,10 @@ int main(int argc, char *argv[]) {
    delete[] ax;
    delete[] ay;
    delete[] az;
-   delete[] work_buffer;
+   delete[] buf;
+#ifdef TAPER
    delete[] taper;
+#endif
 
    return 0;
 }

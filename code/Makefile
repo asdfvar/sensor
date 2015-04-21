@@ -14,7 +14,7 @@ LIBS = -lmatflt -lsens -lpreproc
 # DIRECTIVE
 # switch between PC and onboard hardware
 
-MAIN_DIRECTIVE = -Dpc
+MAIN_DIRECTIVE = -Dpc #-DTAPER
 
 MAIN_OBJ  = main.o  fft.o
 TRAIN_OBJ = train.o fft.o

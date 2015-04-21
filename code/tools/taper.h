@@ -1,3 +1,6 @@
+#ifndef TAPER_H
+#define TAPER_H
+
 void taper_f(
        float *taper,
        float time_window,
@@ -8,3 +11,5 @@ void taper_f(
        int   N);
 
 void apply_taper (float *sig, float *taper, int N);
+
+#endif
