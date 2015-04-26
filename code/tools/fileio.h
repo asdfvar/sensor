@@ -87,27 +87,6 @@ namespace fio {
 
 /*****************************************************/
 
- class inputFile {
-
-   public:
-
-      inputFile(std::string in_file);
-     ~inputFile(void);
-
-      float get_parameter_f       (std::string parameter);
-      int   get_parameter_i       (std::string parameter);
-      int   get_parameter_sex     (std::string parameter);
-      std::string get_parameter_s (std::string parameter);
-
-   private:
-
-      std::string in_file;
-      std::ifstream input;
-
- };
-
-/*****************************************************/
-
  class readRefs {
 
     public:
@@ -127,36 +106,8 @@ namespace fio {
 
 /*****************************************************/
 
- class parameters {
+/* parameters class:
 
-   public:
-
-      parameters (std::string path);
-
-      void  print (void);
-
-      float get_dt (void);
-      float get_time_window (void);
-      float get_time_window_ref (void);
-      float get_samp_freq (void);
-      float get_freq_range (void);
-      float get_cutoff_freq (void);
-      float get_threshold (void);
-      int   get_N_window (void);
-      int   get_N_window_ref (void);
-      int   get_sex (void);
-      float get_age (void);
-      float get_weight (void);
-      float get_height (void);
-      bool  Do_taper (void);
-      std::string get_tag (void);
-      std::string get_data_path (void);
-
-   private:
-
-   std::ifstream input;
-
-/*
    Matched Filter processing:
         tag
         time_window
@@ -181,29 +132,60 @@ namespace fio {
         activity_ID
 */
 
-   std::string tag;         bool b_tag;
-   float time_window;       bool b_time_window;
-   float freq_range;        bool b_freq_range;
-   float cutoff_freq;       bool b_cutoff_freq;
-   float samp_freq;         bool b_samp_freq;
-   float ref_time;          bool b_ref_time;
-   float threshold;         bool b_threshold;
-   int   sex;               bool b_sex;
-   float age;               bool b_age;
-   float weight;            bool b_weight;
-   float height;            bool b_height;
-   std::string data_path;   bool b_data_path;
-   std::string ref_path;    bool b_ref_path;
-   std::string activity_ID; bool b_activity_ID;
+ class parameters {
 
-   float dt;
-   bool  b_taper;
-   int   sens_training;
+   public:
 
-   float        get_parameter_f   ( std::string parameter);
-   int          get_parameter_i   ( std::string parameter);
-   std::string  get_parameter_s   ( std::string parameter);
-   int          get_parameter_sex ( std::string parameter);
+      parameters (std::string path);
+
+      void  print (void);
+
+      float       get_dt (void);
+      float       get_time_window (void);
+      float       get_time_window_ref (void);
+      float       get_samp_freq (void);
+      float       get_freq_range (void);
+      float       get_cutoff_freq (void);
+      float       get_threshold (void);
+      int         get_N_window (void);
+      int         get_N_window_ref (void);
+      int         get_sex (void);
+      float       get_age (void);
+      float       get_weight (void);
+      float       get_height (void);
+      bool        Do_taper (void);
+      std::string get_tag (void);
+      std::string get_data_path (void);
+      std::string get_ref_path (void);
+      std::string get_activity_ID (void);
+
+   private:
+
+      std::ifstream input;
+
+      std::string tag;         bool b_tag;
+      float time_window;       bool b_time_window;
+      float freq_range;        bool b_freq_range;
+      float cutoff_freq;       bool b_cutoff_freq;
+      float samp_freq;         bool b_samp_freq;
+      float ref_time;          bool b_ref_time;
+      float threshold;         bool b_threshold;
+      int   sex;               bool b_sex;
+      float age;               bool b_age;
+      float weight;            bool b_weight;
+      float height;            bool b_height;
+      std::string data_path;   bool b_data_path;
+      std::string ref_path;    bool b_ref_path;
+      std::string activity_ID; bool b_activity_ID;
+
+      float dt;
+      bool  b_taper;
+      int   sens_training;
+
+      float        get_parameter_f   ( std::string parameter);
+      int          get_parameter_i   ( std::string parameter);
+      std::string  get_parameter_s   ( std::string parameter);
+      int          get_parameter_sex ( std::string parameter);
 
  };
 

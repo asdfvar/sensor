@@ -9,7 +9,7 @@ namespace fio {
  {
 
    N          = count_kinetisense_lines( path );
-   samp_freq  = 128.0; // Hz
+   samp_freq  = 128.0f; // Hz
    kin_data   = read_kinetisense( path );
    total_time = (float)N / samp_freq;
 
@@ -153,166 +153,6 @@ namespace fio {
 
 /******************************************************************/
 
- inputFile::inputFile( std::string in_file_in ) {
-
-    std::string in_file = in_file_in;
-    input.open ( in_file.c_str() );
-
- }
-
-/******************************************************************/
-
- inputFile::~inputFile (void) {
-    std::cout << "Closing input file" << std::endl;
-    input.close();
- }
-
-/******************************************************************/
-
- float inputFile::get_parameter_f(std::string parameter)
- {
-
-    input.seekg(0);
-
-    std::string line;
-    std::string inp_parameter;
-    std::string delimiter = "=";
-    std::string value;
-    int delimiter_pos;
-
-    int inc=0;
-    do {
-       std::getline (input, line);
-       delimiter_pos = line.find(delimiter);
-       inp_parameter = line.substr(0, delimiter_pos);
-       inc++;
-    } while (parameter != inp_parameter && !input.eof() && inc<999);
-
-    if (input.eof()) {
-       std::cout << "Parameter (float) not found" << std::endl;
-       return -1.0;
-    } else if (inc==999) {
-       std::cout << "Max attempts to read parameter (float) made" << std::endl;
-    } else {
-       value = line.substr(delimiter_pos+1, line.length());
-       return atof(value.c_str());
-    }
-
-    return -1.0;
- }
-
-/******************************************************************/
-
- int inputFile::get_parameter_i(std::string parameter)
- {
-
-    input.seekg(0, input.beg);
-
-    std::string line;
-    std::string inp_parameter;
-    std::string delimiter = "=";
-    std::string value;
-    int delimiter_pos;
-
-    int inc=0;
-    do {
-       std::getline (input, line);
-       delimiter_pos = line.find(delimiter);
-       inp_parameter = line.substr(0, delimiter_pos);
-       inc++;
-    } while (parameter != inp_parameter && !input.eof() && inc<999);
-
-    if (input.eof()) {
-       std::cout << "Parameter (int) not found" << std::endl;
-       return -1;
-    } else if (inc==999) {
-       std::cout << "Max attempts to read parameter (int) made" << std::endl;
-    } else {
-       value = line.substr(delimiter_pos+1, line.length());
-       return atof(value.c_str());
-    }
-
-    return -1;
- }
-
-/******************************************************************/
-
- std::string inputFile::get_parameter_s(std::string parameter)
- {
-
-    input.seekg(0, input.beg);
-
-    std::string line;
-    std::string inp_parameter;
-    std::string delimiter = "=";
-    std::string value;
-    int delimiter_pos;
-
-    int inc=0;
-    do {
-       std::getline (input, line);
-       delimiter_pos = line.find(delimiter);
-       inp_parameter = line.substr(0, delimiter_pos);
-       inc++;
-    } while (parameter != inp_parameter && !input.eof() && inc<999);
-
-    if (input.eof()) {
-       std::cout << "Parameter (string) not found" << std::endl;
-       return "-1";
-    } else if (inc==999) {
-       std::cout << "Max attempts to read parameter (string) made" << std::endl;
-    } else {
-       value = line.substr(delimiter_pos+1, line.length());
-       return value;
-    }
-
-    return "-1";
- }
-
-/******************************************************************/
-
- int inputFile::get_parameter_sex(std::string parameter)
- {
-
-    input.seekg(0, input.beg);
-
-    std::string line;
-    std::string inp_parameter;
-    std::string delimiter = "=";
-    std::string value;
-    int delimiter_pos;
-
-    int inc=0;
-    do {
-       std::getline (input, line);
-       delimiter_pos = line.find(delimiter);
-       inp_parameter = line.substr(0, delimiter_pos);
-       inc++;
-    } while (parameter != inp_parameter && !input.eof() && inc<999);
-
-    if (input.eof()) {
-       std::cout << "Parameter (int) not found" << std::endl;
-       return -1;
-    } else if (inc==999) {
-       std::cout << "Max attempts to read parameter (int) made" << std::endl;
-    } else {
-       value = line.substr(delimiter_pos+1, line.length());
-       if (value == "M")
-          return MALE;
-       else if (value == "F")
-          return FEMALE;
-       else {
-          std::cout << "Sex not specified" << std::endl;
-          return -1;
-       }
-    }
-
-    return -1;
- }
-
-
-/******************************************************************/
-
  readRefs::readRefs (std::string in_file)
  {
 
@@ -401,7 +241,6 @@ namespace fio {
     data_path   = get_parameter_s   ("data_path"  );
     ref_path    = get_parameter_s   ("ref_path"   ); // used for training
     activity_ID = get_parameter_s   ("activity_ID"); // used for training
-std::cout << "weight = " << weight << std::endl;
 
     b_tag         = (tag != "-1")          ? true : false;
     b_time_window = (time_window >= 0.0f)  ? true : false;
@@ -432,6 +271,7 @@ std::cout << "weight = " << weight << std::endl;
  {
 
     std::cout << std::endl;
+    std::cout << "Parameters:" << std::endl;
     if (b_tag)         std::cout << "tag = "         << tag         << std::endl;
     if (b_time_window) std::cout << "time_window = " << time_window << std::endl;
     if (b_freq_range)  std::cout << "freq_range = "  << freq_range  << std::endl;
@@ -467,19 +307,15 @@ std::cout << "weight = " << weight << std::endl;
     std::string value;
     int delimiter_pos;
 
-    int inc=0;
     do {
        std::getline (input, line);
        delimiter_pos = line.find(delimiter);
        inp_parameter = line.substr(0, delimiter_pos);
-       inc++;
-    } while (parameter != inp_parameter && !input.eof() && inc<999);
+    } while (parameter != inp_parameter && !input.eof());
 
     if (input.eof()) {
        std::cout << parameter << " not found" << std::endl;
        return -1.0;
-    } else if (inc==999) {
-       std::cout << "Max attempts to read " << parameter << " made" << std::endl;
     } else {
        value = line.substr(delimiter_pos+1, line.length());
        return atof(value.c_str());
@@ -502,19 +338,15 @@ std::cout << "weight = " << weight << std::endl;
     std::string value;
     int delimiter_pos;
 
-    int inc=0;
     do {
        std::getline (input, line);
        delimiter_pos = line.find(delimiter);
        inp_parameter = line.substr(0, delimiter_pos);
-       inc++;
-    } while (parameter != inp_parameter && !input.eof() && inc<999);
+    } while (parameter != inp_parameter && !input.eof());
 
     if (input.eof()) {
        std::cout << parameter << " not found" << std::endl;
        return -1;
-    } else if (inc==999) {
-       std::cout << "Max attempts to read " << parameter << " made" << std::endl;
     } else {
        value = line.substr(delimiter_pos+1, line.length());
        return atof(value.c_str());
@@ -537,19 +369,15 @@ std::cout << "weight = " << weight << std::endl;
     std::string value;
     int delimiter_pos;
 
-    int inc=0;
     do {
        std::getline (input, line);
        delimiter_pos = line.find(delimiter);
        inp_parameter = line.substr(0, delimiter_pos);
-       inc++;
-    } while (parameter != inp_parameter && !input.eof() && inc<999);
+    } while (parameter != inp_parameter && !input.eof());
 
     if (input.eof()) {
        std::cout << parameter << " not found" << std::endl;
        return "-1";
-    } else if (inc==999) {
-       std::cout << "Max attempts to read " << parameter << " made" << std::endl;
     } else {
        value = line.substr(delimiter_pos+1, line.length());
        return value;
@@ -572,19 +400,15 @@ std::cout << "weight = " << weight << std::endl;
     std::string value;
     int delimiter_pos;
 
-    int inc=0;
     do {
        std::getline (input, line);
        delimiter_pos = line.find(delimiter);
        inp_parameter = line.substr(0, delimiter_pos);
-       inc++;
-    } while (parameter != inp_parameter && !input.eof() && inc<999);
+    } while (parameter != inp_parameter && !input.eof());
 
     if (input.eof()) {
        std::cout << parameter << " not found" << std::endl;
        return -1;
-    } else if (inc>=999) {
-       std::cout << "Max attempts to read " << parameter << " made" << std::endl;
     } else {
        value = line.substr(delimiter_pos+1, line.length());
        if (value == "M")
@@ -710,6 +534,20 @@ std::cout << "weight = " << weight << std::endl;
  std::string parameters::get_data_path (void)
  {
     return data_path;
+ }
+
+/******************************************************************/
+
+ std::string parameters::get_ref_path (void)
+ {
+    return ref_path;
+ }
+
+/******************************************************************/
+
+ std::string parameters::get_activity_ID (void)
+ {
+    return activity_ID;
  }
 
 /******************************************************************/

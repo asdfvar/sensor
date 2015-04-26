@@ -19,25 +19,26 @@ extern "C" {
 int main(int argc, char *argv[]) {
 
    std::string     input_file = argv[1];
-   fio::inputFile  InFile(input_file);
    fio::parameters PARAMETERS (input_file);
 
-   float time_window       = InFile.get_parameter_f("time_window"); // seconds to analyze a signal
-   float freq_range        = InFile.get_parameter_f("freq_range" ); // Hz
-   float cutoff_freq       = InFile.get_parameter_f("cutoff_freq"); // Hz
-   float samp_freq         = InFile.get_parameter_f("samp_freq"  ); // Hz
-   float ref_time          = InFile.get_parameter_f("ref_time"   ); // reference time for training
-   std::string data_path   = InFile.get_parameter_s("data_path"  );
-   std::string ref_path    = InFile.get_parameter_s("ref_path"   ); // used for training
-   std::string activity_ID = InFile.get_parameter_s("activity_ID"); // used for training
-   float dt              = 1.0 / samp_freq; // seconds
-   int   N_window        = (int) (samp_freq * time_window); // Number of data points of the signal
-   float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
-   bool  Do_taper = true;
-   int   N_ref_time = (int)(ref_time * samp_freq);
-   int   sens_num = 2; // sensor used for training
+   std::cout << "====================================" << std::endl;
+   std::cout << "Training Matched Filter on " << PARAMETERS.get_activity_ID() << std::endl;
+   std::cout << "====================================" << std::endl;
 
-   if (cutoff_freq < 0) Do_taper = false;
+   PARAMETERS.print();
+
+   float time_window       = PARAMETERS.get_time_window();
+   float freq_range        = PARAMETERS.get_freq_range();
+   float cutoff_freq       = PARAMETERS.get_cutoff_freq();
+   float samp_freq         = PARAMETERS.get_samp_freq();
+   float ref_time          = PARAMETERS.get_time_window_ref();
+   std::string data_path   = PARAMETERS.get_data_path();
+   std::string ref_path    = PARAMETERS.get_ref_path();
+   std::string activity_ID = PARAMETERS.get_activity_ID();
+   float dt                = PARAMETERS.get_dt();
+   int   N_window          = PARAMETERS.get_N_window();
+   float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
+   int   sens_num = 2; // sensor used for training
 
    taper_f(taper,
            time_window,

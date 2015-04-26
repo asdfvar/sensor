@@ -6,6 +6,7 @@
 #include <cmath>
 #include <iostream>
 #include "fft.h"
+#include "fileio.h"
 
 #define PIO2 1.5707963267948966
 

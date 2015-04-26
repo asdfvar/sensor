@@ -21,12 +21,13 @@ extern "C" {
 #ifdef pc
 int main(int argc, char *argv[]) {
 
+   std::cout << "======================" << std::endl;
+   std::cout << "Running Matched Filter" << std::endl;
+   std::cout << "======================" << std::endl;
+
    std::string    input_file = argv[1];
    std::string    refs_file  = argv[2];
-
-   fio::inputFile InFile(input_file);
    fio::readRefs  InRefs(refs_file);
-
    fio::parameters PARAMETERS (input_file);
 
    PARAMETERS.print();
