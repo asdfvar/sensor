@@ -11,13 +11,11 @@ LIBPATH = -L./$(MATCHFILTER) -L./$(TOOLS) -L./$(PREPROC)
 
 LIBS = -lmatflt -lsens -lpreproc
 
-# DIRECTIVE
-# switch between PC and onboard hardware
-
 MAIN_DIRECTIVE = -Dpc #-DTAPER
 
-MAIN_OBJ  = main.o  fft.o
-TRAIN_OBJ = train.o fft.o
+MAIN_OBJ  = main.o
+TRAIN_OBJ = train.o
+FFT_OBJ   = fft.o
 
 EXE   = sensor
 TRAIN = train
@@ -26,17 +24,17 @@ TRAIN = train
 
 all: $(EXE) $(TRAIN)
 
-$(EXE): $(COMPONENTS) $(MAIN_OBJ)
+$(EXE): $(MAIN_OBJ) $(FFT_OBJ)
 	cd $(MATCHFILTER) && $(MAKE)
 	cd $(PREPROC) && $(MAKE)
 	cd $(TOOLS) && $(MAKE)
-	$(CPPC) $(MAIN_OBJ) $(FLAGS) -o $(EXE) $(INC) $(LIBPATH) $(LIBS)
+	$(CPPC) $(MAIN_OBJ) $(FFT_OBJ) $(FLAGS) -o $(EXE) $(INC) $(LIBPATH) $(LIBS)
 
-$(TRAIN): $(COMPONENTS) $(TRAIN_OBJ)
+$(TRAIN): $(TRAIN_OBJ) $(FFT_OBJ)
 	cd $(MATCHFILTER) && $(MAKE)
 	cd $(PREPROC) && $(MAKE)
 	cd $(TOOLS) && $(MAKE)
-	$(CPPC) $(TRAIN_OBJ) $(FLAGS) -o $(TRAIN) $(INC) $(LIBPATH) $(LIBS)
+	$(CPPC) $(TRAIN_OBJ) $(FFT_OBJ) $(FLAGS) -o $(TRAIN) $(INC) $(LIBPATH) $(LIBS)
 
 # CLEAN ALL
 
@@ -44,7 +42,7 @@ clean:
 	make -C $(MATCHFILTER) clean
 	make -C $(PREPROC) clean
 	make -C $(TOOLS) clean
-	rm $(EXE) $(TRAIN) $(MAIN_OBJ) $(TRAIN_OBJ)
+	rm $(EXE) $(TRAIN) $(MAIN_OBJ) $(FFT_OBJ) $(TRAIN_OBJ)
 
 train.o: train.cpp
 	$(CPPC) $(MAIN_DIRECTIVE) $^ -c $(INC)
