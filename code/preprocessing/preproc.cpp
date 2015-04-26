@@ -7,9 +7,6 @@
  * direction of acceleration is in y, and the third direction is in z. This
  * process will be known as the dimensionality reduction of the data.
  *
- * Although not done yet, the data will also undergo a lowpass filter prior
- * to a dimensionality reduction.
- *
  * The dimensionality reduction is acheived by computing the eigenvectors of
  * the covariance matrix of the data. Because this matrix is a real-symmetric
  * matrix, its eigenvectors are real and orthogonal to each other. The data
@@ -22,20 +19,23 @@
 
 #include <iostream>
 #include "eigen.h"
+#include "fileio.h"
 
 int preproc(
      float *__restrict__ ax,             /* Acceleration data in x          */
      float *__restrict__ ay,             /* Acceleration data in y          */
      float *__restrict__ az,             /* Acceleration data in z          */
      float *__restrict__ power,          /* Resulting power of the signal   */
-     const float dt,        /* Delta time comstant             */
-     const float window,    /* Time window of the data         */
-     const float samp_freq, /* Sampling frequency of the data  */
-     const int   N)         /* Number of sample points         */
+     fio::parameters *PARAMETERS,        /* Parameters                      */
+     const int   N)                      /* Number of sample points         */
 {
 
    int i,j,k;
    float cov_mat[3][3]; // Covariance matrix
+
+   float dt        = PARAMETERS->get_dt();
+   float window    = PARAMETERS->get_time_window();
+   float samp_freq = PARAMETERS->get_samp_freq();
 
    /* Demean the data */
 

@@ -13,18 +13,20 @@ void match_filt_training(
               matchedfilter *MF,
               fio::kinIO    *KIN,
               float         *taper,
-              bool           Do_taper,
-              float          cutoff_freq,
-              float          freq_range,
-              float          samp_freq,
-              float          dt,
-              float          time_window,      /* Signal window time (seconds)    */
-              int            N_window,         /* Signal window points (elements) */
-              float          time_window_ref,  /* Reference length (seconds)      */
-              int            N_window_ref,     /* Reference length (# elements)   */
+              fio::parameters *PARAMETERS,
               int            sens_num)         /* Which Kinetesense sensor        */
 {
 
+ bool  Do_taper        = PARAMETERS->Do_taper();
+ float cutoff_freq     = PARAMETERS->get_cutoff_freq();
+ float freq_range      = PARAMETERS->get_freq_range();
+ float samp_freq       = PARAMETERS->get_samp_freq();
+ float dt              = PARAMETERS->get_dt();
+ float time_window     = PARAMETERS->get_time_window();      /* Signal window time (seconds)    */
+ int   N_window        = PARAMETERS->get_N_window();         /* Signal window points (elements) */
+ float time_window_ref = PARAMETERS->get_time_window_ref();  /* Reference length (seconds)      */
+ int   N_window_ref    = PARAMETERS->get_N_window_ref();     /* Reference length (# elements)   */
+ 
  float time_inc = (KIN->get_total_time() - time_window) / BINS;
 
  float start_time_ref  = 0.0;
@@ -61,9 +63,7 @@ void match_filt_training(
         ay,            /* Acceleration data in y               */
         az,            /* Acceleration data in z               */
         &power,        /* Resulting power of the signal        */
-        dt,            /* Delta time comstant                  */
-        time_window,   /* Time window of the data              */
-        samp_freq,     /* Sampling frequency of the data       */
+        PARAMETERS,    /* Sampling frequency of the data       */
         N_window);     /* Number of sample points              */
 
     MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
@@ -86,9 +86,7 @@ void match_filt_training(
            ay,            /* Acceleration data in y               */
            az,            /* Acceleration data in z               */
            &power,        /* Resulting power of the signal        */
-           dt,            /* Delta time comstant                  */
-           time_window,   /* Time window of the data              */
-           samp_freq,     /* Sampling frequency of the data       */
+           PARAMETERS,    /* Sampling frequency of the data       */
            N_window);     /* Number of sample points              */
 
        if (Do_taper) {
@@ -142,9 +140,7 @@ void match_filt_training(
      ay,            /* Acceleration data in y               */
      az,            /* Acceleration data in z               */
      &power,        /* Resulting power of the signal        */
-     dt,            /* Delta time comstant                  */
-     time_window,   /* Time window of the data              */
-     samp_freq,     /* Sampling frequency of the data       */
+     PARAMETERS,    /* Sampling frequency of the data       */
      N_window);     /* Number of sample points              */
 
  MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);

@@ -401,6 +401,7 @@ namespace fio {
     data_path   = get_parameter_s   ("data_path"  );
     ref_path    = get_parameter_s   ("ref_path"   ); // used for training
     activity_ID = get_parameter_s   ("activity_ID"); // used for training
+std::cout << "weight = " << weight << std::endl;
 
     b_tag         = (tag != "-1")          ? true : false;
     b_time_window = (time_window >= 0.0f)  ? true : false;
@@ -457,6 +458,7 @@ namespace fio {
  float parameters::get_parameter_f (std::string parameter)
  {
 
+    input.clear();
     input.seekg(0);
 
     std::string line;
@@ -491,6 +493,7 @@ namespace fio {
  int parameters::get_parameter_i (std::string parameter)
  {
 
+    input.clear();
     input.seekg(0, input.beg);
 
     std::string line;
@@ -525,6 +528,7 @@ namespace fio {
  std::string parameters::get_parameter_s (std::string parameter)
  {
 
+    input.clear();
     input.seekg(0, input.beg);
 
     std::string line;
@@ -559,6 +563,7 @@ namespace fio {
  int parameters::get_parameter_sex (std::string parameter)
  {
 
+    input.clear();
     input.seekg(0, input.beg);
 
     std::string line;
@@ -578,7 +583,7 @@ namespace fio {
     if (input.eof()) {
        std::cout << parameter << " not found" << std::endl;
        return -1;
-    } else if (inc==999) {
+    } else if (inc>=999) {
        std::cout << "Max attempts to read " << parameter << " made" << std::endl;
     } else {
        value = line.substr(delimiter_pos+1, line.length());
@@ -618,6 +623,13 @@ namespace fio {
 
 /******************************************************************/
 
+ int parameters::get_N_window_ref (void)
+ {
+    return (int)(samp_freq * ref_time);
+ }
+
+/******************************************************************/
+
  bool parameters::Do_taper (void)
  {
     return b_taper;
@@ -642,6 +654,13 @@ namespace fio {
  float parameters::get_time_window (void)
  {
     return time_window;
+ }
+
+/******************************************************************/
+
+ float parameters::get_time_window_ref (void)
+ {
+    return ref_time;
  }
 
 /******************************************************************/

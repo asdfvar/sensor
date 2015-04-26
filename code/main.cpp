@@ -109,10 +109,8 @@ int main(int argc, char *argv[]) {
           ay,            /* Acceleration data in y               */
           az,            /* Acceleration data in z               */
          &power,         /* Resulting power of the signal        */
-          PARAMETERS.get_dt(),            /* Delta time comstant                  */
-          PARAMETERS.get_time_window(),   /* Time window of the data              */
-          PARAMETERS.get_samp_freq(),     /* Sampling frequency of the data       */
-          N_window);     /* Number of sample points              */
+         &PARAMETERS,    /* Sampling frequency of the data       */
+         N_window);      /* Number of sample points              */
 
       if (PARAMETERS.Do_taper()) {
 #ifdef TAPER

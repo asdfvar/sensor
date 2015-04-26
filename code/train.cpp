@@ -18,8 +18,9 @@ extern "C" {
 #ifdef pc
 int main(int argc, char *argv[]) {
 
-   std::string    input_file = argv[1];
-   fio::inputFile InFile(input_file);
+   std::string     input_file = argv[1];
+   fio::inputFile  InFile(input_file);
+   fio::parameters PARAMETERS (input_file);
 
    float time_window       = InFile.get_parameter_f("time_window"); // seconds to analyze a signal
    float freq_range        = InFile.get_parameter_f("freq_range" ); // Hz
@@ -34,7 +35,7 @@ int main(int argc, char *argv[]) {
    float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
    bool  Do_taper = true;
    int   N_ref_time = (int)(ref_time * samp_freq);
-   int   sens_training = 2; // sensor used for training
+   int   sens_num = 2; // sensor used for training
 
    if (cutoff_freq < 0) Do_taper = false;
 
@@ -53,9 +54,11 @@ int main(int argc, char *argv[]) {
    matchedfilter MF (N_window, atoi(activity_ID.c_str()));
 
    /* Train on the data provided */
-   match_filt_training (&MF, &KIN, taper, Do_taper, cutoff_freq, freq_range,
-                        samp_freq, dt, time_window, N_window, ref_time,
-                        N_ref_time, sens_training);
+   match_filt_training (&MF,
+                        &KIN,
+                        taper,
+                        &PARAMETERS,
+                        sens_num);
 
    /* Write the data to file */
    MF.write(ref_path);

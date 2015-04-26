@@ -137,11 +137,13 @@ namespace fio {
 
       float get_dt (void);
       float get_time_window (void);
+      float get_time_window_ref (void);
       float get_samp_freq (void);
       float get_freq_range (void);
       float get_cutoff_freq (void);
       float get_threshold (void);
       int   get_N_window (void);
+      int   get_N_window_ref (void);
       int   get_sex (void);
       float get_age (void);
       float get_weight (void);
