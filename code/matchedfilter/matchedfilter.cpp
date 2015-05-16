@@ -371,7 +371,7 @@ void matchedfilter::set_corr_ax (float corr)
 
    corr_ax_computed = true;
 
-   if (corr_ax > 1.0f) std::cout << "Correlation in x = " << corr_ax << " > 1.0" << std::endl;
+   if (corr_ax > 1.001f) std::cout << "Correlation in x = " << corr_ax << " > 1.0" << std::endl;
 }
 
 /******************************************************************************/
@@ -382,7 +382,7 @@ void matchedfilter::set_corr_ay (float corr)
 
    corr_ay_computed = true;
 
-   if (corr_ay > 1.0f) std::cout << "Correlation in y = " << corr_ay << " > 1.0" << std::endl;
+   if (corr_ay > 1.001f) std::cout << "Correlation in y = " << corr_ay << " > 1.0" << std::endl;
 }
 
 /******************************************************************************/
