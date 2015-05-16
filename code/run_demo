@@ -12,6 +12,7 @@ input_file=input_train_demo
 ./train $input_file
 
 input_file=input_demo
+#input_file=input_demo_test
 refs_path=ref_demo
 ./sensor $input_file $refs_path
 

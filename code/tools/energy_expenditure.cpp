@@ -37,23 +37,47 @@ float energy_expenditure (
    switch (act) {
 
       case WALKING_LVL_SLOW_FIRM:
-         MET = 2.5;
+         MET = 2.5f;
          break;
 
       case WALKING_LVL_MOD_FIRM:
-         MET = 3.3;
+         MET = 3.3f;
          break;
 
       case BICYCLING:
-         MET = 8.0;
+         MET = 8.0f;
          break;
 
       case JOGGING:
-         MET = 7.0;
+         MET = 7.0f;
+         break;
+
+      case RUNNING_5_MPH:
+         MET = 8.0f;
+         break;
+
+      case RUNNING_6_MPH:
+         MET = 10.0f;
+         break;
+
+      case RUNNING_7_MPH:
+         MET = 11.5f;
+         break;
+
+      case RUNNING_8_MPH:
+         MET = 13.5f;
+         break;
+
+      case RUNNING_9_MPH:
+         MET = 15.0f;
+         break;
+
+      case RUNNING_10_MPH:
+         MET = 16.0f;
          break;
 
       default: /* NONE */
-         MET = 1.0;
+         MET = 1.0f;
    }
 
    energy_exp = RMR * MET;
