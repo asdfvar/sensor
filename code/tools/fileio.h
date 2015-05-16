@@ -61,8 +61,8 @@ namespace fio {
       float[19]           -EMG 2
 
            */
-          const char path[], /*   File of the kinetisense data */
-          const int  N_lines); /* number of lines in the file */
+          const char path[],   /* File of the kinetisense data */
+          const int  N_lines); /* number of lines in the file  */
 
       // Overloaded function of above
       float **read_kinetisense (const char path[]);
@@ -78,6 +78,31 @@ namespace fio {
 
       // Pointers to the kinetisense data
       float **kin_data;
+
+      float *sensor1_ax;
+      float *sensor1_ay;
+      float *sensor1_az;
+
+      float *sensor1_wx;
+      float *sensor1_wy;
+      float *sensor1_wz;
+
+      float *sensor2_ax;
+      float *sensor2_ay;
+      float *sensor2_az;
+
+      float *sensor2_wx;
+      float *sensor2_wy;
+      float *sensor2_wz;
+
+      float *sensor3_ax;
+      float *sensor3_ay;
+      float *sensor3_az;
+
+      float *sensor3_wx;
+      float *sensor3_wy;
+      float *sensor3_wz;
+
  };
 
  void write_correlations(const std::string path, float *corr_ax, float *corr_ay, int N);

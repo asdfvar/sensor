@@ -84,9 +84,9 @@ namespace fio {
  {
    int k_start = (int)(time * samp_freq);
 
-    if (sens_num == 1)      for (int k=0; k<N; k++) ax[k] = kin_data[0][k + k_start];
-    else if (sens_num == 2) for (int k=0; k<N; k++) ax[k] = kin_data[6][k + k_start];
-    else if (sens_num == 3) for (int k=0; k<N; k++) ax[k] = kin_data[12][k + k_start];
+         if (sens_num == 1) for (int k=0; k<N; k++) ax[k] = sensor1_ax[k + k_start];
+    else if (sens_num == 2) for (int k=0; k<N; k++) ax[k] = sensor2_ax[k + k_start];
+    else if (sens_num == 3) for (int k=0; k<N; k++) ax[k] = sensor3_ax[k + k_start];
  }
 
 /******************************************************************/
@@ -95,9 +95,9 @@ namespace fio {
  {
    int k_start = (int)(time * samp_freq);
 
-    if (sens_num == 1)      for (int k=0; k<N; k++) ay[k] = kin_data[1][k + k_start];
-    else if (sens_num == 2) for (int k=0; k<N; k++) ay[k] = kin_data[7][k + k_start];
-    else if (sens_num == 3) for (int k=0; k<N; k++) ay[k] = kin_data[13][k + k_start];
+         if (sens_num == 1) for (int k=0; k<N; k++) ay[k] = sensor1_ay[k + k_start];
+    else if (sens_num == 2) for (int k=0; k<N; k++) ay[k] = sensor2_ay[k + k_start];
+    else if (sens_num == 3) for (int k=0; k<N; k++) ay[k] = sensor3_ay[k + k_start];
  }
 
 /******************************************************************/
@@ -106,9 +106,9 @@ namespace fio {
  {
    int k_start = (int)(time * samp_freq);
 
-    if (sens_num == 1)      for (int k=0; k<N; k++) az[k] = kin_data[2][k + k_start];
-    else if (sens_num == 2) for (int k=0; k<N; k++) az[k] = kin_data[8][k + k_start];
-    else if (sens_num == 3) for (int k=0; k<N; k++) az[k] = kin_data[17][k + k_start];
+         if (sens_num == 1) for (int k=0; k<N; k++) az[k] = sensor1_az[k + k_start];
+    else if (sens_num == 2) for (int k=0; k<N; k++) az[k] = sensor2_az[k + k_start];
+    else if (sens_num == 3) for (int k=0; k<N; k++) az[k] = sensor3_az[k + k_start];
  }
 
 /******************************************************************/

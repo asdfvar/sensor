@@ -67,21 +67,77 @@ float **kinIO::read_kinetisense(
        const int N_lines) 
 {
 
+   std::string header;
+   std::string parameter;
    std::string line;
    std::ifstream kin_data;
    kin_data.open (path);
 
    float freq = 128.0; // Hz
 
-   float **data = new float *[20];
+   float **data = new float *[22];
    for (int k = 0; k < 20; k++)
       data[k] = new float[N_lines];
 
    kin_data.seekg(0);
 
-   // read past the header
-   std::getline (kin_data, line);
+   // read the header
+   std::getline (kin_data, header);
 
+   std::cout << "parsing header:" << std::endl;
+   std::cout << header << std::endl;
+
+   int ka_parse = 0;
+   int kb_parse = 0;
+   for (int index = 0; ka_parse < header.length(); index++)
+   {
+      kb_parse = header.find(",", ka_parse+1);
+      if (kb_parse < header.length())
+      {
+         parameter = header.substr(ka_parse+1, kb_parse-ka_parse-1);
+      }
+
+      if (parameter == " Sensor 1 ax") {
+         sensor1_ax = data[index];
+      } else if (parameter == " Sensor 1 ay") {
+         sensor1_ay = data[index];
+      } else if (parameter == " Sensor 1 az") {
+         sensor1_az = data[index];
+      } else if (parameter == " Sensor 1 wx") {
+         sensor1_wx = data[index];
+      } else if (parameter == " Sensor 1 wy") {
+         sensor1_wy = data[index];
+      } else if (parameter == " Sensor 1 wz") {
+         sensor1_wz = data[index];
+      } else if (parameter == " Sensor 2 ax") {
+         sensor2_ax = data[index];
+      } else if (parameter == " Sensor 2 ay") {
+         sensor2_ay = data[index];
+      } else if (parameter == " Sensor 2 az") {
+         sensor2_az = data[index];
+      } else if (parameter == " Sensor 2 wx") {
+         sensor2_wx = data[index];
+      } else if (parameter == " Sensor 2 wy") {
+         sensor2_wy = data[index];
+      } else if (parameter == " Sensor 2 wz") {
+         sensor2_wz = data[index];
+      } else if (parameter == " Sensor 3 ax") {
+         sensor3_ax = data[index];
+      } else if (parameter == " Sensor 3 ay") {
+         sensor3_ay = data[index];
+      } else if (parameter == " Sensor 3 az") {
+         sensor3_az = data[index];
+      } else if (parameter == " Sensor 3 wx") {
+         sensor3_wx = data[index];
+      } else if (parameter == " Sensor 3 wy") {
+         sensor3_wy = data[index];
+      } else if (parameter == " Sensor 3 wz") {
+         sensor3_wz = data[index];
+      }
+
+      ka_parse = kb_parse;
+   }
+   
    for (int k = 0; k < N_lines; k++) {
       for (int p = 0; p < 20; p++) {
          std::getline (kin_data, line, ',');
