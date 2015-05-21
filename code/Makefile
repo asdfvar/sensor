@@ -13,7 +13,7 @@ LIBS = -lmatflt -lsens -lpreproc
 
 MAIN_DIRECTIVE = -Dpc #-DTAPER
 
-MAIN_OBJ  = main.o
+MAIN_OBJ  = mf_main.o
 TRAIN_OBJ = train.o
 FFT_OBJ   = fft.o
 
@@ -47,7 +47,7 @@ clean:
 train.o: train.cpp
 	$(CPPC) $(MAIN_DIRECTIVE) $^ -c $(INC)
 
-main.o: main.cpp
+mf_main.o: mf_main.cpp
 	$(CPPC) $(MAIN_DIRECTIVE) $^ -c $(INC)
 
 fft.o: tools/fft.c
