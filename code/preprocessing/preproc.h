@@ -3,7 +3,7 @@
 
 #include "fileio.h"
 
-int preproc(
+void preproc(
      float *ax,             /* Acceleration data in x         */
      float *ay,             /* Acceleration data in y         */
      float *az,             /* Acceleration data in z         */

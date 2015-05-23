@@ -44,7 +44,6 @@ int main(int argc, char *argv[]) {
    int   sens_training = 2; // sensor used for training
    float *buf  = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
    float power, energy;
-   float *data_ax, *data_ay, *data_az;
    int   itt = 0, max_index;
    float corr;
    int   act;

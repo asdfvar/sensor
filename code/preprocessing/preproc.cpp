@@ -21,7 +21,7 @@
 #include "eigen.h"
 #include "fileio.h"
 
-int preproc(
+void preproc(
      float *__restrict__ ax,             /* Acceleration data in x          */
      float *__restrict__ ay,             /* Acceleration data in y          */
      float *__restrict__ az,             /* Acceleration data in z          */
@@ -125,5 +125,5 @@ int preproc(
       az[k] = x*eigVec_3[0] + y*eigVec_3[1] + z*eigVec_3[2];
    }
 
-   return 0;
+   return;
 }
