@@ -110,11 +110,13 @@ int main(int argc, char *argv[]) {
           ax,            /* Acceleration data in x               */
           ay,            /* Acceleration data in y               */
           az,            /* Acceleration data in z               */
-         &power,         /* Resulting power of the signal        */
-         &PARAMETERS,    /* Sampling frequency of the data       */
-         N_window);      /* Number of sample points              */
+          &power,        /* Resulting power of the signal        */
+          &PARAMETERS,   /* Sampling frequency of the data       */
+          N_window);     /* Number of sample points              */
 
-      if (PARAMETERS.Do_taper()) {
+      if (PARAMETERS.Do_taper())
+      {
+
 #ifdef TAPER
          apply_taper (ax, taper, N_window);
          apply_taper (ay, taper, N_window);
@@ -122,7 +124,9 @@ int main(int argc, char *argv[]) {
          apply_filter (ax, 1, N_window);
          apply_filter (ay, 1, N_window);
 #endif
+
       }
+
       proc_time = gettime();
       ave_preproc_time += proc_time;
 
@@ -133,7 +137,8 @@ int main(int argc, char *argv[]) {
       // run the matched filter through the activities
       corr = -1.1f; // -1 is the lowest obtainable minimum
       max_index = 0;
-      for (int k=0; k<MF_activities.get_N(); k++, MF_activities.goto_next()) {
+      for (int k=0; k<MF_activities.get_N(); k++, MF_activities.goto_next())
+      {
 
          MF = MF_activities.get_MF();
 
@@ -150,16 +155,18 @@ int main(int argc, char *argv[]) {
          proc_time = gettime();
          ave_mf_time += proc_time;
 
-         MF->write_corr ("output/correlations" + PARAMETERS.get_tag(), initial_write);
+         MF->write_corr ("output/correlations" + PARAMETERS.get_tag(),
+                         initial_write);
 
          // find which activity has the highest correlation
          tmp = 0.5f * (MF->get_corr_ax() + MF->get_corr_ay());
-         if ( tmp > corr ) {
+
+         if ( tmp > corr )
+         {
             corr = tmp;
             max_index = k;
          }
       }
-      MF_activities.goto_first();
 
       /*
        * ENERGY EXPENDITURE
@@ -168,7 +175,12 @@ int main(int argc, char *argv[]) {
       for (int k=0; k<max_index; k++, MF_activities.goto_next()) {}
 
       MF = MF_activities.get_MF();
-      corr = 0.5f * (MF->get_corr_ax() + MF->get_corr_ay());
+
+      /*
+       * Using the correlation in the primary direction of motion
+       */
+
+      corr = MF->get_corr_ax();
 
       if (corr >= PARAMETERS.get_threshold()) {
          // good match
@@ -186,12 +198,21 @@ int main(int argc, char *argv[]) {
                                    power,
                                    PARAMETERS.get_time_window());
 
-      fio::write_val (power,  "output/power"    + PARAMETERS.get_tag(), initial_write);
-      fio::write_val (act,    "output/activity" + PARAMETERS.get_tag(), initial_write);
-      fio::write_val (energy, "output/energy"   + PARAMETERS.get_tag(), initial_write);
+      fio::write_val (power,
+                      "output/power"    + PARAMETERS.get_tag(),
+                      initial_write);
+
+      fio::write_val (act,
+                      "output/activity" + PARAMETERS.get_tag(),
+                      initial_write);
+
+      fio::write_val (energy,
+                      "output/energy"   + PARAMETERS.get_tag(),
+                      initial_write);
 
       initial_write = false;
       MF_activities.goto_first();
+
    }
 
    ave_preproc_time /= (float) itt;
