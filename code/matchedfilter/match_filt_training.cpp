@@ -31,7 +31,7 @@ void match_filt_training(
 
  float start_time_ref  = 0.0;
  float best_start_time = start_time_ref;
- float start_time_sig  = 0.0;
+ float start_time_data  = 0.0;
 
  float sum_corr          = 0.0;
  float best_correlations = 0.0;
@@ -72,14 +72,14 @@ void match_filt_training(
 
     /* Loop through signal to test this loaded reference */
 
-    start_time_sig = 0.0;
+    start_time_data = 0.0;
     sum_corr       = 0.0;
-    while (KIN->valid_start_end (start_time_sig, time_window))
+    while (KIN->valid_start_end (start_time_data, time_window))
     {
 
-       KIN->load_sens_ax (ax, start_time_sig, 2, N_window);
-       KIN->load_sens_ay (ay, start_time_sig, 2, N_window);
-       KIN->load_sens_az (az, start_time_sig, 2, N_window);
+       KIN->load_sens_ax (ax, start_time_data, 2, N_window);
+       KIN->load_sens_ay (ay, start_time_data, 2, N_window);
+       KIN->load_sens_az (az, start_time_data, 2, N_window);
 
        preproc(
            ax,            /* Acceleration data in x               */
@@ -109,7 +109,7 @@ void match_filt_training(
 
        sum_corr += MF->get_corr_ax () * MF->get_corr_ay() ;
 
-       start_time_sig += time_inc;
+       start_time_data += time_inc;
 
     }
     if (sum_corr > best_correlations) {

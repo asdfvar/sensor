@@ -1,7 +1,6 @@
 tag=_demo
 samp_freq=128.0
 time_window=4.0
-ref_time=1.5
 cutoff_freq=40.0
 freq_range=0.0
 threshold=0.90
