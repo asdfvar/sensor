@@ -2,22 +2,25 @@
 
 import csv
 import numpy as np
-import pylab as pl
 
 class read_correlations:
-   pass
 
-fid = open('../output/correlations_demo17190', 'r')
-fid.close()
+   def __init__(self, path):
 
-primary   = np.array([])
-secondary = np.array([])
+      fid = open(path, 'r')
+      reader = csv.reader(fid)
+      row_count = sum(1 for row in reader)
+      fid.close()
 
-with open('../output/correlations_demo17190','r') as fid:
-   contents = csv.reader(fid)
-   for line in contents:
-      primary   = np.append(primary,   float(line[0]))
-      secondary = np.append(secondary, float(line[1]))
+      self.correlations_primary   = np.zeros( row_count, dtype = float )
+      self.correlations_secondary = np.zeros( row_count, dtype = float )
 
-pl.plot(primary)
-pl.show()
+      with open(path,'r') as fid:
+         reader = csv.reader(fid)
+
+         for p, row in enumerate( reader ):
+            for k, data in enumerate( row ):
+               if k == 0:
+                  self.correlations_primary[p] = float( data )
+               elif k == 1:
+                  self.correlations_secondary[p] = float( data )
