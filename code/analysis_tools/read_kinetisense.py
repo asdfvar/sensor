@@ -13,6 +13,13 @@ class KIN:
       row_count = sum(1 for row in reader)
       fid.close()
 
+      samp_freq  = 120.0
+      dt         = 1.0 / samp_freq
+      N          = row_count - 1
+      total_time = N / samp_freq
+
+      print "%f total seconds of data" % total_time
+
       self.sensor_1_ax = np.zeros(row_count-1, dtype = float)
       self.sensor_1_ay = np.zeros(row_count-1, dtype = float)
       self.sensor_1_az = np.zeros(row_count-1, dtype = float)
@@ -84,6 +91,34 @@ class KIN:
                elif header[k] == " Event":
                   self.Event[p] = float(data)
 
-   def plot_sensor_1_ax(self):
-      pl.plot(self.sensor_1_ax)
-      pl.show()
+   def get_sensor_a(self,
+                    sensor_num,
+                    sensor_dir,
+                    start_time,
+                    interval,
+                    dt):
+
+      start_index = int(start_time / dt)
+      end_index   = int(start_index + interval / dt)
+
+      if sensor_num == 1:
+         if sensor_dir == 1:
+            return self.sensor_1_ax[start_index: end_index]
+         if sensor_dir == 2:
+            return self.sensor_1_ay[start_index: end_index]
+         if sensor_dir == 3:
+            return self.sensor_1_az[start_index: end_index]
+      elif sensor_num == 2:
+         if sensor_dir == 1:
+            return self.sensor_2_ax[start_index: end_index]
+         if sensor_dir == 2:
+            return self.sensor_2_ay[start_index: end_index]
+         if sensor_dir == 3:
+            return self.sensor_2_az[start_index: end_index]
+      elif sensor_num == 3:
+         if sensor_dir == 1:
+            return self.sensor_3_ax[start_index: end_index]
+         if sensor_dir == 2:
+            return self.sensor_3_ay[start_index: end_index]
+         if sensor_dir == 3:
+            return self.sensor_3_az[start_index: end_index]
