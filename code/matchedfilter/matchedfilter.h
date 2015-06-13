@@ -69,7 +69,7 @@ class matchedfilter {
 
 /* Cross correlation */
 
-float crosscorr(float *ref, float *signal, float norm_ref,
+float phase_correlation(float *ref, float *signal, float norm_ref,
                 float *buffer, float dt, float samp_freq,
                 int N_window_ref, int N_data);
 

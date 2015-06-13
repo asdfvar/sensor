@@ -12,7 +12,7 @@ extern "C" {
 #include <cmath>
 #include <iostream>
 
-float crosscorr(
+float phase_correlation(
             float *__restrict__ ref,
             float *__restrict__ sig,
             float norm_ref_in,
@@ -60,7 +60,7 @@ float crosscorr(
    ifft(sig, N_data);
 
    /* lower bound the correlation by zero prior to squaring it */
-   for (k = 0; k < N_data; k++) sig[k] = (sig[k] > 0.0f) ? sig[k] : 0.0f;
+   for (k = 0; k < N_data; k++) if (sig[k] < 0.0f) sig[k] = 0.0f;
 
    /* Normalize the correlation and square its magnitude */
 

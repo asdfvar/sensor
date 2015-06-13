@@ -10,7 +10,7 @@ void run_mf (matchedfilter *MF,
 {
 
    MF->set_corr_ax (
-          crosscorr (MF->access_ax(),
+          phase_correlation (MF->access_ax(),
                      ax,
                      MF->get_norm_ax(),
                      buf,
@@ -21,7 +21,7 @@ void run_mf (matchedfilter *MF,
                    );
               
    MF->set_corr_ay (
-          crosscorr (MF->access_ay(),
+          phase_correlation (MF->access_ay(),
                      ay,
                      MF->get_norm_ay(),
                      buf,

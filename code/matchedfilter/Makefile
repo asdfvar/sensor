@@ -9,7 +9,7 @@ PREPROC = ../preprocessing
 
 INC = -I$(TOOLS) -I$(PREPROC)
 
-OBJ = matchedfilter.o crosscorr.o match_filt_training.o run_mf.o
+OBJ = matchedfilter.o phase_correlation.o match_filt_training.o run_mf.o
 
 ## BUILD ALL
 
@@ -29,7 +29,7 @@ matchedfilter.o: matchedfilter.cpp
 run_mf.o: run_mf.cpp
 	$(CPPC) $^ -c $(INC) $(FLAGS)
 
-crosscorr.o: crosscorr.cpp
+phase_correlation.o: phase_correlation.cpp
 	$(CPPC) $^ -c $(INC) $(FLAGS)
 
 match_filt_training.o: match_filt_training.cpp
