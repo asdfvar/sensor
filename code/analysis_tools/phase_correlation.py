@@ -111,7 +111,10 @@ class phase_correlation:
       self.array_1 = array_1
       self.array_2 = array_2
 
-   def plot_match( self ):
-      pl.plot(self.array_2, 'r', linewidth=3.0)
-      pl.plot(self.array_1_rolled, 'g', linewidth=2.0)
+   def plot_match( self, samp_freq=128.0):
+      dt = 1.0 / samp_freq
+      end = len(self.array_2) * dt
+      time = np.linspace( 0, end, len(self.array_2))
+      pl.plot(time, self.array_2, 'r', linewidth=3.0)
+      pl.plot(time, self.array_1_rolled, 'g', linewidth=2.0)
       pl.show()

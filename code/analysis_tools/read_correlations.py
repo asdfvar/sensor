@@ -2,6 +2,7 @@
 
 import csv
 import numpy as np
+import pylab as pl
 
 class read_correlations:
 
@@ -24,3 +25,8 @@ class read_correlations:
                   self.correlations_primary[p] = float( data )
                elif k == 1:
                   self.correlations_secondary[p] = float( data )
+
+   def plot(self):
+      pl.plot( np.clip(self.correlations_primary, 0.0, 1.0), 'r')
+      pl.plot( np.clip(self.correlations_secondary, 0.0, 1.0), 'g')
+      pl.show()
