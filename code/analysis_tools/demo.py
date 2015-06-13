@@ -6,16 +6,17 @@ import read_reference
 import read_parameters
 import preproc
 import pylab as pl
+import numpy as np
 
 
-walking = "../../data/Phase_2/csv_format/Craig/Craig_Walking_tredmil.csv"
-kin_data = read_kinetisense.KIN( walking )
+data = "../../data/Phase_2/csv_format/Craig/Craig_Walking_tredmil.csv"
+kin_data = read_kinetisense.KIN( data )
 
 inputs = "../input_demo"
 params = read_parameters.read_parameters( inputs )
 
-ref_demo = "../output/ref_data17190"
-ref = read_reference.read_reference( ref_demo )
+ref_file = "../output/ref_data17190"
+ref = read_reference.read_reference( ref_file )
 #ref.plot()
 
 start_time = 400.0
@@ -28,16 +29,6 @@ az = kin_data.get_sensor_a( 2, 3, start_time, interval, dt)
 
 [axp, ayp, azp] = preproc.preproc( ax, ay, az )
 
-#pl.plot(axp, 'r')
-#pl.plot(ayp, 'g')
-#pl.plot(azp, 'b')
-#pl.show()
-
-correlation = phase_correlation.phase_correlation( ref.primary, axp )
-
-#pl.plot( ref.primary, 'r' )
-#pl.plot( axp )
-#pl.show()
-
-pl.plot( correlation )
-pl.show()
+correlation = phase_correlation.phase_correlation( ref.primary, axp, 7)
+print "correlation = %f"          % correlation.matched_corr
+correlation.plot_match()

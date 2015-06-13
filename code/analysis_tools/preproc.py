@@ -12,7 +12,6 @@ def preproc(ax, ay, az):
 
    eig_values, eig_vectors = la.eigh( covariance )
 
-   print eig_values
    xp = np.dot( x.T, eig_vectors )
 
    max_eig_ind = 0

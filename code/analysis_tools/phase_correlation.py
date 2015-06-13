@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import numpy as np
 import math
+import pylab as pl
 
 '''
    array_1 will pass over array_2 (remain stationary) to produce
@@ -58,6 +59,23 @@ def zero_pad( array_1, array_2 ):
    return new_array_1
 
 '''
+   Apply an n_point tent filter smoothing to the data
+'''
+
+def smooth( array , n_points):
+
+   left_weights = np.arange( int(n_points / 2) + 1, dtype='float')
+   right_weights = left_weights[::-1]
+
+   weights = np.append( left_weights, right_weights[1::] ) + 1.0
+   weights /= sum(weights)
+   weights = np.roll( weights, -int(n_points / 2) )
+
+   smoothed = np.convolve( weights, array )
+
+   return smoothed
+
+'''
    array_1 will pass over array_2 (remain stationary) to produce
    the normalized correlation
 
@@ -69,9 +87,31 @@ def zero_pad( array_1, array_2 ):
    len(array_1) <= len(array_2), numpy arrays
 '''
 
-def phase_correlation( array_1, array_2 ):
-   norm         = normalizing_array( array_1, array_2 )
-   array_1      = zero_pad( array_1, array_2 )
-   correlation  = cross_correlation( array_1, array_2)
-   correlation *= norm
-   return correlation
+class phase_correlation:
+
+   def __init__(self, array_1, array_2, n_point=1 ):
+
+      array_1      = smooth( array_1, n_point )
+      array_2      = smooth( array_2, n_point )
+
+      norm         = normalizing_array( array_1, array_2 )
+      array_1      = zero_pad( array_1, array_2 )
+      correlation  = cross_correlation( array_1, array_2)
+      correlation *= norm
+
+      matched_corr = correlation.max()
+      lag          = correlation.argmax()
+
+      array_1_rolled = np.roll( array_1, lag )
+
+      self.correlation    = correlation
+      self.array_1_rolled = array_1_rolled
+      self.matched_corr   = matched_corr
+
+      self.array_1 = array_1
+      self.array_2 = array_2
+
+   def plot_match( self ):
+      pl.plot(self.array_2, 'r', linewidth=3.0)
+      pl.plot(self.array_1_rolled, 'g', linewidth=2.0)
+      pl.show()
