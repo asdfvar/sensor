@@ -27,6 +27,16 @@ class read_correlations:
                   self.correlations_secondary[p] = float( data )
 
    def plot(self):
-      pl.plot( np.clip(self.correlations_primary, 0.0, 1.0), 'r')
-      pl.plot( np.clip(self.correlations_secondary, 0.0, 1.0), 'g')
+      fig = pl.figure()
+
+      ax1 = fig.add_subplot(211)
+      pl.ylim([0.0, 1.0])
+      pl.title("Primary Signature Correlations")
+      ax1.plot( np.clip(self.correlations_primary, 0.0, 1.0), 'blue')
+
+      ax2 = fig.add_subplot(212)
+      pl.ylim([0.0, 1.0])
+      pl.title("Secondary Signature Correlations")
+      ax2.plot( np.clip(self.correlations_secondary, 0.0, 1.0), 'red')
+
       pl.show()

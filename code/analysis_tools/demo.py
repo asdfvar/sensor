@@ -33,5 +33,5 @@ az = kin_data.get_sensor_a( 2, 3, start_time, interval, dt)
 [axp, ayp, azp] = preproc.preproc( ax, ay, az )
 
 correlation_primary = phase_correlation.phase_correlation( ref.primary, axp, 1)
-print "primary correlation = %f"          % correlation.matched_corr
-correlation.plot_match()
+print "primary correlation = %f"          % correlation_primary.matched_corr
+correlation_primary.plot_match()

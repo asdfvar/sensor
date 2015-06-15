@@ -117,4 +117,6 @@ class phase_correlation:
       time = np.linspace( 0, end, len(self.array_2))
       pl.plot(time, self.array_2, 'r', linewidth=3.0)
       pl.plot(time, self.array_1_rolled, 'g', linewidth=2.0)
+      pl.xlabel("Time (seconds)")
+      pl.ylabel("Acceleration (g)")
       pl.show()
