@@ -38,6 +38,8 @@ int main(int argc, char *argv[]) {
    float *ax    = new float[N_window+2];   // Workspace for the signal in x
    float *ay    = new float[N_window+2];   // Workspace for the signal in y
    float *az    = new float[N_window+2];   // Workspace for the signal in z
+   float *primary    = new float[N_window+2];
+   float *secondary    = new float[N_window+2];
 #ifdef TAPER
    float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
 #endif
@@ -142,11 +144,14 @@ int main(int argc, char *argv[]) {
 
          MF = MF_activities.get_MF();
 
+         for (int p = 0; p < N_window+2; p++) primary[p]   = ax[p];
+         for (int p = 0; p < N_window+2; p++) secondary[p] = ay[p];
+
          gettime();
 
          run_mf (MF,
-                 ax,
-                 ay,
+                 primary,
+                 secondary,
                  PARAMETERS.get_dt(),
                  PARAMETERS.get_samp_freq(),
                  N_window,
@@ -224,6 +229,8 @@ int main(int argc, char *argv[]) {
    delete[] ay;
    delete[] az;
    delete[] buf;
+   delete[] primary;
+   delete[] secondary;
 #ifdef TAPER
    delete[] taper;
 #endif

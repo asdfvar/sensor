@@ -40,3 +40,14 @@ class read_correlations:
       ax2.plot( np.clip(self.correlations_secondary, 0.0, 1.0), 'red')
 
       pl.show()
+
+   def print_stats(self):
+      print "Primary correlation stats:"
+      print "\tmax = %f" % max(self.correlations_primary)
+      print "\tmean = %f" % np.mean(self.correlations_primary)
+      print "\tstd = %f" % np.std(self.correlations_primary)
+
+      print "Secondary correlation stats:"
+      print "\tmax = %f" % max(self.correlations_secondary)
+      print "\tmean = %f" % np.mean(self.correlations_secondary)
+      print "\tstd = %f" % np.std(self.correlations_secondary)

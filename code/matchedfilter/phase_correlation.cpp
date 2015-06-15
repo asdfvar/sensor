@@ -59,9 +59,6 @@ float phase_correlation(
 
    ifft(sig, N_data);
 
-   /* lower bound the correlation by zero prior to squaring it */
-   for (k = 0; k < N_data; k++) if (sig[k] < 0.0f) sig[k] = 0.0f;
-
    /* Normalize the correlation and square its magnitude */
 
    for (k = 0; k < N_data - N_window_ref + 1; k++)
