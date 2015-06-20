@@ -5,6 +5,7 @@
 #include "gettime.h"
 #include "taper.h"
 #include "filter.h"
+#include "memory_management.h"
 #include <iostream>
 
 #define BINS 200.0
@@ -43,6 +44,8 @@ void match_filt_training(
 
  float *__restrict__ buf = new float[N_window+2];
 
+ MEMORY mem_buffer( 6 * (N_window + 2) );
+
  float prev_perc_done = 0.0;
  float curr_perc_done = 0.0;
 
@@ -50,6 +53,7 @@ void match_filt_training(
 
  gettime();
 
+ std::cout << "% done\tthis average correlation\tbest correlation\tbest time"<< std::endl;
  while (KIN->valid_start_end (start_time_ref, time_window))
  {
 
@@ -108,7 +112,7 @@ void match_filt_training(
                dt,
                samp_freq,
                N_window,
-               buf);
+               mem_buffer);
 
        sum_corr += MF->get_correlation();
 
@@ -127,15 +131,10 @@ void match_filt_training(
     if (curr_perc_done - prev_perc_done >= 10.0f)
     {
 
-       std::cout << "Training "            <<
-                    curr_perc_done         <<
-                    "% done. "             <<
-                    "this average corr = " <<
-                    ave_correlation        <<
-                    " best correlation = " <<
-                    best_correlation       <<
-                    " best time = "        <<
-                    best_start_time        <<
+       std::cout << curr_perc_done   << "\t"     <<
+                    ave_correlation  << "\t\t\t" <<
+                    best_correlation << "\t\t"   <<
+                    best_start_time  << "\t"     <<
                     std::endl;
 
        prev_perc_done = curr_perc_done;
@@ -164,6 +163,8 @@ void match_filt_training(
  MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
 
  std::cout << "Training time = " << gettime() << std::endl;
+
+ mem_buffer.clear_memory();
 
  delete[] ax;
  delete[] ay;

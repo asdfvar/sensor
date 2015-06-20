@@ -1,5 +1,7 @@
 #include "matchedfilter.h"
+#include "memory_management.h"
 #include "phase_correlation.h"
+#include <iostream>
 #include <cmath>
 
 void run_mf (matchedfilter *MF,
@@ -8,21 +10,20 @@ void run_mf (matchedfilter *MF,
              float          dt,
              float          samp_freq,
              int            N_data,
-             float         *buf)
+             MEMORY         mem_buffer)
 {
-
-   // TODO: Make proper handle for this
-   float norm_primary_squared[1024];
-   float cross_correlation_primary[1024];
-   float norm_secondary_squared[1024];
-   float cross_correlation_secondary[1024];
-   float cross_correlation[1024];
-   float norm_squared[1024];
 
    int   N_window                   = MF->get_N_window();
    int   N_data_reference           = N_data - N_window + 1;
    float ref_norm_primary_squared   = MF->get_norm_ax() * MF->get_norm_ax();
    float ref_norm_secondary_squared = MF->get_norm_ay() * MF->get_norm_ay();
+
+   float *norm_primary_squared        = mem_buffer.allocate_float( N_data           );
+   float *cross_correlation_primary   = mem_buffer.allocate_float( N_data + 2       );
+   float *norm_secondary_squared      = mem_buffer.allocate_float( N_data           );
+   float *cross_correlation_secondary = mem_buffer.allocate_float( N_data + 2       );
+   float *cross_correlation           = mem_buffer.allocate_float( N_data_reference );
+   float *norm_squared                = mem_buffer.allocate_float( N_data_reference );
 
    phase::norm_squared (primary_acceleration,
                         norm_primary_squared,
@@ -49,21 +50,11 @@ void run_mf (matchedfilter *MF,
    phase::phase_correlation (MF->access_ax(),
                      primary_acceleration,
                      cross_correlation_primary,
-                     MF->get_norm_ax(),
-                     buf,
-                     dt,
-                     samp_freq,
-                     N_window,
                      N_data);
 
    phase::phase_correlation (MF->access_ay(),
                      secondary_acceleration,
                      cross_correlation_secondary,
-                     MF->get_norm_ay(),
-                     buf,
-                     dt,
-                     samp_freq,
-                     N_window,
                      N_data);
 
    for (int k = 0; k < N_data_reference; k++)

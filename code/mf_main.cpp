@@ -7,6 +7,7 @@
 #include "match_filt_training.h"
 #include "energy_expenditure.h"
 #include "compendium.h"
+#include "memory_management.h"
 #include "gettime.h"
 #include "taper.h"
 #include "filter.h"
@@ -51,6 +52,7 @@ int main(int argc, char *argv[]) {
    int   act;
    float tmp;
    matchedfilter *MF;
+   MEMORY mem_buffer(6 * (N_window + 2));
 
 #ifdef TAPER
    taper_f(taper,
@@ -155,7 +157,7 @@ int main(int argc, char *argv[]) {
                  PARAMETERS.get_dt(),
                  PARAMETERS.get_samp_freq(),
                  N_window,
-                 buf);
+                 mem_buffer);
 
          proc_time = gettime();
          ave_mf_time += proc_time;
@@ -221,6 +223,8 @@ int main(int argc, char *argv[]) {
    std::cout << "average pre-processing time = " << ave_preproc_time << std::endl;
    ave_mf_time /= (float) itt;
    std::cout << "average matched-filter time = " << ave_mf_time << std::endl;
+
+   mem_buffer.clear_memory();
 
    delete[] ax;
    delete[] ay;

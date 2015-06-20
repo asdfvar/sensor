@@ -48,35 +48,11 @@ namespace phase
              float *__restrict__ ref,
              float *__restrict__ signal,
              float *__restrict__ cross_correlation,
-             float norm_ref_in,
-             float *__restrict__ norm_sig2, /* buffer space */
-             float dt,
-             float samp_freq,
-             int   N_window_ref,
              int   N_data)
  {
  
     float tmp;
     int k;
- 
- #if 0
-    /* Compute the norm squared of the signal */
-    for (k = 0; k < N_data; k++){
-       norm_sig2[k] = signal[k] * signal[k];
-    }
- 
-    tmp = 0.0f;
-    for (k = 0; k < N_window_ref; k++){
-       tmp += norm_sig2[k];
-    }
- 
-    for (k = 0; k < N_data - N_window_ref; k++) {
-       tmp2          = norm_sig2[k];
-       norm_sig2[k]  = tmp;
-       tmp          += norm_sig2[k+N_window_ref] - tmp2;
-    }
-    norm_sig2[k] = tmp;
- #endif
  
     // FFT
     fft(signal, N_data);
@@ -91,40 +67,6 @@ namespace phase
     }
  
     ifft(cross_correlation, N_data);
- 
- #if 0
-    /* Normalize the correlation and square its magnitude */
- 
-    for (k = 0; k < N_data - N_window_ref + 1; k++)
-       signal[k] *= signal[k];
- 
-    norm_ref_in *= norm_ref_in;
- 
-    /* using the square of the correlation allows us to minimize the cost
-       of invoking the square root repeatedly*/
- 
-    /* We don't care about circular shifts */
-    int N_data_ref = N_data - N_window_ref + 1;
- 
-    for (k = 0; k < N_data_ref; k++) norm_sig2[k] *= norm_ref_in;
- 
-    for (k = 0; k < N_data_ref; k++) signal[k] /= norm_sig2[k];
- 
-    float max     = signal[0];
-    int   max_ind = 0;
- 
-    for (k = 1; k < N_data_ref; k++) {
-       if (signal[k] > max){
-          max = signal[k];
-          max_ind = k;
-       }
-    }
- 
-    max = sqrtf(max);
- 
-    int   shift = max_ind; // The number of cells the reference must shift to best match the signal
-    float corr  = max;     // The normalized correlation after matching the reference to the signal
- #endif
  
     return;
  }

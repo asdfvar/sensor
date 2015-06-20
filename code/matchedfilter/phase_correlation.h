@@ -7,11 +7,6 @@ namespace phase
              float *ref,
              float *sig,
              float *cross_correlation,
-             float norm_ref_in,
-             float *norm_sig2,
-             float dt,
-             float samp_freq,
-             int   N_window_ref,
              int   N_data);
 
  void norm_squared (
