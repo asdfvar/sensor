@@ -40,8 +40,7 @@ matchedfilter::matchedfilter (int N_data, int activity_ID_in)
       ref_ay[k] = 0.0;
    }
 
-   corr_ax_computed = false;
-   corr_ay_computed = false;
+   correlation_computed = false;
    activity_ID = activity_ID_in;
 }
 
@@ -153,8 +152,7 @@ matchedfilter::matchedfilter (const char path[], int N_data)
    norm_ref_ax = sqrtf( norm_ref_ax );
    norm_ref_ay = sqrtf( norm_ref_ay );
 
-   corr_ax_computed = false;
-   corr_ay_computed = false;
+   correlation_computed = false;
 
 }
 
@@ -245,26 +243,16 @@ int matchedfilter::get_ID(void)
 
 /******************************************************************************/
 
-float matchedfilter::get_corr_ax (void)
+float matchedfilter::get_correlation (void)
 {
-   if (corr_ax_computed) {
-      return corr_ax;
+   if ( correlation_computed )
+   {
+      return correlation;
    } else {
       std::cout << "Error: Correlations not computed yet" << std::endl;
       return -1.0;
    }
-}
 
-/******************************************************************************/
-
-float matchedfilter::get_corr_ay (void)
-{
-   if (corr_ay_computed) {
-      return corr_ay;
-   } else {
-      std::cout << "Error: Correlations not computed yet" << std::endl;
-      return -1.0;
-   }
 }
 
 /******************************************************************************/
@@ -305,7 +293,7 @@ void matchedfilter::write_corr(std::string corr_file, bool init)
    } else {
       out_file.open (corr_file.c_str(), std::ios::app);
    }
-   out_file << corr_ax << "," << corr_ay << "\n";
+   out_file << correlation << "\n";
    out_file.close();
    
 }
@@ -314,18 +302,17 @@ void matchedfilter::write_corr(std::string corr_file, bool init)
 
 void matchedfilter::print_all (void)
 {
-   std::cout << "N_data_ref = "      <<  N_data_ref << std::endl;
-   std::cout << "N_window_ref = "    << N_window_ref << std::endl;
-   std::cout << "dt_ref = "          << dt_ref << std::endl;
-   std::cout << "samp_freq_ref = "   << samp_freq_ref << std::endl;
+   std::cout << "N_data_ref =      " << N_data_ref      << std::endl;
+   std::cout << "N_window_ref =    " << N_window_ref    << std::endl;
+   std::cout << "dt_ref =          " << dt_ref          << std::endl;
+   std::cout << "samp_freq_ref =   " << samp_freq_ref   << std::endl;
    std::cout << "time_window_ref = " << time_window_ref << std::endl;
-   std::cout << "activity_ID = "     << activity_ID << std::endl;
-   std::cout << "ref_ax = "          << *ref_ax << std::endl;
-   std::cout << "ref_ay = "          << *ref_ay << std::endl;
-   std::cout << "nor_ref_ax = "      << norm_ref_ax << std::endl;
-   std::cout << "norm_ref_ay = "     << norm_ref_ay << std::endl;
-   std::cout << "corr_ax = "         << corr_ax << std::endl;
-   std::cout << "corr_ay = "         << corr_ay << std::endl;
+   std::cout << "activity_ID =     " << activity_ID     << std::endl;
+   std::cout << "ref_ax =          " << *ref_ax         << std::endl;
+   std::cout << "ref_ay =          " << *ref_ay         << std::endl;
+   std::cout << "nor_ref_ax =      " << norm_ref_ax     << std::endl;
+   std::cout << "norm_ref_ay =     " << norm_ref_ay     << std::endl;
+   std::cout << "correlation =     " << correlation     << std::endl;
 }
 
 /******************************************************************************/
@@ -365,24 +352,19 @@ int matchedfilter::get_N_window (void)
 
 /******************************************************************************/
 
-void matchedfilter::set_corr_ax (float corr)
+void matchedfilter::set_correlation (float correlation_in)
 {
-   corr_ax = corr;
+   correlation = correlation_in;
 
-   corr_ax_computed = true;
+   correlation_computed = true;
 
-   if (corr_ax > 1.001f) std::cout << "Correlation in x = " << corr_ax << " > 1.0" << std::endl;
-}
-
-/******************************************************************************/
-
-void matchedfilter::set_corr_ay (float corr)
-{
-   corr_ay = corr;
-
-   corr_ay_computed = true;
-
-   if (corr_ay > 1.001f) std::cout << "Correlation in y = " << corr_ay << " > 1.0" << std::endl;
+   if (correlation > 1.001f)
+   {
+      std::cout << "Correlation = " <<
+                   correlation      <<
+                   " > 1.0" <<
+                   std::endl;
+   }
 }
 
 /******************************************************************************/

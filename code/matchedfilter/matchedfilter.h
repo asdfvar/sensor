@@ -21,11 +21,9 @@ class matchedfilter {
       float get_norm_ax (void);
       float get_norm_ay (void);
 
-      void set_corr_ax (float corr);
-      void set_corr_ay (float corr);
+      void set_correlation (float corr);
 
-      float get_corr_ax (void); // Return correlation in x
-      float get_corr_ay (void); // Return correlation in y
+      float get_correlation (void); // Return correlation in x
 
       int get_N_window (void);
 
@@ -57,21 +55,13 @@ class matchedfilter {
       float norm_ref_ax;      // Normalizing factor of the reference
       float norm_ref_ay;      // Normalizing factor of the reference
 
-      float corr_ax;          // Normalized correlation in x (Primary direction)
-      float corr_ay;          // Normalized correlation in y (Secondary direction)
+      float correlation;      // Normalized correlation
 
       /* Boolean cases to make sure values and such are set before calling certain routines */
 
-      bool corr_ax_computed;
-      bool corr_ay_computed;
+      bool correlation_computed;
 
 };
-
-/* Cross correlation */
-
-float phase_correlation(float *ref, float *signal, float norm_ref,
-                float *buffer, float dt, float samp_freq,
-                int N_window_ref, int N_data);
 
 /******************************/
 

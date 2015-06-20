@@ -164,9 +164,7 @@ int main(int argc, char *argv[]) {
                          initial_write);
 
          // find which activity has the highest correlation
-         tmp = 0.5f * (MF->get_corr_ax() + MF->get_corr_ay());
-
-         if ( tmp > corr )
+         if ( MF->get_correlation() > corr )
          {
             corr = tmp;
             max_index = k;
@@ -181,11 +179,7 @@ int main(int argc, char *argv[]) {
 
       MF = MF_activities.get_MF();
 
-      /*
-       * Using the correlation in the primary direction of motion
-       */
-
-      corr = MF->get_corr_ax();
+      corr = MF->get_correlation();
 
       if (corr >= PARAMETERS.get_threshold()) {
          // good match

@@ -107,7 +107,7 @@ void match_filt_training(
                N_window,
                buf);
 
-       sum_corr += MF->get_corr_ax () * MF->get_corr_ay() ;
+       sum_corr = MF->get_correlation();
 
        start_time_data += time_inc;
 
