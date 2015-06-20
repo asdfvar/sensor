@@ -35,11 +35,11 @@ int main(int argc, char *argv[]) {
    std::string data_path   = PARAMETERS.get_data_path();
    float start_time      = 0.0f;             // seconds from start
    int   N_window        = PARAMETERS.get_N_window(); // Number of data points of the signal
-   float *ax    = new float[N_window+2];   // Workspace for the signal in x
-   float *ay    = new float[N_window+2];   // Workspace for the signal in y
-   float *az    = new float[N_window+2];   // Workspace for the signal in z
-   float *primary    = new float[N_window+2];
-   float *secondary    = new float[N_window+2];
+   float *ax             = new float[N_window+2];   // Workspace for the signal in x
+   float *ay             = new float[N_window+2];   // Workspace for the signal in y
+   float *az             = new float[N_window+2];   // Workspace for the signal in z
+   float *primary        = new float[N_window+2];
+   float *secondary      = new float[N_window+2];
 #ifdef TAPER
    float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
 #endif
@@ -175,7 +175,10 @@ int main(int argc, char *argv[]) {
        * ENERGY EXPENDITURE
        */
 
-      for (int k=0; k<max_index; k++, MF_activities.goto_next()) {}
+      for (int k=0; k<max_index; k++)
+      {
+         MF_activities.goto_next();
+      }
 
       MF = MF_activities.get_MF();
 

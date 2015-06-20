@@ -26,6 +26,7 @@ void match_filt_training(
  int   N_window        = PARAMETERS->get_N_window();         /* Signal window points (elements) */
  float time_window_ref = PARAMETERS->get_time_window_ref();  /* Reference length (seconds)      */
  int   N_window_ref    = PARAMETERS->get_N_window_ref();     /* Reference length (# elements)   */
+ int   count;
  
  float time_inc = (KIN->get_total_time() - time_window) / BINS;
 
@@ -34,7 +35,7 @@ void match_filt_training(
  float start_time_data  = 0.0;
 
  float sum_corr          = 0.0;
- float best_correlations = 0.0;
+ float best_correlation = 0.0;
 
  float *__restrict__ ax = new float[N_window+2];   // Workspace for the signal in x
  float *__restrict__ ay = new float[N_window+2];   // Workspace for the signal in y
@@ -72,9 +73,11 @@ void match_filt_training(
 
     /* Loop through signal to test this loaded reference */
 
-    start_time_data = 0.0;
-    sum_corr       = 0.0;
-    while (KIN->valid_start_end (start_time_data, time_window))
+    for (count           = 0,
+         start_time_data = 0.0f,
+         sum_corr        = 0.0f;
+            KIN->valid_start_end (start_time_data, time_window);
+               count++)
     {
 
        KIN->load_sens_ax (ax, start_time_data, 2, N_window);
@@ -107,19 +110,34 @@ void match_filt_training(
                N_window,
                buf);
 
-       sum_corr = MF->get_correlation();
+       sum_corr += MF->get_correlation();
 
        start_time_data += time_inc;
 
     }
-    if (sum_corr > best_correlations) {
-       best_correlations = sum_corr;
-       best_start_time = start_time_ref;
+
+    float ave_correlation = sum_corr / (float)count;
+
+    if (ave_correlation > best_correlation) {
+       best_correlation = ave_correlation;
+       best_start_time   = start_time_ref;
     }
 
-    curr_perc_done = start_time_ref/(KIN->get_total_time() - time_window)*100.0;
-    if (curr_perc_done - prev_perc_done > 10.0) {
-       std::cout << "Training " << curr_perc_done << "% done" << std::endl;
+    curr_perc_done = start_time_ref/(KIN->get_total_time() - time_window)*100.0f;
+    if (curr_perc_done - prev_perc_done >= 10.0f)
+    {
+
+       std::cout << "Training "            <<
+                    curr_perc_done         <<
+                    "% done. "             <<
+                    "this average corr = " <<
+                    ave_correlation        <<
+                    " best correlation = " <<
+                    best_correlation       <<
+                    " best time = "        <<
+                    best_start_time        <<
+                    std::endl;
+
        prev_perc_done = curr_perc_done;
     }
 
