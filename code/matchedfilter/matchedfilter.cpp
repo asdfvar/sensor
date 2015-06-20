@@ -25,6 +25,21 @@ static std::string to_string ( int val )
    return s;
 }
 
+static float norm_ref( float *reference,
+                       int N_window_ref )
+{
+   float norm = 0.0f;
+
+   for (int k = 0; k < N_window_ref; k++)
+   {
+      norm += reference[k] * reference[k];
+   }
+
+   norm = sqrtf( norm );
+
+   return norm;
+}
+
 /******************************************************************************/
 
 matchedfilter::matchedfilter (int N_data, int activity_ID_in)
@@ -69,14 +84,11 @@ void matchedfilter::load_ref (float *ax_in, float *ay_in,
 
    /* Compute the norm of the reference signal */
 
-   norm_ref_ax = 0.0;
-   norm_ref_ay = 0.0;
-   for (int k = 0; k < N_window_ref; k++){
-      norm_ref_ax    += ref_ax[k]*ref_ax[k];
-      norm_ref_ay    += ref_ay[k]*ref_ay[k];
-   }
-   norm_ref_ax = sqrtf( norm_ref_ax );
-   norm_ref_ay = sqrtf( norm_ref_ay );
+   norm_ref_ax = norm_ref( ref_ax,
+                           N_window_ref );
+
+   norm_ref_ay = norm_ref( ref_ay,
+                           N_window_ref );
 
 }
 
@@ -143,16 +155,11 @@ matchedfilter::matchedfilter (const char path[], int N_data)
 
    /* Compute the norm of the reference signal */
 
-   norm_ref_ax = 0.0;
-   norm_ref_ay = 0.0;
-   for (int k = 0; k < N_window_ref; k++){
-      norm_ref_ax    += ref_ax[k]*ref_ax[k];
-      norm_ref_ay    += ref_ay[k]*ref_ay[k];
-   }
-   norm_ref_ax = sqrtf( norm_ref_ax );
-   norm_ref_ay = sqrtf( norm_ref_ay );
+   norm_ref_ax = norm_ref( ref_ax,
+                           N_window_ref );
 
-   correlation_computed = false;
+   norm_ref_ay = norm_ref( ref_ay,
+                           N_window_ref );
 
 }
 
