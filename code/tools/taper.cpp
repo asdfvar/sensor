@@ -10,6 +10,9 @@
 
 #define PIO2 1.5707963267948966
 
+/*
+ * Function NAME: taper_f
+ */
 void taper_f(
        float *taper,      // taper data of size N+2
        float time_window,
@@ -48,7 +51,11 @@ void taper_f(
 
 }
 
-void apply_taper (float *sig, float *taper, int N) {
+/*
+ * Function NAME: apply_taper
+ */
+void apply_taper (float *sig, float *taper, int N)
+{
 
       // FFT the signal
       fft(sig, N);

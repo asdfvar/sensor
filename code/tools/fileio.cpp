@@ -5,6 +5,9 @@
 #include <stdlib.h>
 
 namespace fio {
+ /*
+  * Constructor NAME: kinIO
+  */
  kinIO::kinIO (const char path[] )
  {
 
@@ -17,6 +20,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Destructor NAME: kinIO
+  */
  kinIO::~kinIO ()
  {
 
@@ -27,6 +33,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: valid_start_end
+  */
  bool kinIO::valid_start_end (float start, float window)
  {
    if ( start + window > total_time ) return false;
@@ -35,6 +44,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: access_sens_ax
+  */
  float *kinIO::access_sens_ax (float time, int sens_num)
  {
    int k = (int)(time * samp_freq);
@@ -50,6 +62,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: access_sens_ay
+  */
  float *kinIO::access_sens_ay (float time, int sens_num)
  {
    int k = (int)(time * samp_freq);
@@ -65,6 +80,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: access_sens_az
+  */
  float *kinIO::access_sens_az (float time, int sens_num)
  {
    int k = (int)(time * samp_freq);
@@ -80,6 +98,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: load_sens_ax
+  */
  void kinIO::load_sens_ax (float *__restrict__ ax, float time, int sens_num, int N)
  {
    int k_start = (int)(time * samp_freq);
@@ -91,6 +112,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: load_sens_ay
+  */
  void kinIO::load_sens_ay (float *__restrict__ ay, float time, int sens_num, int N)
  {
    int k_start = (int)(time * samp_freq);
@@ -102,6 +126,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: load_sens_az
+  */
  void kinIO::load_sens_az (float *__restrict__ az, float time, int sens_num, int N)
  {
    int k_start = (int)(time * samp_freq);
@@ -113,6 +140,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_total_time
+  */
  float kinIO::get_total_time (void)
  {
     return total_time;
@@ -120,6 +150,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: write_val
+  */
  void write_val(float val, std::string out_file_path, bool init)
  {
 
@@ -137,6 +170,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: write_val
+  */
  void write_val(int val, std::string out_file_path,  bool init)
  {
 
@@ -153,6 +189,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Constructor NAME: readRefs
+  */
  readRefs::readRefs (std::string in_file)
  {
 
@@ -184,18 +223,27 @@ namespace fio {
  
 /******************************************************************/
 
+ /*
+  * Destructor NAME: readRefs
+  */
  readRefs::~readRefs (void) {
     delete[] buffer;
  }
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_Nrefs
+  */
  int readRefs::get_Nrefs(void) {
     return N_refs;
  }
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_ref_path
+  */
  std::string readRefs::get_ref_path(int i_th) {
 
    if (i_th > N_refs) {
@@ -223,6 +271,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Constructor NAME: parameters
+  */
  parameters::parameters (std::string path) {
 
     input.open ( path.c_str() );
@@ -267,6 +318,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: print
+  */
  void parameters::print (void)
  {
 
@@ -295,6 +349,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_parameters_f
+  */
  float parameters::get_parameter_f (std::string parameter)
  {
 
@@ -326,6 +383,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_parameter_i
+  */
  int parameters::get_parameter_i (std::string parameter)
  {
 
@@ -357,6 +417,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_parameter_s
+  */
  std::string parameters::get_parameter_s (std::string parameter)
  {
 
@@ -388,6 +451,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_parameter_sex
+  */
  int parameters::get_parameter_sex (std::string parameter)
  {
 
@@ -426,6 +492,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_dt
+  */
  float parameters::get_dt (void)
  {
     return dt;
@@ -433,6 +502,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_samp_freq
+  */
  float parameters::get_samp_freq (void)
  {
     return samp_freq;
@@ -440,6 +512,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_N_window
+  */
  int parameters::get_N_window (void)
  {
     return (int)(samp_freq * time_window);
@@ -447,6 +522,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_N_window_ref
+  */
  int parameters::get_N_window_ref (void)
  {
     return (int)(samp_freq * ref_time);
@@ -454,6 +532,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: Do_taper
+  */
  bool parameters::Do_taper (void)
  {
     return b_taper;
@@ -461,6 +542,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_freq_range
+  */
  float parameters::get_freq_range (void)
  {
     return freq_range;
@@ -468,6 +552,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_cutoff_freq
+  */
  float parameters::get_cutoff_freq (void)
  {
     return cutoff_freq;
@@ -475,6 +562,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_time_window
+  */
  float parameters::get_time_window (void)
  {
     return time_window;
@@ -482,6 +572,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_time_window_ref
+  */
  float parameters::get_time_window_ref (void)
  {
     return ref_time;
@@ -489,6 +582,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_threashold
+  */
  float parameters::get_threshold (void)
  {
     return threshold;
@@ -496,6 +592,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_sex
+  */
  int parameters::get_sex (void)
  {
     return sex;
@@ -503,6 +602,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_age
+  */
  float parameters::get_age (void)
  {
     return age;
@@ -510,6 +612,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_weight
+  */
  float parameters::get_weight (void)
  {
     return weight;
@@ -517,6 +622,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_height
+  */
  float parameters::get_height (void)
  {
     return height;
@@ -524,6 +632,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_tag
+  */
  std::string parameters::get_tag (void)
  {
     return tag;
@@ -531,6 +642,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_data_path
+  */
  std::string parameters::get_data_path (void)
  {
     return data_path;
@@ -538,6 +652,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_ref_path
+  */
  std::string parameters::get_ref_path (void)
  {
     return ref_path;
@@ -545,6 +662,9 @@ namespace fio {
 
 /******************************************************************/
 
+ /*
+  * Function NAME: get_activity_ID
+  */
  std::string parameters::get_activity_ID (void)
  {
     return activity_ID;

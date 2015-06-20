@@ -12,6 +12,10 @@
 #include "fileio.h"
 
 namespace fio {
+
+/*
+ * Function NAME: count_kinetisense_lines
+ */
 int kinIO::count_kinetisense_lines(
        /* Reads in the file data and counts how many lines of
           data are in the file. */
@@ -35,6 +39,9 @@ int kinIO::count_kinetisense_lines(
 
 /**********************************************************************/
 
+/*
+ * Function NAME: read_kinetisense
+ */
 float **kinIO::read_kinetisense(
           /* Populates the data buffer with the kinetisense csv file data.
              Returns a pointer to hold the data. This will contain the acceleration
@@ -153,11 +160,16 @@ float **kinIO::read_kinetisense(
 
 /**********************************************************************/
 
-float **kinIO::read_kinetisense( const char path[] ) {
+/*
+ * Function NAME: read_kinetisense
+ */
+float **kinIO::read_kinetisense( const char path[] )
+{
 
    int N = count_kinetisense_lines( path );
 
    return read_kinetisense ( path, N );
 
 }
+
 }

@@ -2,6 +2,9 @@
 #include "compendium.h"
 #include <iostream>
 
+/*
+ * Function NAME: energy_expenditure
+ */
 float energy_expenditure (
         float    weight,
         float    height,

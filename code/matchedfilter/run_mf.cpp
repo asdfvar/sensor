@@ -4,6 +4,9 @@
 #include <iostream>
 #include <cmath>
 
+/*
+ * Function NAME: run_mf
+ */
 void run_mf (matchedfilter *MF,
              float         *primary_acceleration,
              float         *secondary_acceleration,

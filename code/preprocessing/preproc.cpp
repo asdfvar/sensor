@@ -21,6 +21,9 @@
 #include "eigen.h"
 #include "fileio.h"
 
+/*
+ * Function NAME: preproc
+ */
 void preproc(
      float *__restrict__ ax,             /* Acceleration data in x          */
      float *__restrict__ ay,             /* Acceleration data in y          */

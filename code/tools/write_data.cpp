@@ -3,6 +3,10 @@
 #include <iostream>
 
 namespace fio {
+
+ /*
+  * Function NAME: write_correlations
+  */
  void write_correlations(const std::string path, float *corr_ax, float *corr_ay, int N) {
 
    std::ofstream OF;

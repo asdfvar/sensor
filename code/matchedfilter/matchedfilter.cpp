@@ -13,6 +13,8 @@ extern "C" {
 #define N_headers 4
 
 /*
+ * Function NAME: to_string
+ *
  * Function to replace std::to_string which has
  * a problem in Cygwin
  */
@@ -25,6 +27,9 @@ static std::string to_string ( int val )
    return s;
 }
 
+/*
+ * Function NAME: norm_ref
+ */
 static float norm_ref( float *reference,
                        int N_window_ref )
 {
@@ -42,6 +47,9 @@ static float norm_ref( float *reference,
 
 /******************************************************************************/
 
+/*
+ * Constructor NAME: matchedfilter
+ */
 matchedfilter::matchedfilter (int N_data, int activity_ID_in)
 {
 
@@ -61,6 +69,9 @@ matchedfilter::matchedfilter (int N_data, int activity_ID_in)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: load_ref
+ */
 void matchedfilter::load_ref (float *ax_in, float *ay_in,
                               float dt_in, float samp_freq_in,
                               float time_window_in, int N_window_in, int N_data_in)
@@ -94,6 +105,9 @@ void matchedfilter::load_ref (float *ax_in, float *ay_in,
 
 /******************************************************************************/
 
+/*
+ * Constructor NAME: matchedfilter
+ */
 matchedfilter::matchedfilter (const char path[], int N_data)
 {
 
@@ -165,6 +179,9 @@ matchedfilter::matchedfilter (const char path[], int N_data)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: apply_taper
+ */
 void matchedfilter::apply_taper (float *taper_buff,
                                  float cutoff_freq,
                                  float freq_range)
@@ -210,6 +227,9 @@ void matchedfilter::apply_taper (float *taper_buff,
 
 /******************************************************************************/
 
+/*
+ * Function NAME: apply_fft
+ */
 void matchedfilter::apply_fft(int N)
 {
    fft(ref_ax, N);
@@ -218,6 +238,9 @@ void matchedfilter::apply_fft(int N)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: apply_ifft
+ */
 void matchedfilter::apply_ifft(int N)
 {
    ifft(ref_ax, N);
@@ -226,6 +249,9 @@ void matchedfilter::apply_ifft(int N)
 
 /******************************************************************************/
 
+/*
+ * Destructor NAME: matchedfilter
+ */
 matchedfilter::~matchedfilter (void)
 {
 
@@ -236,6 +262,9 @@ matchedfilter::~matchedfilter (void)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: set_ID
+ */
 void matchedfilter::set_ID(int activity_ID_in)
 {
    activity_ID = activity_ID_in;
@@ -243,6 +272,9 @@ void matchedfilter::set_ID(int activity_ID_in)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: get_ID
+ */
 int matchedfilter::get_ID(void)
 {
    return activity_ID;
@@ -250,6 +282,9 @@ int matchedfilter::get_ID(void)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: get_correlation
+ */
 float matchedfilter::get_correlation (void)
 {
    if ( correlation_computed )
@@ -264,6 +299,9 @@ float matchedfilter::get_correlation (void)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: write
+ */
 bool matchedfilter::write (std::string ref_file)
 {
 
@@ -289,6 +327,9 @@ bool matchedfilter::write (std::string ref_file)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: write_corr
+ */
 void matchedfilter::write_corr(std::string corr_file, bool init)
 {
 
@@ -307,6 +348,9 @@ void matchedfilter::write_corr(std::string corr_file, bool init)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: print_all
+ */
 void matchedfilter::print_all (void)
 {
    std::cout << "N_data_ref =      " << N_data_ref      << std::endl;
@@ -324,6 +368,9 @@ void matchedfilter::print_all (void)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: access_ax
+ */
 float *matchedfilter::access_ax (void)
 {
    return ref_ax;
@@ -331,6 +378,9 @@ float *matchedfilter::access_ax (void)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: access_ay
+ */
 float *matchedfilter::access_ay (void)
 {
    return ref_ay;
@@ -338,6 +388,9 @@ float *matchedfilter::access_ay (void)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: get_norm_ax
+ */
 float matchedfilter::get_norm_ax (void)
 {
    return norm_ref_ax;
@@ -345,6 +398,9 @@ float matchedfilter::get_norm_ax (void)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: get_norm_ay
+ */
 float matchedfilter::get_norm_ay (void)
 {
    return norm_ref_ay;
@@ -352,6 +408,9 @@ float matchedfilter::get_norm_ay (void)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: get_N_window
+ */
 int matchedfilter::get_N_window (void)
 {
    return N_window_ref;
@@ -359,6 +418,9 @@ int matchedfilter::get_N_window (void)
 
 /******************************************************************************/
 
+/*
+ * Function NAME: set_correlation
+ */
 void matchedfilter::set_correlation (float correlation_in)
 {
    correlation = correlation_in;
@@ -375,7 +437,9 @@ void matchedfilter::set_correlation (float correlation_in)
 }
 
 /******************************************************************************/
-
+/*
+ * Constructor NAME: node
+ */
 node::node ( matchedfilter *MF_in ) {
    MF   = MF_in;
    prev = 0;
@@ -384,13 +448,18 @@ node::node ( matchedfilter *MF_in ) {
 
 
 /******************************************************************************/
-
+/*
+ * Destructor NAME: node
+ */
 node::~node (void) {
    delete MF;
 }
 
 /******************************************************************************/
 
+/*
+ * Constructor NAME: mf_list
+ */
 mf_list::mf_list (void) {
    N     = 0;
    first = last = NODE;
@@ -409,6 +478,9 @@ mf_list::mf_list (void) {
  *                  N'-----+
  */
 
+/*
+ * Function NAME: insert
+ */
 void mf_list::insert (matchedfilter *MF) {
 
    if (N == 0) {
@@ -436,6 +508,9 @@ void mf_list::insert (matchedfilter *MF) {
 
 /******************************************************************************/
 
+/*
+ * Function NAME: pop
+ */
 node *mf_list::pop (void) {
 
    node *CURR = NODE;
@@ -465,12 +540,18 @@ node *mf_list::pop (void) {
 
 /******************************************************************************/
 
+/*
+ * Function NAME: goto_next
+ */
 void mf_list::goto_next (void) {
    if (NODE != last) NODE = NODE->next;
 }
 
 /******************************************************************************/
 
+/*
+ * Function NAME: is_last
+ */
 bool mf_list::is_last (void) {
    if (NODE == last) return true;
    else return false;
@@ -478,24 +559,36 @@ bool mf_list::is_last (void) {
 
 /******************************************************************************/
 
+/*
+ * Function NAME: goto_prev
+ */
 void mf_list::goto_prev (void) {
    if (NODE != first) NODE = NODE->prev;
 }
 
 /******************************************************************************/
 
+/*
+ * Function NAME: goto_first
+ */
 void mf_list::goto_first (void) {
    NODE = first;
 }
 
 /******************************************************************************/
 
+/*
+ * Function NAME: goto_last
+ */
 void mf_list::goto_last (void) {
    NODE = last;
 }
 
 /******************************************************************************/
 
+/*
+ * Function NAME: append
+ */
 void mf_list::append (matchedfilter *MF) {
    if (N == 0) insert (MF);
    else {
@@ -508,7 +601,9 @@ void mf_list::append (matchedfilter *MF) {
 }
 
 /******************************************************************************/
-
+/*
+ * Destructor NAME: mf_list
+ */
 mf_list::~mf_list (void) {
    std::cout << "Cleaning up the list of activities" << std::endl;
    while (N>0) delete pop();
@@ -516,12 +611,18 @@ mf_list::~mf_list (void) {
 
 /******************************************************************************/
 
+/*
+ * Function NAME: get_MF
+ */
 matchedfilter *mf_list::get_MF (void) {
    return NODE->MF;
 }
 
 /******************************************************************************/
 
+/*
+ * Function NAME: get_N
+ */
 int mf_list::get_N (void) {
    return N;
 }

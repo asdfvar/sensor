@@ -1,3 +1,6 @@
+/*
+ * Function NAME: apply_filter
+ */
 void apply_filter (float *data,
                    int    fill,
                    int    N)

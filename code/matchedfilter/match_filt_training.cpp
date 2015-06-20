@@ -10,6 +10,9 @@
 
 #define BINS 200.0
 
+/*
+ * Function NAME: match_filt_training
+ */
 void match_filt_training(
               matchedfilter *MF,
               fio::kinIO    *KIN,

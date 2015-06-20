@@ -1,6 +1,9 @@
 #include "memory_management.h"
 #include <iostream>
 
+/*
+ * Constructor NAME: MEMORY
+ */
 MEMORY::MEMORY (size_t N_floats_in)
 {
    N_floats = N_floats_in;
@@ -8,8 +11,14 @@ MEMORY::MEMORY (size_t N_floats_in)
    float_ptr = float_ptr_base;
 }
 
+/*
+ * Destructor NAME: MEMORY
+ */
 MEMORY::~MEMORY (void) {}
 
+/*
+ * Function NAME: allocate_float
+ */
 float *MEMORY::allocate_float (size_t N)
 {
 
@@ -34,6 +43,9 @@ float *MEMORY::allocate_float (size_t N)
    }
 }
 
+/*
+ * Function NAME: clear_memory
+ */
 void MEMORY::clear_memory (void)
 {
    std::cout << "Freeing memory buffer" << std::endl;

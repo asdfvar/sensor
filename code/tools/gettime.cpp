@@ -9,7 +9,11 @@
   and the previous call of this function
 */
 
-float gettime(void) {
+/*
+ * Function NAME: gettime
+ */
+float gettime(void)
+{
 
    static bool init_done = false;
    static struct timeval start, end;
@@ -33,12 +37,16 @@ float gettime(void) {
 }
 
 /*
+ *
+ * Function NAME: waitUntil
+ * 
   Function to wait until the time in dt has passed since the
   last call of this function. If it is the first call of this
   function, return after dt time of calling this function.
 */
 
-float waitUntil(float dt) {
+float waitUntil(float dt)
+{
 
    static bool init_done = false;
    static struct timeval start, end;

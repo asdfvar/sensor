@@ -17,9 +17,10 @@
 #include <iostream>
 #include "eigen.h"
 
-/* Some anscillary functions are provided first */
-
-/* Compute the matrix multiplication of the NxN matrices A and B.
+/*
+ * Function NAME: matrix_mult_transpose
+ * 
+ * Compute the matrix multiplication of the NxN matrices A and B.
  *
  * C = A * B
  *
@@ -38,7 +39,8 @@
 static void matrix_mult_transpose(float       *__restrict__ C,
                                   const float *__restrict__ A,
                                   const float *__restrict__ Bt,
-                                  const int N) {
+                                  const int N)
+{
 
    float tmp[3];
 
@@ -52,8 +54,11 @@ static void matrix_mult_transpose(float       *__restrict__ C,
    }
 
 }
-
-/* Compute the matrix multiplication of the NxN matrices A and B.
+ 
+/*
+ * Function NAME: transpose_matrix_mult_transpose
+ * 
+ * Compute the matrix multiplication of the NxN matrices A and B.
  *
  * C = A * B
  *
@@ -65,12 +70,13 @@ static void matrix_mult_transpose(float       *__restrict__ C,
  * Output:
  * Ct - The transposed result of A*B
  *
-*/
+ */
 
 static void transpose_matrix_mult_transpose(float       *__restrict__ Ct,
                                             const float *__restrict__ A,
                                             const float *__restrict__ Bt,
-                                            const int N) {
+                                            const int N)
+{
 
    for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
@@ -82,8 +88,9 @@ static void transpose_matrix_mult_transpose(float       *__restrict__ Ct,
 
 }
 
-/***************************************************************************************/
-
+/*
+ * Function NAME: eigen
+ */
 /* Determine the eigenvectors of a 3x3 real symetric matrix
  * (or at least have real eigenvalues and eigenvectors)
  *

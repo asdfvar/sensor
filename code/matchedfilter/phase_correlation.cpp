@@ -14,6 +14,9 @@ extern "C" {
 
 namespace phase
 {
+/*
+ * Function NAME: norm_squared
+ */
  void norm_squared (
              float *__restrict__ signal,
              float *__restrict__ norm,
@@ -44,6 +47,9 @@ namespace phase
  
  }
  
+/*
+ * Function NAME: phase_correlation
+ */
  void phase_correlation(
              float *__restrict__ ref,
              float *__restrict__ signal,
