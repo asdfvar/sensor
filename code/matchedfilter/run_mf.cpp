@@ -1,3 +1,10 @@
+/*
+ *     ( (ref_1 \dot sig_1)[i] + (ref_2 \dot sig_2)[i] ) /
+ * sqrt( (ref_1 \dot ref_1 + ref_2 \dot ref_2) *
+ *       (sig_1[i] \dot sig_1[i] + sig_2[i] \dot sig_2[i] ) )
+ *
+ * Note that sig_1,2[i] is a vector which means sig_1,2 is an array of vectors
+ */
 #include "matchedfilter.h"
 #include "memory_management.h"
 #include "phase_correlation.h"
@@ -28,6 +35,7 @@ void run_mf (matchedfilter *MF,
    float *cross_correlation           = mem_buffer.allocate_float( N_data_reference );
    float *norm_squared                = mem_buffer.allocate_float( N_data_reference );
 
+   // norm_primary_squared[i] = primary_acc[i] \dot primary_acc[i]
    phase::norm_squared (primary_acceleration,
                         norm_primary_squared,
                         N_window,
@@ -51,14 +59,14 @@ void run_mf (matchedfilter *MF,
    }
 
    phase::phase_correlation (MF->access_ax(),
-                     primary_acceleration,
-                     cross_correlation_primary,
-                     N_data);
+                             primary_acceleration,
+                             cross_correlation_primary,
+                             N_data);
 
    phase::phase_correlation (MF->access_ay(),
-                     secondary_acceleration,
-                     cross_correlation_secondary,
-                     N_data);
+                             secondary_acceleration,
+                             cross_correlation_secondary,
+                             N_data);
 
    for (int k = 0; k < N_data_reference; k++)
    {
