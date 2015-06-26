@@ -1,10 +1,57 @@
-Main source code for the sensor project. This is a prototype. Nothing to submit in the readme yet.
-
+Main source-code prototype for the sensor project.
 
 INSTRUCTIONS:
 
-To setup fftw, go to the respective library of files and run the following commands as root:
+   SETUP:
+
+To setup fftw, go to the respective library of files in ./libs/fftw-3.3.4/ and run the following commands as root:
 
 ./configure --enable-float
 make
 make install
+
+   HOW TO BUILD
+
+After the setup step is done, to build, navigate to the ./code path and run the command: make
+
+   HOW TO RUN
+
+      TRAINING:
+
+Training is performed on data that has been generated from the Kinetisense sensor. Ensure that the *.kin files are transformed into the *.csv file format to be injested by the training program prior to training. This can be done with the Kinetisense software that comes with the sensor.
+
+To start training, an input file must be provided. Because the code is not yet robust enough to handle additional spaces and extra lines, the input file contents must not have empty lines or spaces:
+
+samp_freq=<sampling frequency (Hz)>
+time_window=<interval of time to match the signal (seconds)>
+ref_time=<Interval of time that makes up the reference signal (seconds)>
+data_path=<path to the data file to train on>
+activity_ID=<an integer number that corresponds with the activity found in the compendium of physical activities>
+ref_path=<output path to store the resulting reference data>
+
+to train, run the command ./train <input filename>
+
+After training, the code can then use the reference file that was produced to analyze another data set to produce correlations, energy expenditure, etc. The parameters for the input into the sensor executable look like this:
+
+tag=<tag name to be appended to the output files>
+samp_freq=<sampling frequency (Hz)>
+time_window=<interval of time to match the signal (seconds)>
+threshold=<number between 0 and 1 to determine the cutoff correlation to classify an activity>
+sex=<M or F>
+age=<age in years>
+weight=<weight in Kg>
+height=<height in cm>
+data_path=<path to the data file to train on>
+
+An additional file is needed to identify which references to load that are generated from the training program. Its file contents are:
+
+<path to reference file 1>
+<path to reference file 2>
+...
+<path to reference file N>
+
+Then, to run the sensor executable file, run the command: ./sensor <input filename> <references filename>
+
+   OTHER REMARKS
+
+An example executable demo file is provided with this repo which will run on data provided with this repo. To run it, make sure execute permissions are set for the file "run_demo" and fftw is setup then run the command "./run_demo". This will build the code, produce a reference file, and produce output.
