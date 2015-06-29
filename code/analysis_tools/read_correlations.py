@@ -26,18 +26,14 @@ class read_correlations:
    def plot(self):
 
       pl.ylim([0.0, 1.0])
-      pl.title("Primary Signature Correlations")
+      pl.title("Correlations")
+      pl.yticks(np.arange(0.0, 1.001, 0.1))
       pl.plot( np.clip(self.correlations, 0.0, 1.0), 'blue')
 
       pl.show()
 
    def print_stats(self):
-      print "Primary correlation stats:"
+      print "correlation stats:"
       print "\tmax = %f" % max(self.correlations)
       print "\tmean = %f" % np.mean(self.correlations)
       print "\tstd = %f" % np.std(self.correlations)
-
-      print "Secondary correlation stats:"
-      print "\tmax = %f" % max(self.correlations_secondary)
-      print "\tmean = %f" % np.mean(self.correlations_secondary)
-      print "\tstd = %f" % np.std(self.correlations_secondary)

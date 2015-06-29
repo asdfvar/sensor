@@ -2,6 +2,7 @@
 import numpy as np
 import math
 import pylab as pl
+from numpy import linalg as la
 
 '''
    array_1 will pass over array_2 (remain stationary) to produce
@@ -45,7 +46,7 @@ def normalizing_array( array_1, array_2 ):
       norm_2[start] = math.sqrt( np.dot( array_2[start:end], array_2[start:end] ))
 
    norm_array = np.zeros( len(array_2) )
-   norm_array[0:norm_size] = 1.0 / (norm_1 * norm_2)
+   norm_array[0:norm_size] = 1.0 / norm_1 * norm_2
 
    return norm_array
 
@@ -76,47 +77,56 @@ def smooth( array , n_points):
    return smoothed
 
 '''
-   array_1 will pass over array_2 (remain stationary) to produce
+   ref will pass over data (remain stationary) to produce
    the normalized correlation
 
-   positive lags (zero based index) mean to circular shift array_1
+   positive lags (zero based index) mean to circular shift ref 
    in the positive direction by that much followed by a dot product
-   with array_2 to produce the corresponding value in the
+   with data to produce the corresponding value in the
    correlation array at that index
 
-   len(array_1) <= len(array_2), numpy arrays
+   len(ref) <= len(data), numpy arrays
 '''
 
 class phase_correlation:
 
-   def __init__(self, array_1, array_2, n_point=1 ):
+   def __init__(self, ref, data, n_point=1 ):
 
-      array_1      = smooth( array_1, n_point )
-      array_2      = smooth( array_2, n_point )
+      ref   = smooth( ref, n_point )
+      data  = smooth( data, n_point )
 
-      norm         = normalizing_array( array_1, array_2 )
-      array_1      = zero_pad( array_1, array_2 )
-      correlation  = cross_correlation( array_1, array_2)
-      correlation *= norm
+      norm                       = normalizing_array( ref, data )
+      self.norm                  = norm
+      ref                        = zero_pad( ref, data )
+      cross_corr                 = cross_correlation( ref, data)
+      cross_corr                 = abs( cross_corr )
+      self.cross_corr            = cross_corr
+      cross_corr_normalized      = cross_corr * norm
+      self.cross_corr_normalized = cross_corr_normalized
+      pl.plot(norm)
+      pl.show()
 
-      matched_corr = correlation.max()
-      lag          = correlation.argmax()
+      matched_corr = cross_corr_normalized.max()
 
-      array_1_rolled = np.roll( array_1, lag )
+      lag          = cross_corr_normalized.argmax()
 
-      self.correlation    = correlation
-      self.array_1_rolled = array_1_rolled
+      ref_1_rolled = np.roll( ref, lag )
+
+      self.ref_1_rolled = ref_1_rolled
       self.matched_corr   = matched_corr
 
-      self.array_1 = array_1
-      self.array_2 = array_2
+      self.ref_norm  = la.norm( ref  )
+      self.data_norm = la.norm( data )
+
+      self.ref = ref 
+      self.data = data 
 
    def plot_match( self, samp_freq=128.0):
       dt = 1.0 / samp_freq
-      end = len(self.array_2) * dt
-      time = np.linspace( 0, end, len(self.array_2))
-      pl.plot(time, self.array_2, 'r', linewidth=3.0)
-      pl.plot(time, self.array_1_rolled, 'g', linewidth=2.0)
+      end = len(self.data) * dt
+      time = np.linspace( 0, end, len(self.data))
+      pl.plot(time, self.data, 'r', linewidth=3.0)
+      pl.plot(time, self.ref_1_rolled, 'g', linewidth=2.0)
       pl.xlabel("Time (seconds)")
       pl.ylabel("Acceleration (g)")
       pl.show()
