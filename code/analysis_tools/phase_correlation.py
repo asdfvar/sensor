@@ -46,7 +46,7 @@ def normalizing_array( array_1, array_2 ):
       norm_2[start] = math.sqrt( np.dot( array_2[start:end], array_2[start:end] ))
 
    norm_array = np.zeros( len(array_2) )
-   norm_array[0:norm_size] = 1.0 / norm_1 * norm_2
+   norm_array[0:norm_size] = 1.0 / (norm_1 * norm_2)
 
    return norm_array
 
@@ -103,8 +103,6 @@ class phase_correlation:
       self.cross_corr            = cross_corr
       cross_corr_normalized      = cross_corr * norm
       self.cross_corr_normalized = cross_corr_normalized
-      pl.plot(norm)
-      pl.show()
 
       matched_corr = cross_corr_normalized.max()
 
