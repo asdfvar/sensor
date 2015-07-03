@@ -4,10 +4,10 @@ FLAGS = -O3 -Wall
 
 LIBEXE = libmatflt.a
 
-TOOLS = ../tools
+UTILITIES = ../utilities
 PREPROC = ../preprocessing
 
-INC = -I$(TOOLS) -I$(PREPROC)
+INC = -I$(UTILITIES) -I$(PREPROC)
 
 OBJ = matchedfilter.o phase_correlation.o match_filt_training.o run_mf.o
 

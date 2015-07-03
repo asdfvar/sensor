@@ -4,10 +4,10 @@ FLAGS = -Wall -O3 -lfftw3f -lm
 
 MATCHFILTER = matchedfilter
 PREPROC = preprocessing
-TOOLS = tools
+UTILITIES = utilities
 
-INC = -I$(MATCHFILTER) -I$(TOOLS) -I$(PREPROC)
-LIBPATH = -L./$(MATCHFILTER) -L./$(TOOLS) -L./$(PREPROC)
+INC = -I$(MATCHFILTER) -I$(UTILITIES) -I$(PREPROC)
+LIBPATH = -L./$(MATCHFILTER) -L./$(UTILITIES) -L./$(PREPROC)
 
 LIBS = -lmatflt -lsens -lpreproc
 
@@ -27,13 +27,13 @@ all: $(EXE) $(TRAIN)
 $(EXE): $(MAIN_OBJ) $(FFT_OBJ)
 	cd $(MATCHFILTER) && $(MAKE)
 	cd $(PREPROC) && $(MAKE)
-	cd $(TOOLS) && $(MAKE)
+	cd $(UTILITIES) && $(MAKE)
 	$(CPPC) $(MAIN_OBJ) $(FFT_OBJ) $(FLAGS) -o $(EXE) $(INC) $(LIBPATH) $(LIBS)
 
 $(TRAIN): $(TRAIN_OBJ) $(FFT_OBJ)
 	cd $(MATCHFILTER) && $(MAKE)
 	cd $(PREPROC) && $(MAKE)
-	cd $(TOOLS) && $(MAKE)
+	cd $(UTILITIES) && $(MAKE)
 	$(CPPC) $(TRAIN_OBJ) $(FFT_OBJ) $(FLAGS) -o $(TRAIN) $(INC) $(LIBPATH) $(LIBS)
 
 # CLEAN ALL
@@ -41,7 +41,7 @@ $(TRAIN): $(TRAIN_OBJ) $(FFT_OBJ)
 clean:
 	make -C $(MATCHFILTER) clean
 	make -C $(PREPROC) clean
-	make -C $(TOOLS) clean
+	make -C $(UTILITIES) clean
 	rm $(EXE) $(TRAIN) $(MAIN_OBJ) $(FFT_OBJ) $(TRAIN_OBJ)
 
 train.o: train.cpp
@@ -50,5 +50,5 @@ train.o: train.cpp
 mf_main.o: mf_main.cpp
 	$(CPPC) $(MAIN_DIRECTIVE) $^ -c $(INC)
 
-fft.o: tools/fft.c
+fft.o: utilities/fft.c
 	$(CC) $^ -c

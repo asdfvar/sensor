@@ -13,17 +13,18 @@ int main()
 
    for (int k = 0; k < 10; k++) data2[k] = data[k];
 
-   apply_filter (data2, 5, 10, memory);
+   int point = 5;
+
+   apply_filter (data2, point, 10, memory);
 
    std::cout << std::endl;
-   std::cout << "from" << std::endl;
    for (int k = 0; k < 10; k++)
    {
       std::cout << data[k] << " ";
    }
    std::cout << std::endl;
 
-   std::cout << "to" << std::endl;
+   std::cout << point << " point filter result:" << std::endl;
    for (int k = 0; k < 10; k++)
    {
       std::cout << data2[k] << " ";

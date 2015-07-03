@@ -4,9 +4,9 @@ FLAGS = -O3 -Wall
 
 LIBEXE = libpreproc.a
 
-TOOLS = ../tools
+UTILITIES = ../utilities
 
-INC = -I$(TOOLS)
+INC = -I$(UTILITIES)
 
 OBJ = preproc.o eigen.o
 

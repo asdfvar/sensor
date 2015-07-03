@@ -1,3 +1,13 @@
+/*
+ * Function NAME: match_filt_training
+ *
+ * time_window     - Signal window time (seconds)
+ * N_window        - Signal window points (elements)
+ * time_window_ref - Reference length (seconds)
+ * N_window_ref    - Reference length (# elements)
+ *
+ */
+
 #include "matchedfilter.h"
 #include "run_mf.h"
 #include "fileio.h"
@@ -10,9 +20,6 @@
 
 #define BINS 200.0
 
-/*
- * Function NAME: match_filt_training
- */
 void match_filt_training(
               matchedfilter *MF,
               fio::kinIO    *KIN,
@@ -26,12 +33,14 @@ void match_filt_training(
  float freq_range      = PARAMETERS->get_freq_range();
  float samp_freq       = PARAMETERS->get_samp_freq();
  float dt              = PARAMETERS->get_dt();
- float time_window     = PARAMETERS->get_time_window();      /* Signal window time (seconds)    */
- int   N_window        = PARAMETERS->get_N_window();         /* Signal window points (elements) */
- float time_window_ref = PARAMETERS->get_time_window_ref();  /* Reference length (seconds)      */
- int   N_window_ref    = PARAMETERS->get_N_window_ref();     /* Reference length (# elements)   */
+ float time_window     = PARAMETERS->get_time_window();
+ int   N_window        = PARAMETERS->get_N_window();
+ float time_window_ref = PARAMETERS->get_time_window_ref();
+ int   N_window_ref    = PARAMETERS->get_N_window_ref();
  int   count;
  
+ MEMORY mem_buffer( 6 * (N_window + 2) );
+
  float time_inc = (KIN->get_total_time() - time_window) / BINS;
 
  float start_time_ref  = 0.0;
@@ -47,16 +56,22 @@ void match_filt_training(
 
  float *__restrict__ buf = new float[N_window+2];
 
- MEMORY mem_buffer( 6 * (N_window + 2) );
+ float *__restrict__ primary;
+ float *__restrict__ secondary;
 
  float prev_perc_done = 0.0;
  float curr_perc_done = 0.0;
 
  float power;
 
+ std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
+ std::cout.precision(6);
+
  gettime();
 
- std::cout << "% done\tthis average correlation\tbest correlation\tbest time"<< std::endl;
+ std::cout << "% done\tthis average correlation\t"
+           << "best correlation\tbest time"<< std::endl;
+
  while (KIN->valid_start_end (start_time_ref, time_window))
  {
 
@@ -74,7 +89,18 @@ void match_filt_training(
         PARAMETERS,    /* Sampling frequency of the data       */
         N_window);     /* Number of sample points              */
 
-    MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
+    primary   = ax;
+    secondary = ay;
+
+    MF->load_ref (
+        primary,
+        secondary,
+        dt,
+        samp_freq,
+        time_window_ref,
+        N_window_ref,
+        N_window);
+
     if (Do_taper) MF->apply_taper (buf, cutoff_freq, freq_range);
     MF->apply_fft(N_window);
 
@@ -99,19 +125,15 @@ void match_filt_training(
            PARAMETERS,    /* Sampling frequency of the data       */
            N_window);     /* Number of sample points              */
 
-       if (Do_taper) {
-#if 0
-          apply_taper (ax, taper, N_window);
-          apply_taper (ay, taper, N_window);
-#else
-          apply_filter (ax, 3, N_window, mem_buffer);
-          apply_filter (ay, 3, N_window, mem_buffer);
-#endif
-       }
+       apply_filter (ax, 3, N_window, mem_buffer);
+       apply_filter (ay, 3, N_window, mem_buffer);
+
+       primary   = ax;
+       secondary = ay;
 
        run_mf (MF,
-               ax,
-               ay,
+               primary,
+               secondary,
                dt,
                samp_freq,
                N_window,
@@ -135,7 +157,7 @@ void match_filt_training(
     {
 
        std::cout << curr_perc_done   << "\t"     <<
-                    ave_correlation  << "\t\t\t" <<
+                    ave_correlation  << "\t\t" <<
                     best_correlation << "\t\t"   <<
                     best_start_time  << "\t"     <<
                     std::endl;
@@ -155,6 +177,10 @@ void match_filt_training(
  KIN->load_sens_ay (ay, best_start_time, 2, N_window);
  KIN->load_sens_az (az, best_start_time, 2, N_window);
 
+ /*
+ ** Pre-process the raw acceleration data
+ */
+
  preproc(
      ax,            /* Acceleration data in x               */
      ay,            /* Acceleration data in y               */
@@ -163,7 +189,22 @@ void match_filt_training(
      PARAMETERS,    /* Sampling frequency of the data       */
      N_window);     /* Number of sample points              */
 
- MF->load_ref (ax, ay, dt, samp_freq, time_window_ref, N_window_ref, N_window);
+ /*
+ ** Re-alias the primary and secondary acceleration data.
+ ** Then, load this data into memory to be written out.
+ */
+
+ primary   = ax;
+ secondary = ay;
+
+ MF->load_ref (
+     primary,
+     secondary,
+     dt,
+     samp_freq,
+     time_window_ref,
+     N_window_ref,
+     N_window);
 
  std::cout << "Training time = " << gettime() << std::endl;
 
