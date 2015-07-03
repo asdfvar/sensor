@@ -47,11 +47,11 @@ import numpy as np
 ###
 
 correlations = []
-#correlation_file = "../submit/output/correlations_craig_tredmil17190"
-#correlation_file = "../submit/output/correlations_craig_tredmil12020"
 correlation_file = "../output/correlations_demo17190"
+#correlation_file = "../submit/output/correlations_craig_tredmil17190"
 correlations.append( read_correlations.read_correlations( correlation_file ) )
 correlation_file = "../output/old/correlations_demo17190"
+#correlation_file = "../submit/output/correlations_craig_tredmil12020"
 correlations.append( read_correlations.read_correlations( correlation_file ) )
 correlations[0].print_stats()
 correlations[0].plot()

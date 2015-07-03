@@ -28,7 +28,7 @@ class read_correlations:
       pl.ylim([0.0, 1.0])
       pl.title("Correlations")
       pl.yticks(np.arange(0.0, 1.001, 0.1))
-      pl.plot( np.clip(self.correlations, 0.0, 1.0), 'green')
+      pl.plot( np.clip(self.correlations, 0.0, 1.2), 'green')
 
       pl.show()
 

@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "memory_management.h"
+
 class matchedfilter {
 
    public:
@@ -32,10 +34,16 @@ class matchedfilter {
 
       bool write(std::string); // write the data to file
       void write_corr (std::string file, bool initial_write);
+
       void print_all (void);
+
       void apply_taper (float *taper_buff,
                         float cutoff_freq,
                         float freq_range);
+
+      void mf_apply_filter (int points,
+                            MEMORY mem_buffer);
+
       void apply_fft(int N);
       void apply_ifft(int N);
 

@@ -20,6 +20,8 @@
 
 #define BINS 200.0
 
+#define NUM_TENT_FILT_POINTS 3
+
 void match_filt_training(
               matchedfilter *MF,
               fio::kinIO    *KIN,
@@ -92,6 +94,18 @@ void match_filt_training(
     primary   = ax;
     secondary = ay;
 
+      apply_filter (
+         primary,
+         NUM_TENT_FILT_POINTS,
+         N_window,
+         mem_buffer);
+
+      apply_filter (
+         secondary,
+         NUM_TENT_FILT_POINTS,
+         N_window,
+         mem_buffer);
+
     MF->load_ref (
         primary,
         secondary,
@@ -101,7 +115,6 @@ void match_filt_training(
         N_window_ref,
         N_window);
 
-    if (Do_taper) MF->apply_taper (buf, cutoff_freq, freq_range);
     MF->apply_fft(N_window);
 
     /* Loop through signal to test this loaded reference */
@@ -125,8 +138,17 @@ void match_filt_training(
            PARAMETERS,    /* Sampling frequency of the data       */
            N_window);     /* Number of sample points              */
 
-       apply_filter (ax, 3, N_window, mem_buffer);
-       apply_filter (ay, 3, N_window, mem_buffer);
+       apply_filter (
+           ax,
+           NUM_TENT_FILT_POINTS,
+           N_window,
+           mem_buffer);
+
+       apply_filter (
+           ay,
+           NUM_TENT_FILT_POINTS,
+           N_window,
+           mem_buffer);
 
        primary   = ax;
        secondary = ay;

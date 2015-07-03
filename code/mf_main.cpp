@@ -15,6 +15,8 @@
 
 #define TIME_INC 0.5
 
+#define NUM_TENT_FILT_POINTS 3
+
 extern "C" {
 #include "fft.h"
 }
@@ -42,7 +44,6 @@ int main(int argc, char *argv[]) {
    float *primary        = new float[N_window+2];
    float *secondary      = new float[N_window+2];
    int   sens_training = 2; // sensor used for training
-   float *buf  = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
    float power, energy;
    int   itt = 0, max_index;
    float corr;
@@ -65,11 +66,8 @@ int main(int argc, char *argv[]) {
       ref_path = InRefs.get_ref_path(i_ref);
       MF = new matchedfilter (ref_path.c_str(), N_window);
 
-      if (PARAMETERS.Do_taper()) {
-           MF->apply_taper (buf,
-                            PARAMETERS.get_cutoff_freq(),
-                            PARAMETERS.get_freq_range());
-      }
+      MF->mf_apply_filter (NUM_TENT_FILT_POINTS, 
+                           mem_buffer);
 
       MF->apply_fft(N_window);
       MF_activities.append ( MF );
@@ -105,13 +103,17 @@ int main(int argc, char *argv[]) {
           &PARAMETERS,   /* Sampling frequency of the data       */
           N_window);     /* Number of sample points              */
 
-      if (PARAMETERS.Do_taper())
-      {
+      apply_filter (
+          ax,
+          NUM_TENT_FILT_POINTS,
+          N_window,
+          mem_buffer);
 
-         apply_filter (ax, 3, N_window, mem_buffer);
-         apply_filter (ay, 3, N_window, mem_buffer);
-
-      }
+      apply_filter (
+          ay,
+          NUM_TENT_FILT_POINTS,
+          N_window,
+          mem_buffer);
 
       proc_time = gettime();
       ave_preproc_time += proc_time;
@@ -211,7 +213,6 @@ int main(int argc, char *argv[]) {
    delete[] ax;
    delete[] ay;
    delete[] az;
-   delete[] buf;
    delete[] primary;
    delete[] secondary;
 

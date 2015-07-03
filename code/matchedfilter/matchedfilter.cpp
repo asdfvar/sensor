@@ -1,5 +1,6 @@
 #include "matchedfilter.h"
 #include "taper.h"
+#include "filter.h"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -223,6 +224,31 @@ void matchedfilter::apply_taper (float *taper_buff,
    ifft(ref_ay, N_window_ref);
 
    return;
+}
+
+/*
+ * Function NAME: apply_filter
+ */
+
+void matchedfilter::mf_apply_filter (int points,
+                                     MEMORY mem_buffer)
+{
+   apply_filter (
+      ref_ax,
+      points,
+      N_window_ref,
+      mem_buffer);
+
+   norm_ref_ax = norm_ref( ref_ax,
+                           N_window_ref );
+   apply_filter (
+      ref_ay,
+      points,
+      N_window_ref,
+      mem_buffer);
+
+   norm_ref_ay = norm_ref( ref_ay,
+                           N_window_ref );
 }
 
 /******************************************************************************/
