@@ -104,8 +104,8 @@ void match_filt_training(
           apply_taper (ax, taper, N_window);
           apply_taper (ay, taper, N_window);
 #else
-          apply_filter (ax, 1, N_window);
-          apply_filter (ay, 1, N_window);
+          apply_filter (ax, 3, N_window, mem_buffer);
+          apply_filter (ay, 3, N_window, mem_buffer);
 #endif
        }
 

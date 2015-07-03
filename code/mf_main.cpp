@@ -41,9 +41,6 @@ int main(int argc, char *argv[]) {
    float *az             = new float[N_window+2];   // Workspace for the signal in z
    float *primary        = new float[N_window+2];
    float *secondary      = new float[N_window+2];
-#ifdef TAPER
-   float *taper = new float[N_window+2];   // taper used for applying the lowpass filter
-#endif
    int   sens_training = 2; // sensor used for training
    float *buf  = new float[N_window+2]; // The additional 2 is needed for nyquist (Complex)
    float power, energy;
@@ -53,16 +50,6 @@ int main(int argc, char *argv[]) {
    float tmp;
    matchedfilter *MF;
    MEMORY mem_buffer(6 * (N_window + 2));
-
-#ifdef TAPER
-   taper_f(taper,
-           PARAMETERS.get_time_window(),
-           PARAMETERS.get_cutoff_freq(),
-           PARAMETERS.get_freq_range(),
-           PARAMETERS.get_samp_freq(),
-           PARAMETERS.get_dt(),
-           N_window);
-#endif
 
    /* Setup Kinetisense data */
 
@@ -121,13 +108,8 @@ int main(int argc, char *argv[]) {
       if (PARAMETERS.Do_taper())
       {
 
-#ifdef TAPER
-         apply_taper (ax, taper, N_window);
-         apply_taper (ay, taper, N_window);
-#else
-         apply_filter (ax, 1, N_window);
-         apply_filter (ay, 1, N_window);
-#endif
+         apply_filter (ax, 3, N_window, mem_buffer);
+         apply_filter (ay, 3, N_window, mem_buffer);
 
       }
 
@@ -232,9 +214,6 @@ int main(int argc, char *argv[]) {
    delete[] buf;
    delete[] primary;
    delete[] secondary;
-#ifdef TAPER
-   delete[] taper;
-#endif
 
    return 0;
 }
