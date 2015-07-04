@@ -16,18 +16,15 @@
 #include "taper.h"
 #include "filter.h"
 #include "memory_management.h"
+#include "define_parameters.h"
 #include <iostream>
-
-#define BINS 200.0
-
-#define NUM_TENT_FILT_POINTS 3
 
 void match_filt_training(
               matchedfilter *MF,
               fio::kinIO    *KIN,
               float         *taper,
               fio::parameters *PARAMETERS,
-              int            sens_num)         /* Which Kinetesense sensor        */
+              int            sens_num)
 {
 
  bool  Do_taper        = PARAMETERS->Do_taper();
@@ -45,12 +42,12 @@ void match_filt_training(
 
  float time_inc = (KIN->get_total_time() - time_window) / BINS;
 
- float start_time_ref  = 0.0;
- float best_start_time = start_time_ref;
- float start_time_data  = 0.0;
+ float start_time_ref   = 0.0f;
+ float best_start_time  = start_time_ref;
+ float start_time_data  = 0.0f;
 
- float sum_corr          = 0.0;
- float best_correlation = 0.0;
+ float sum_corr         = 0.0f;
+ float best_correlation = 0.0f;
 
  float *__restrict__ ax = new float[N_window+2];   // Workspace for the signal in x
  float *__restrict__ ay = new float[N_window+2];   // Workspace for the signal in y
@@ -61,8 +58,8 @@ void match_filt_training(
  float *__restrict__ primary;
  float *__restrict__ secondary;
 
- float prev_perc_done = 0.0;
- float curr_perc_done = 0.0;
+ float prev_perc_done = 0.0f;
+ float curr_perc_done = 0.0f;
 
  float power;
 
@@ -73,6 +70,10 @@ void match_filt_training(
 
  std::cout << "% done\tthis average correlation\t"
            << "best correlation\tbest time"<< std::endl;
+
+ /*
+  * Loop through candidate reference signals.
+  */
 
  while (KIN->valid_start_end (start_time_ref, time_window))
  {
@@ -117,7 +118,9 @@ void match_filt_training(
 
     MF->apply_fft(N_window);
 
-    /* Loop through signal to test this loaded reference */
+    /*
+     * Loop through signal to test against the candidate reference
+     */
 
     for (count           = 0,
          start_time_data = 0.0f,

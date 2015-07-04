@@ -18,10 +18,7 @@
 #include "taper.h"
 #include "filter.h"
 #include "run_mf.h"
-
-#define TIME_INC 0.5
-
-#define NUM_TENT_FILT_POINTS 3
+#include "define_parameters.h"
 
 extern "C" {
 #include "fft.h"

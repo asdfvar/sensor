@@ -18,9 +18,9 @@ import numpy as np
 
 #ref_file = "../submit/output/ref_craig17190"
 #ref_file = "../submit/output/ref_craig12020"
-ref_file = "/home/euler/projects/sensor/code/submit/output/ref_craig17190"
-ref = read_reference.read_reference( ref_file )
-ref.plot()
+#ref_file = "/home/euler/projects/sensor/code/submit/output/ref_craig17190"
+#ref = read_reference.read_reference( ref_file )
+#ref.plot()
 
 #start_time = 1000.0
 #interval   = 4.0
