@@ -18,9 +18,11 @@ class matchedfilter {
                      float time_window_in, int N_window_in, int N_data_in);
 
       float *access_ax (void);
+
       float *access_ay (void);
 
       float get_norm_ax (void);
+
       float get_norm_ay (void);
 
       void set_correlation (float corr);
@@ -33,7 +35,9 @@ class matchedfilter {
       int  get_ID(void); // get the activity ID
 
       bool write(std::string); // write the data to file
-      void write_corr (std::string file, bool initial_write);
+
+      void write_corr (std::string file,
+                       bool initial_write);
 
       void print_all (void);
 
@@ -41,8 +45,8 @@ class matchedfilter {
                         float cutoff_freq,
                         float freq_range);
 
-      void mf_apply_filter (int points,
-                            MEMORY mem_buffer);
+      void filter (int points,
+                   MEMORY mem_buffer);
 
       void apply_fft(int N);
       void apply_ifft(int N);

@@ -94,13 +94,13 @@ void match_filt_training(
     primary   = ax;
     secondary = ay;
 
-      apply_filter (
+      util::filter (
          primary,
          NUM_TENT_FILT_POINTS,
          N_window,
          mem_buffer);
 
-      apply_filter (
+      util::filter (
          secondary,
          NUM_TENT_FILT_POINTS,
          N_window,
@@ -138,13 +138,13 @@ void match_filt_training(
            PARAMETERS,    /* Sampling frequency of the data       */
            N_window);     /* Number of sample points              */
 
-       apply_filter (
+       util::filter (
            ax,
            NUM_TENT_FILT_POINTS,
            N_window,
            mem_buffer);
 
-       apply_filter (
+       util::filter (
            ay,
            NUM_TENT_FILT_POINTS,
            N_window,

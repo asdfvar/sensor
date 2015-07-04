@@ -227,13 +227,13 @@ void matchedfilter::apply_taper (float *taper_buff,
 }
 
 /*
- * Function NAME: apply_filter
+ * Function NAME: filter
  */
 
-void matchedfilter::mf_apply_filter (int points,
-                                     MEMORY mem_buffer)
+void matchedfilter::filter (int points,
+                                  MEMORY mem_buffer)
 {
-   apply_filter (
+   util::filter (
       ref_ax,
       points,
       N_window_ref,
@@ -241,7 +241,7 @@ void matchedfilter::mf_apply_filter (int points,
 
    norm_ref_ax = norm_ref( ref_ax,
                            N_window_ref );
-   apply_filter (
+   util::filter (
       ref_ay,
       points,
       N_window_ref,

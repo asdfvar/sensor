@@ -1,5 +1,5 @@
 CPPC = g++
-OBJ = smooth.o apply_filter.o memory_management.o
+OBJ = smooth.o filter.o memory_management.o
 INC = -I../..
 
 EXE = smooth
@@ -13,7 +13,7 @@ clean:
 smooth.o: smooth.cpp
 	$(CPPC) $^ -c $(INC)
 
-apply_filter.o: ../../apply_filter.cpp
+filter.o: ../../filter.cpp
 	$(CPPC) $^ -c $(INC)
 
 memory_management.o: ../../memory_management.cpp

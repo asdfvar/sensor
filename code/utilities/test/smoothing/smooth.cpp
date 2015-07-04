@@ -4,7 +4,7 @@
 int main()
 {
 
-   MEMORY memory( 100 );
+   MEMORY memory( 10 );
 
    float data[10] = {1.0, -7.0, 3.0, 4.0, 3.0,
                      -2.0, 9.0, 2.0, -3.0, 1.0};
@@ -15,7 +15,11 @@ int main()
 
    int point = 5;
 
-   apply_filter (data2, point, 10, memory);
+   util::filter (
+           data2,
+           point,
+           10,
+           memory);
 
    std::cout << std::endl;
    for (int k = 0; k < 10; k++)

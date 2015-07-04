@@ -1,7 +1,8 @@
 #include "filter.h"
 
+namespace util {
 /*
- * Function NAME: apply_filter
+ * Function NAME: filter
  *
  * Applies a tent filter to the data
  *
@@ -11,7 +12,7 @@
  *                   2 * N words of float data available
  */
 
-void apply_filter (float *data,
+void filter (float *data,
                    int    points,
                    int    N,
                    MEMORY mem_buffer)
@@ -66,4 +67,6 @@ void apply_filter (float *data,
 
       data[p-1] /= norm;
    }
+}
+
 }

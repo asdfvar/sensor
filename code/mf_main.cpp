@@ -1,3 +1,9 @@
+/*
+ * start_time    - seconds from start
+ * N_window      - Number of data points of the signal
+ * sens_training - sensor used for training
+ */
+
 #include <iostream>
 #include <stdlib.h>
 #include <string>
@@ -36,14 +42,14 @@ int main(int argc, char *argv[]) {
    PARAMETERS.print();
 
    std::string data_path   = PARAMETERS.get_data_path();
-   float start_time      = 0.0f;             // seconds from start
-   int   N_window        = PARAMETERS.get_N_window(); // Number of data points of the signal
-   float *ax             = new float[N_window+2];   // Workspace for the signal in x
-   float *ay             = new float[N_window+2];   // Workspace for the signal in y
-   float *az             = new float[N_window+2];   // Workspace for the signal in z
+   float start_time      = 0.0f;
+   int   N_window        = PARAMETERS.get_N_window();
+   float *ax             = new float[N_window+2];
+   float *ay             = new float[N_window+2];
+   float *az             = new float[N_window+2];
    float *primary        = new float[N_window+2];
    float *secondary      = new float[N_window+2];
-   int   sens_training = 2; // sensor used for training
+   int   sens_training = 2;
    float power, energy;
    int   itt = 0, max_index;
    float corr;
@@ -66,7 +72,7 @@ int main(int argc, char *argv[]) {
       ref_path = InRefs.get_ref_path(i_ref);
       MF = new matchedfilter (ref_path.c_str(), N_window);
 
-      MF->mf_apply_filter (
+      MF->filter (
           NUM_TENT_FILT_POINTS,
           mem_buffer);
 
@@ -104,13 +110,13 @@ int main(int argc, char *argv[]) {
           &PARAMETERS,   /* Sampling frequency of the data       */
           N_window);     /* Number of sample points              */
 
-      apply_filter (
+      util::filter (
           ax,
           NUM_TENT_FILT_POINTS,
           N_window,
           mem_buffer);
 
-      apply_filter (
+      util::filter (
           ay,
           NUM_TENT_FILT_POINTS,
           N_window,
