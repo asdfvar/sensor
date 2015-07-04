@@ -52,13 +52,18 @@ void apply_filter (float *data,
    ** Normalize the end points of the resulting smoothed data
    */
 
+   float norm;
    for (int k = 0; k < half; k++)
    {
-      data[k] /= (float)(den_half - ((half - k)*(half - k+1)/2));
+      norm = (float)(den_half - ((half - k)*(half - k+1)/2));
+
+      data[k] /= norm;
    }
 
    for (int k = 0, p = N; p > N - half; p--, k++)
    {
-      data[p] /= (float)(den_half - ((half - k)*(half - k+1)/2));
+      norm = (float)(den_half - ((half - k)*(half - k+1)/2));
+
+      data[p-1] /= norm;
    }
 }

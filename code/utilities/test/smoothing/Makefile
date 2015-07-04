@@ -2,7 +2,7 @@ CPPC = g++
 OBJ = smooth.o apply_filter.o memory_management.o
 INC = -I../..
 
-EXE = filter
+EXE = smooth
 
 all: $(OBJ)
 	$(CPPC) $(OBJ) -o $(EXE) $(INC)
