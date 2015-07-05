@@ -38,7 +38,6 @@ void preproc(
 
    float dt        = PARAMETERS->get_dt();
    float window    = PARAMETERS->get_time_window();
-   float samp_freq = PARAMETERS->get_samp_freq();
 
    /* Demean the data */
 

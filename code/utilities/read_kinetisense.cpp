@@ -80,8 +80,6 @@ float **kinIO::read_kinetisense(
    std::ifstream kin_data;
    kin_data.open (path);
 
-   float freq = 128.0; // Hz
-
    float **data = new float *[22];
    for (int k = 0; k < 20; k++)
       data[k] = new float[N_lines];
@@ -94,8 +92,9 @@ float **kinIO::read_kinetisense(
    std::cout << "parsing header:" << std::endl;
    std::cout << header << std::endl;
 
-   int ka_parse = 0;
-   int kb_parse = 0;
+   unsigned int ka_parse = 0;
+   unsigned int kb_parse = 0;
+
    for (int index = 0; ka_parse < header.length(); index++)
    {
       kb_parse = header.find(",", ka_parse+1);

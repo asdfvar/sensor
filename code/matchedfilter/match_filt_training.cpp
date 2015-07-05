@@ -27,9 +27,6 @@ void match_filt_training(
               int            sens_num)
 {
 
- bool  Do_taper        = PARAMETERS->Do_taper();
- float cutoff_freq     = PARAMETERS->get_cutoff_freq();
- float freq_range      = PARAMETERS->get_freq_range();
  float samp_freq       = PARAMETERS->get_samp_freq();
  float dt              = PARAMETERS->get_dt();
  float time_window     = PARAMETERS->get_time_window();

@@ -85,14 +85,14 @@ void run_mf (matchedfilter *MF,
    }
 
    float max       = cross_correlation[0];
-   int   max_index = 0;
 
    for (int index = 1; index < N_data_reference; index++)
    {
       if (cross_correlation[index] > max)
       {
+
          max = cross_correlation[index];
-         max_index = index;
+
       }
    }
 
