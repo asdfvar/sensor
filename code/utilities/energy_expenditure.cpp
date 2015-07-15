@@ -18,7 +18,7 @@ float energy_expenditure (
    float RMR, MET;
    float energy_exp; // K cal / min
 
-   // compute the RMR
+   // compute the RMR using the Mufflin equation
 
    switch (sex) {
 
@@ -80,10 +80,13 @@ float energy_expenditure (
          break;
 
       default: /* NONE */
-         MET = 1.0f;
+         if (power < 0.5)      MET = 1.0f;
+         else if (power < 2.0) MET = 3.0f;
+         else if (power < 5.0) MET = 6.0f;
+         else                  MET = 12.0f;
    }
 
-   energy_exp = RMR * MET;
+   energy_exp = RMR * MET * 1.1574074e-5; // kCals / second
 
    return energy_exp;
 

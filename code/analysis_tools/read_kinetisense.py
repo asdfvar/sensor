@@ -13,7 +13,7 @@ class KIN:
       row_count = sum(1 for row in reader)
       fid.close()
 
-      samp_freq  = 120.0
+      samp_freq  = 128.0
       dt         = 1.0 / samp_freq
       N          = row_count - 1
       total_time = N / samp_freq
@@ -122,3 +122,57 @@ class KIN:
             return self.sensor_3_ay[start_index: end_index]
          if sensor_dir == 3:
             return self.sensor_3_az[start_index: end_index]
+
+   def auto_correlate(self, sensor, direction, start, end, dt):
+      if   (sensor == 1 and direction == 1):
+         u = self.sensor_1_ax
+      elif (sensor == 1 and direction == 2):
+         u = self.sensor_1_ay
+      elif (sensor == 1 and direction == 3):
+         u = self.sensor_1_az
+      elif (sensor == 2 and direction == 1):
+         u = self.sensor_2_ax
+      elif (sensor == 2 and direction == 2):
+         u = self.sensor_2_ay
+      elif (sensor == 2 and direction == 3):
+         u = self.sensor_2_az
+      elif (sensor == 3 and direction == 1):
+         u = self.sensor_3_ax
+      elif (sensor == 3 and direction == 2):
+         u = self.sensor_3_ay
+      elif (sensor == 3 and direction == 3):
+         u = self.sensor_3_az
+      else:
+         u = np.zeros(1)
+
+      start_index = int(start / dt)
+      end_index   = int(end   / dt)
+
+      u = u[start_index : end_index]
+
+      correlation = np.correlate( u, u, 'same')
+
+      N = len(u)
+
+      norm_1 = np.zeros( N )
+      norm_2 = np.zeros( N )
+
+      for k in range(N/2):
+         norm_1[k] = sum(u[0 : N/2+1 + k]**2)
+         norm_2[k] = sum(u[N/2 - k : ]**2)
+
+      if N % 2 != 0: norm_1[N/2] = sum(u**2)
+      if N % 2 != 0: norm_2[N/2] = sum(u**2)
+
+      if N % 2 != 0:
+         for k in range(N/2):
+            norm_1[k + N/2 + 1] = norm_2[N/2 - k - 1]
+            norm_2[k + N/2 + 1] = norm_1[N/2 - k - 1]
+      else:
+         for k in range(N/2):
+            norm_1[k + N/2] = norm_2[N/2 - k - 1]
+            norm_2[k + N/2] = norm_1[N/2 - k - 1]
+
+      norm = np.sqrt( norm_1 * norm_2 )
+
+      return correlation / norm

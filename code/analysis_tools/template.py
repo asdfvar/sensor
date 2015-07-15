@@ -54,7 +54,15 @@ correlations.append( read_correlations.read_correlations( correlation_file ) )
 #correlation_file = "../output/old/correlations_demo17190"
 correlation_file = "../submit/output/correlations_craig_tredmil12020"
 correlations.append( read_correlations.read_correlations( correlation_file ) )
-correlations[0].print_stats()
-correlations[0].plot()
-correlations[1].print_stats()
-correlations[1].plot()
+#correlations[0].print_stats()
+#correlations[0].plot()
+#correlations[1].print_stats()
+#correlations[1].plot()
+
+
+data = "../../data/Phase_2/csv_format/Craig/walking/2015-01-03-05-46-14.csv"
+kin_data = read_kinetisense.KIN( data )
+auto_corr = kin_data.auto_correlate(2,1, 8.0, 40.0, 1.0/128.0)
+pl.plot(auto_corr)
+pl.show()
+print auto_corr

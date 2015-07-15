@@ -34,6 +34,6 @@ class read_correlations:
 
    def print_stats(self):
       print "correlation stats:"
-      print "\tmax = %f" % max(self.correlations)
+      print "\tmax  = %f" % max(self.correlations)
       print "\tmean = %f" % np.mean(self.correlations)
-      print "\tstd = %f" % np.std(self.correlations)
+      print "\tstd  = %f" % np.std(self.correlations)

@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
    float corr;
    int   act;
    float tmp;
+   float total_energy = 0.0f;
    matchedfilter *MF;
    MEMORY mem_buffer(6 * (N_window + 2));
 
@@ -156,10 +157,11 @@ int main(int argc, char *argv[]) {
          // find which activity has the highest correlation
          if ( MF->get_correlation() > corr )
          {
-            corr = tmp;
+            corr = MF->get_correlation();
             max_index = k;
          }
       }
+      MF_activities.goto_first();
 
       /*
        * ENERGY EXPENDITURE
@@ -190,6 +192,8 @@ int main(int argc, char *argv[]) {
                                    power,
                                    PARAMETERS.get_time_window());
 
+      total_energy += energy * TIME_INC;
+
       fio::write_val (power,
                       "output/power"    + PARAMETERS.get_tag(),
                       initial_write);
@@ -198,7 +202,7 @@ int main(int argc, char *argv[]) {
                       "output/activity" + PARAMETERS.get_tag(),
                       initial_write);
 
-      fio::write_val (energy,
+      fio::write_val (total_energy,
                       "output/energy"   + PARAMETERS.get_tag(),
                       initial_write);
 
