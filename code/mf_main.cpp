@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
    float *primary        = new float[N_window+2];
    float *secondary      = new float[N_window+2];
    int   sens_training = 2;
-   float power, energy;
+   float power, energy_rate;
    int   itt = 0, max_index;
    float corr;
    int   act;
@@ -184,7 +184,7 @@ int main(int argc, char *argv[]) {
          act = NONE;
       }
 
-      energy = energy_expenditure (PARAMETERS.get_weight(),
+      energy_rate = energy_expenditure (PARAMETERS.get_weight(),
                                    PARAMETERS.get_height(),
                                    PARAMETERS.get_age(),
                                    PARAMETERS.get_sex(),
@@ -192,7 +192,7 @@ int main(int argc, char *argv[]) {
                                    power,
                                    PARAMETERS.get_time_window());
 
-      total_energy += energy * TIME_INC;
+      total_energy += energy_rate * TIME_INC;
 
       fio::write_val (power,
                       "output/power"    + PARAMETERS.get_tag(),
