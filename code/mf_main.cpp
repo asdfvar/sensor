@@ -215,6 +215,7 @@ int main(int argc, char *argv[]) {
    std::cout << "average pre-processing time = " << ave_preproc_time << std::endl;
    ave_mf_time /= (float) itt;
    std::cout << "average matched-filter time = " << ave_mf_time << std::endl;
+   std::cout << "Total energy expenditure = " << total_energy << " kCals" << std::endl;
 
    mem_buffer.clear_memory();
 
