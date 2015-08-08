@@ -60,10 +60,14 @@ void match_filt_training(
 
  float power;
 
+ TIME measure_time;
+
  std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
  std::cout.precision(6);
 
  gettime();
+
+ measure_time.start();
 
  std::cout << "% done\tthis average correlation\t"
            << "best correlation\tbest time"<< std::endl;
@@ -228,7 +232,11 @@ void match_filt_training(
      N_window_ref,
      N_window);
 
+ measure_time.end();
+
  std::cout << "Training time = " << gettime() << std::endl;
+
+ std::cout << "Training time = " << measure_time.total_time() << std::endl;
 
  mem_buffer.clear_memory();
 

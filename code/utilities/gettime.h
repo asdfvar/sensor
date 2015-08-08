@@ -11,12 +11,14 @@ class TIME
    public:
 
       TIME(void);
+      TIME (int N);
       ~TIME(void);
 
       void start(void);
       void end(void);
 
       double average(void);
+      double total_time(void);
 
    private:
 

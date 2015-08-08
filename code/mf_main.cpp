@@ -79,12 +79,10 @@ int main(int argc, char *argv[]) {
 
    }
 
-   float proc_time;
-   float ave_preproc_time = 0.0f;
-   float ave_mf_time      = 0.0f;
    bool  initial_write    = true;
 
-   TIME preproc_time;
+   TIME preproc_time    ( -1 );
+   TIME match_filt_time ( -1 );
 
    /* Iterate through the data */
 
@@ -103,7 +101,6 @@ int main(int argc, char *argv[]) {
 
       preproc_time.start();
 
-      gettime();
       preproc(
           ax,            /* Acceleration data in x               */
           ay,            /* Acceleration data in y               */
@@ -124,9 +121,6 @@ int main(int argc, char *argv[]) {
           N_window,
           mem_buffer);
 
-      proc_time = gettime();
-      ave_preproc_time += proc_time;
-
       preproc_time.end();
 
       /*
@@ -144,7 +138,7 @@ int main(int argc, char *argv[]) {
          for (int p = 0; p < N_window+2; p++) primary[p]   = ax[p];
          for (int p = 0; p < N_window+2; p++) secondary[p] = ay[p];
 
-         gettime();
+         match_filt_time.start();
 
          run_mf (MF,
                  primary,
@@ -154,8 +148,7 @@ int main(int argc, char *argv[]) {
                  N_window,
                  mem_buffer);
 
-         proc_time = gettime();
-         ave_mf_time += proc_time;
+         match_filt_time.end();
 
          MF->write_corr ("output/correlations" + PARAMETERS.get_tag(),
                          initial_write);
@@ -173,7 +166,7 @@ int main(int argc, char *argv[]) {
        * ENERGY EXPENDITURE
        */
 
-      for (int k=0; k<max_index; k++)
+      for (int k = 0; k < max_index; k++)
       {
          MF_activities.goto_next();
       }
@@ -190,7 +183,8 @@ int main(int argc, char *argv[]) {
          act = NONE;
       }
 
-      energy_rate = energy_expenditure (PARAMETERS.get_weight(),
+      energy_rate = energy_expenditure (
+                                   PARAMETERS.get_weight(),
                                    PARAMETERS.get_height(),
                                    PARAMETERS.get_age(),
                                    PARAMETERS.get_sex(),
@@ -217,11 +211,8 @@ int main(int argc, char *argv[]) {
 
    }
 
-   ave_preproc_time /= (float) itt;
-   std::cout << "average pre-processing time = " << ave_preproc_time << std::endl;
    std::cout << "average pre-processing time = " << preproc_time.average() << std::endl;
-   ave_mf_time /= (float) itt;
-   std::cout << "average matched-filter time = " << ave_mf_time << std::endl;
+   std::cout << "average matched-filter time = " << match_filt_time.average() << std::endl;
    std::cout << "Total energy expenditure = " << total_energy << " kCals" << std::endl;
 
    mem_buffer.clear_memory();

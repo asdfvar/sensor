@@ -37,14 +37,13 @@ float gettime(void)
    return dt;
 }
 
-/*
- *
- * Function NAME: waitUntil
- * 
-  Function to wait until the time in dt has passed since the
-  last call of this function. If it is the first call of this
-  function, return after dt time of calling this function.
-*/
+/**
+ ** Function NAME: waitUntil
+ ** 
+ **  Function to wait until the time in dt has passed since the
+ **  last call of this function. If it is the first call of this
+ **  function, return after dt time of calling this function.
+ **/
 
 float waitUntil(float dt)
 {
@@ -70,15 +69,26 @@ float waitUntil(float dt)
    return currentDt;
 }
 
-TIME::TIME (void)
+TIME::TIME (int N_in)
 {
 
-  N = -1;
+  N = N_in;
   total = 0.0;
 
 }
 
-TIME::~TIME (void) {}
+TIME::TIME (void)
+{
+
+  N = 0;
+  total = 0.0;
+
+}
+
+TIME::~TIME (void)
+{
+   std::cout << "Total time " << total << std::endl;
+}
 
 void TIME::start (void)
 {
@@ -107,4 +117,9 @@ double TIME::average (void)
    double average = total / (double)N;
 
    return average;
+}
+
+double TIME::total_time (void)
+{
+   return total;
 }
