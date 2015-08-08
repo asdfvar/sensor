@@ -1,3 +1,4 @@
+#include "gettime.h"
 #include <time.h>
 #include <sys/time.h>
 #include <iostream>
@@ -67,4 +68,43 @@ float waitUntil(float dt)
    gettimeofday(&start, NULL);
 
    return currentDt;
+}
+
+TIME::TIME (void)
+{
+
+  N = -1;
+  total = 0.0;
+
+}
+
+TIME::~TIME (void) {}
+
+void TIME::start (void)
+{
+   struct timeval time_struct;
+   gettimeofday(&time_struct, NULL);
+
+   start_time = time_struct.tv_sec + time_struct.tv_usec * 1.0e-6;
+
+}
+
+void TIME::end (void)
+{
+   struct timeval time_struct;
+   gettimeofday(&time_struct, NULL);
+
+   N++;
+   if (N > 0)
+   {
+      double current = time_struct.tv_sec + time_struct.tv_usec * 1.0e-6;
+      total += current - start_time;
+   }
+}
+
+double TIME::average (void)
+{
+   double average = total / (double)N;
+
+   return average;
 }

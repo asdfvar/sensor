@@ -84,6 +84,8 @@ int main(int argc, char *argv[]) {
    float ave_mf_time      = 0.0f;
    bool  initial_write    = true;
 
+   TIME preproc_time;
+
    /* Iterate through the data */
 
    for (itt=0;
@@ -98,6 +100,8 @@ int main(int argc, char *argv[]) {
       /*
        * PRE-PROCESSING
        */
+
+      preproc_time.start();
 
       gettime();
       preproc(
@@ -122,6 +126,8 @@ int main(int argc, char *argv[]) {
 
       proc_time = gettime();
       ave_preproc_time += proc_time;
+
+      preproc_time.end();
 
       /*
        * MATCHED FILTER
@@ -213,6 +219,7 @@ int main(int argc, char *argv[]) {
 
    ave_preproc_time /= (float) itt;
    std::cout << "average pre-processing time = " << ave_preproc_time << std::endl;
+   std::cout << "average pre-processing time = " << preproc_time.average() << std::endl;
    ave_mf_time /= (float) itt;
    std::cout << "average matched-filter time = " << ave_mf_time << std::endl;
    std::cout << "Total energy expenditure = " << total_energy << " kCals" << std::endl;
