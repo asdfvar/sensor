@@ -105,9 +105,9 @@ namespace fio {
  {
    int k_start = (int)(time * samp_freq);
 
-         if (sens_num == 1) for (int k=0; k<N; k++) ax[k] = sensor1_ax[k + k_start];
-    else if (sens_num == 2) for (int k=0; k<N; k++) ax[k] = sensor2_ax[k + k_start];
-    else if (sens_num == 3) for (int k=0; k<N; k++) ax[k] = sensor3_ax[k + k_start];
+         if (sens_num == 1) for (int k = 0; k < N; k++) ax[k] = sensor1_ax[k_start + k];
+    else if (sens_num == 2) for (int k = 0; k < N; k++) ax[k] = sensor2_ax[k_start + k];
+    else if (sens_num == 3) for (int k = 0; k < N; k++) ax[k] = sensor3_ax[k_start + k];
  }
 
 /******************************************************************/
@@ -119,9 +119,9 @@ namespace fio {
  {
    int k_start = (int)(time * samp_freq);
 
-         if (sens_num == 1) for (int k=0; k<N; k++) ay[k] = sensor1_ay[k + k_start];
-    else if (sens_num == 2) for (int k=0; k<N; k++) ay[k] = sensor2_ay[k + k_start];
-    else if (sens_num == 3) for (int k=0; k<N; k++) ay[k] = sensor3_ay[k + k_start];
+         if (sens_num == 1) for (int k = 0; k < N; k++) ay[k] = sensor1_ay[k_start + k];
+    else if (sens_num == 2) for (int k = 0; k < N; k++) ay[k] = sensor2_ay[k_start + k];
+    else if (sens_num == 3) for (int k = 0; k < N; k++) ay[k] = sensor3_ay[k_start + k];
  }
 
 /******************************************************************/
@@ -133,9 +133,9 @@ namespace fio {
  {
    int k_start = (int)(time * samp_freq);
 
-         if (sens_num == 1) for (int k=0; k<N; k++) az[k] = sensor1_az[k + k_start];
-    else if (sens_num == 2) for (int k=0; k<N; k++) az[k] = sensor2_az[k + k_start];
-    else if (sens_num == 3) for (int k=0; k<N; k++) az[k] = sensor3_az[k + k_start];
+         if (sens_num == 1) for (int k = 0; k < N; k++) az[k] = sensor1_az[k_start + k];
+    else if (sens_num == 2) for (int k = 0; k < N; k++) az[k] = sensor2_az[k_start + k];
+    else if (sens_num == 3) for (int k = 0; k < N; k++) az[k] = sensor3_az[k_start + k];
  }
 
 /******************************************************************/

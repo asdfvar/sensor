@@ -24,7 +24,7 @@ namespace phase
              int   N_data)
  {
     int N_data_reference = N_data - N_window;
- 
+
     for (int k = 0; k < N_data; k++)
     {
        norm[k] = signal[k] * signal[k];

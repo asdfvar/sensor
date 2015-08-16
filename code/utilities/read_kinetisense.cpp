@@ -11,6 +11,57 @@
 #include <cstdlib>
 #include "fileio.h"
 
+/*
+ * Function NAME: parse_string
+ */
+static std::string parse_string (
+                  std::string input_string,
+                  unsigned int index)
+{
+   unsigned int ka_parse = 0;
+   unsigned int kb_parse = 0;
+
+   for (unsigned int k = 0; k <= index; k++)
+   {
+      ka_parse = kb_parse;
+      kb_parse = input_string.find(",", ka_parse + 1);
+   }
+
+   if (ka_parse == kb_parse)
+   {
+      std::cout << __FILE__ << ":" << __LINE__ << ":"
+                << "Invalid index" << std::endl;
+      return "-1";
+   }
+
+   if (index == 0)
+   {
+      return input_string.substr(ka_parse, kb_parse - ka_parse);
+   }
+   else
+   {
+      return input_string.substr(ka_parse + 1, kb_parse - ka_parse - 1);
+   }
+
+}
+
+/*
+ * Function NAME: count_delimits
+ */
+static unsigned int count_delimits (
+                  std::string input_string,
+                  const char delimiter)
+{
+   unsigned int count = 0;
+   for (unsigned int k = 0; k < input_string.length(); k++)
+   {
+//std::cout << input_string[k] << std::endl;
+      if (input_string[k] == delimiter) count++;
+   }
+
+   return count;
+}
+
 namespace fio {
 
 /*
@@ -41,12 +92,11 @@ int kinIO::count_kinetisense_lines(
 
 /*
  * Function NAME: read_kinetisense
- */
-float **kinIO::read_kinetisense(
-          /* Populates the data buffer with the kinetisense csv file data.
-             Returns a pointer to hold the data. This will contain the acceleration
-             and rotation data in units of Gs (1G = 9.81 m/s/s) and EMG data. There
-             are 20 arrays of length N_lines as follows:
+ *
+ * Populates the data buffer with the kinetisense csv file data.
+   Returns a pointer to hold the data. This will contain the acceleration
+   and rotation data in units of Gs (1G = 9.81 m/s/s) and EMG data. There
+   are 20 arrays of length N_lines as follows:
 
    float[0]            -sensor 1 acceleration data in x
    float[1]            -sensor 1 acceleration data in y
@@ -70,39 +120,46 @@ float **kinIO::read_kinetisense(
    float[19]           -EMG 2
 
            */
+float **kinIO::read_kinetisense(
        const char path[], /* [I  ] File of the kinetisense data */
        const int N_lines) 
 {
 
    std::string header;
    std::string parameter;
+   std::string data_string;
    std::string line;
    std::ifstream kin_data;
    kin_data.open (path);
 
-   float **data = new float *[22];
-   for (int k = 0; k < 20; k++)
-      data[k] = new float[N_lines];
-
    kin_data.seekg(0);
 
-   // read the header
+   /*
+   **  Read the header
+   */
+
    std::getline (kin_data, header);
 
    std::cout << "parsing header:" << std::endl;
    std::cout << header << std::endl;
 
-   unsigned int ka_parse = 0;
-   unsigned int kb_parse = 0;
+   std::string stuff;
 
-   for (int index = 0; ka_parse < header.length(); index++)
+   unsigned int num_params = count_delimits(header, ',') + 1;
+
+   float **data = new float *[num_params];
+   for (unsigned int k = 0; k < num_params; k++)
    {
-      kb_parse = header.find(",", ka_parse+1);
-      if (kb_parse < header.length())
-      {
-         parameter = header.substr(ka_parse+1, kb_parse-ka_parse-1);
-      }
+      data[k] = new float[N_lines];
+   }
 
+   for (unsigned int index = 0; index < num_params; index++)
+   {
+      parameter = parse_string ( header, index );
+
+      /*
+      ** Alias to the appropriate sensor
+      */
       if (parameter == " Sensor 1 ax") {
          sensor1_ax = data[index];
       } else if (parameter == " Sensor 1 ay") {
@@ -141,15 +198,17 @@ float **kinIO::read_kinetisense(
          sensor3_wz = data[index];
       }
 
-      ka_parse = kb_parse;
    }
    
    for (int k = 0; k < N_lines; k++) {
-      for (int p = 0; p < 20; p++) {
-         std::getline (kin_data, line, ',');
-         data[p][k] = atof(line.c_str());
+
+      std::getline (kin_data, line);
+
+      for (unsigned int index = 0; index < num_params; index++) {
+         data_string    = parse_string ( line, index );
+         data[index][k] = atof(data_string.c_str());
       }
-         std::getline (kin_data, line);
+
    }
 
    kin_data.close();
