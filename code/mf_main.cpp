@@ -41,11 +41,11 @@ int main(int argc, char *argv[]) {
    std::string data_path   = PARAMETERS.get_data_path();
    float start_time      = 0.0f;
    int   N_window        = PARAMETERS.get_N_window();
-   float *ax             = new float[N_window+2];
-   float *ay             = new float[N_window+2];
-   float *az             = new float[N_window+2];
-   float *primary        = new float[N_window+2];
-   float *secondary      = new float[N_window+2];
+   float *ax             = new float[N_window + 2];
+   float *ay             = new float[N_window + 2];
+   float *az             = new float[N_window + 2];
+   float *primary        = new float[N_window + 2];
+   float *secondary      = new float[N_window + 2];
    int   sens_training = 2;
    float power, energy_rate;
    int   itt = 0, max_index;
