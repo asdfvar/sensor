@@ -7,7 +7,6 @@ void match_filt_training(
               matchedfilter *MF,
               fio::kinIO *KIN,
               float *taper,
-              fio::parameters*,
-              int   sens_num); /* Which Kinetesense sensor */
+              fio::parameters*);
 
 #endif

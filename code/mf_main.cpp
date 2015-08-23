@@ -1,7 +1,6 @@
 /*
  * start_time    - seconds from start
  * N_window      - Number of data points of the signal
- * sens_training - sensor used for training
  */
 
 #include <iostream>
@@ -46,10 +45,10 @@ int main(int argc, char *argv[]) {
    float *az             = new float[N_window + 2];
    float *primary        = new float[N_window + 2];
    float *secondary      = new float[N_window + 2];
-   int   sens_training = 2;
    float power, energy_rate;
    int   itt = 0, max_index;
    float corr;
+   int select_sensor;
    int   act;
    float tmp;
    float total_energy = 0.0f;
@@ -65,7 +64,8 @@ int main(int argc, char *argv[]) {
    mf_list MF_activities;
    std::string ref_path;
 
-   for (int i_ref=1; i_ref<=InRefs.get_Nrefs(); i_ref++) {
+   for (int i_ref=1; i_ref <= InRefs.get_Nrefs(); i_ref++)
+   {
 
       ref_path = InRefs.get_ref_path(i_ref);
       MF = new matchedfilter (ref_path.c_str(), N_window);
@@ -87,13 +87,13 @@ int main(int argc, char *argv[]) {
    /* Iterate through the data */
 
    for (itt=0;
-        KIN.valid_start_end (start_time, PARAMETERS.get_time_window());
-        itt++, start_time += TIME_INC)
+           KIN.valid_start_end (start_time, PARAMETERS.get_time_window());
+              itt++, start_time += TIME_INC)
    {
 
-      KIN.load_sens_ax (ax, start_time, 2, N_window);
-      KIN.load_sens_ay (ay, start_time, 2, N_window);
-      KIN.load_sens_az (az, start_time, 2, N_window);
+      KIN.load_sens_ax (ax, start_time, PARAMETERS.get_sensor(), N_window);
+      KIN.load_sens_ay (ay, start_time, PARAMETERS.get_sensor(), N_window);
+      KIN.load_sens_az (az, start_time, PARAMETERS.get_sensor(), N_window);
 
       /*
        * PRE-PROCESSING
@@ -130,7 +130,7 @@ int main(int argc, char *argv[]) {
       // run the matched filter through the activities
       corr = -1.1f; // -1 is the lowest obtainable minimum
       max_index = 0;
-      for (int k=0; k<MF_activities.get_N(); k++, MF_activities.goto_next())
+      for (int k = 0; k < MF_activities.get_N(); k++, MF_activities.goto_next())
       {
 
          MF = MF_activities.get_MF();
@@ -213,7 +213,7 @@ int main(int argc, char *argv[]) {
 
    std::cout << "average pre-processing time = " << preproc_time.average() << std::endl;
    std::cout << "average matched-filter time = " << match_filt_time.average() << std::endl;
-   std::cout << "Total energy expenditure = " << total_energy << " kCals" << std::endl;
+   std::cout << "Total energy expenditure = "    << total_energy << " kCals" << std::endl;
 
    mem_buffer.clear_memory();
 

@@ -57,9 +57,8 @@ int main(int argc, char *argv[]) {
    /* Train on the data provided */
    match_filt_training (&MF,
                         &KIN,
-                        taper,
-                        &PARAMETERS,
-                        sens_num);
+                         taper,
+                        &PARAMETERS);
 
    /* Write the data to file */
    MF.write(ref_path);

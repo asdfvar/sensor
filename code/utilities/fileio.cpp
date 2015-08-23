@@ -207,7 +207,7 @@ namespace fio {
     buffer = new char [length];
 
     // read data as a block:
-    input.read (buffer,length);
+    input.read (buffer, length);
 
     N_refs = 0;
 
@@ -246,7 +246,8 @@ namespace fio {
   */
  std::string readRefs::get_ref_path(int i_th) {
 
-   if (i_th > N_refs) {
+   if (i_th > N_refs)
+   {
       std::cout << "Attempting to get reference "
                    "at line " << i_th << " but there "
                    "are only " << N_refs << " references."
@@ -278,41 +279,45 @@ namespace fio {
 
     input.open ( path.c_str() );
 
-    tag         = get_parameter_s   ("tag"        );
-    time_window = get_parameter_f   ("time_window"); // seconds to analyze a signal
-    freq_range  = get_parameter_f   ("freq_range" ); // Hz
-    cutoff_freq = get_parameter_f   ("cutoff_freq"); // Hz
-    samp_freq   = get_parameter_f   ("samp_freq"  ); // Hz
-    ref_time    = get_parameter_f   ("ref_time"   ); // reference time for training
-    threshold   = get_parameter_f   ("threshold"  );
-    sex         = get_parameter_sex ("sex"        );
-    age         = get_parameter_f   ("age"        ); // yrs
-    weight      = get_parameter_f   ("weight"     ); // kg
-    height      = get_parameter_f   ("height"     ); // cm
-    data_path   = get_parameter_s   ("data_path"  );
-    ref_path    = get_parameter_s   ("ref_path"   ); // used for training
-    activity_ID = get_parameter_s   ("activity_ID"); // used for training
+    // defaults
+    select_sensor = 2;
 
-    b_tag         = (tag != "-1")          ? true : false;
+    tag           = get_parameter_s   ("tag"        );
+    time_window   = get_parameter_f   ("time_window"); // seconds to analyze a signal
+    freq_range    = get_parameter_f   ("freq_range" ); // Hz
+    cutoff_freq   = get_parameter_f   ("cutoff_freq"); // Hz
+    samp_freq     = get_parameter_f   ("samp_freq"  ); // Hz
+    ref_time      = get_parameter_f   ("ref_time"   ); // reference time for training
+    threshold     = get_parameter_f   ("threshold"  );
+    sex           = get_parameter_sex ("sex"        );
+    age           = get_parameter_f   ("age"        ); // yrs
+    weight        = get_parameter_f   ("weight"     ); // kg
+    height        = get_parameter_f   ("height"     ); // cm
+    data_path     = get_parameter_s   ("data_path"  );
+    ref_path      = get_parameter_s   ("ref_path"   ); // used for training
+    activity_ID   = get_parameter_s   ("activity_ID"); // used for training
+    select_sensor = get_parameter_i   ("sensor"     ); // which sensor to use
+
+    b_tag         = (tag         != "-1")  ? true : false;
     b_time_window = (time_window >= 0.0f)  ? true : false;
-    b_freq_range  = (freq_range >= 0.0f)   ? true : false;
+    b_freq_range  = (freq_range  >= 0.0f)  ? true : false;
     b_cutoff_freq = (cutoff_freq >= 0.0f)  ? true : false;
-    b_samp_freq   = (samp_freq >= 0.0f)    ? true : false;
-    b_ref_time    = (ref_time >= 0.0f)     ? true : false;
-    b_threshold   = (threshold >= 0.0f)    ? true : false;
-    b_sex         = (sex != -1)            ? true : false;
-    b_age         = (age >= 0.0f)          ? true : false;
-    b_weight      = (weight >= 0.0f)       ? true : false;
-    b_height      = (height >= 0.0f)       ? true : false;
-    b_data_path   = (data_path != "-1")    ? true : false;
-    b_ref_path    = (ref_path != "-1")     ? true : false;
+    b_samp_freq   = (samp_freq   >= 0.0f)  ? true : false;
+    b_ref_time    = (ref_time    >= 0.0f)  ? true : false;
+    b_threshold   = (threshold   >= 0.0f)  ? true : false;
+    b_sex         = (sex         != -1  )  ? true : false;
+    b_age         = (age         >= 0.0f)  ? true : false;
+    b_weight      = (weight      >= 0.0f)  ? true : false;
+    b_height      = (height      >= 0.0f)  ? true : false;
+    b_data_path   = (data_path   != "-1")  ? true : false;
+    b_ref_path    = (ref_path    != "-1")  ? true : false;
     b_activity_ID = (activity_ID != "-1")  ? true : false;
 
     input.close();
 
     if (b_samp_freq) dt = 1.0f / samp_freq; else dt = -1.0f; // seconds
     b_taper        = (b_cutoff_freq) ? true : false;
-    sens_training   = 2;
+    select_sensor   = 2;
 
  }
 
@@ -326,23 +331,23 @@ namespace fio {
 
     std::cout << std::endl;
     std::cout << "Parameters:" << std::endl;
-    if (b_tag)         std::cout << "tag = "         << tag         << std::endl;
+    if (b_tag)         std::cout << "tag         = " << tag         << std::endl;
     if (b_time_window) std::cout << "time_window = " << time_window << std::endl;
-    if (b_freq_range)  std::cout << "freq_range = "  << freq_range  << std::endl;
+    if (b_freq_range)  std::cout << "freq_range  = " << freq_range  << std::endl;
     if (b_cutoff_freq) std::cout << "cutoff_freq = " << cutoff_freq << std::endl;
-    if (b_samp_freq)   std::cout << "samp_freq = "   << samp_freq   << std::endl;
-    if (b_ref_time)    std::cout << "ref_time = "    << ref_time    << std::endl;
-    if (b_threshold)   std::cout << "threshold = "   << threshold   << std::endl;
-    if (b_sex)         std::cout << "sex = "         << sex         << std::endl;
-    if (b_age)         std::cout << "age = "         << age         << std::endl;
-    if (b_weight)      std::cout << "weight = "      << weight      << std::endl;
-    if (b_height)      std::cout << "height = "      << height      << std::endl;
-    if (b_data_path)   std::cout << "data_path = "   << data_path   << std::endl;
-    if (b_ref_path)    std::cout << "ref_path = "    << ref_path    << std::endl;
+    if (b_samp_freq)   std::cout << "samp_freq   = " << samp_freq   << std::endl;
+    if (b_ref_time)    std::cout << "ref_time    = " << ref_time    << std::endl;
+    if (b_threshold)   std::cout << "threshold   = " << threshold   << std::endl;
+    if (b_sex)         std::cout << "sex         = " << sex         << std::endl;
+    if (b_age)         std::cout << "age         = " << age         << std::endl;
+    if (b_weight)      std::cout << "weight      = " << weight      << std::endl;
+    if (b_height)      std::cout << "height      = " << height      << std::endl;
+    if (b_data_path)   std::cout << "data_path   = " << data_path   << std::endl;
+    if (b_ref_path)    std::cout << "ref_path    = " << ref_path    << std::endl;
     if (b_activity_ID) std::cout << "activity_ID = " << activity_ID << std::endl;
-    if (b_samp_freq)   std::cout << "dt = "          << dt          << std::endl;
+    if (b_samp_freq)   std::cout << "dt          = " << dt          << std::endl;
     if (b_taper)       std::cout << "applying data smoothing"       << std::endl;
-                       std::cout << "Kinetisense sensor " << sens_training << std::endl;
+                       std::cout << "Kinetisense sensor " << select_sensor << std::endl;
     std::cout << std::endl;
 
  }
@@ -598,6 +603,14 @@ namespace fio {
  int parameters::get_sex (void)
  {
     return sex;
+ }
+
+ /*
+  * Function NAME: get_sensor
+  */
+ int parameters::get_sensor (void)
+ {
+    return select_sensor;
  }
 
 /******************************************************************/

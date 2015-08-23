@@ -281,8 +281,8 @@ void matchedfilter::apply_ifft(int N)
 matchedfilter::~matchedfilter (void)
 {
 
-   delete ref_ax;
-   delete ref_ay;
+   delete[] ref_ax;
+   delete[] ref_ay;
 
 }
 

@@ -110,7 +110,9 @@ namespace fio {
  void write_val(int val,   std::string power_file, bool init);
  void write_val(float val, std::string power_file, bool init);
 
-/*****************************************************/
+/*
+** class name: readRefs
+*/
 
  class readRefs {
 
@@ -129,10 +131,11 @@ namespace fio {
        int N_refs;
  };
 
-/*****************************************************/
+/*
+** class name: parameters
+*/
 
-/* parameters class:
-
+/*
    Matched Filter processing:
         tag
         time_window
@@ -183,6 +186,7 @@ namespace fio {
       std::string get_data_path (void);
       std::string get_ref_path (void);
       std::string get_activity_ID (void);
+      int         get_sensor (void);
 
    private:
 
@@ -205,7 +209,7 @@ namespace fio {
 
       float dt;
       bool  b_taper;
-      int   sens_training;
+      int   select_sensor;
 
       float        get_parameter_f   ( std::string parameter);
       int          get_parameter_i   ( std::string parameter);
