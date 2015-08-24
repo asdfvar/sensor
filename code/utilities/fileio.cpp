@@ -317,7 +317,6 @@ namespace fio {
 
     if (b_samp_freq) dt = 1.0f / samp_freq; else dt = -1.0f; // seconds
     b_taper        = (b_cutoff_freq) ? true : false;
-    select_sensor   = 2;
 
  }
 

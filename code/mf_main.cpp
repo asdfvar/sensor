@@ -48,10 +48,10 @@ int main(int argc, char *argv[]) {
    float power, energy_rate;
    int   itt = 0, max_index;
    float corr;
-   int select_sensor;
    int   act;
    float tmp;
    float total_energy = 0.0f;
+   int   select_sensor;
    matchedfilter *MF;
    MEMORY mem_buffer(6 * (N_window + 2));
 

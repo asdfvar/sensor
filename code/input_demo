@@ -1,4 +1,5 @@
 tag=_demo
+sensor=2
 samp_freq=128.0
 time_window=4.0
 cutoff_freq=40.0

@@ -160,7 +160,7 @@ float **kinIO::read_kinetisense(
       /*
       ** Alias to the appropriate sensor
       */
-      if (parameter == " Sensor 1 ax") {
+      if (parameter == "Sensor 1 ax") {
          sensor1_ax = data[index];
       } else if (parameter == " Sensor 1 ay") {
          sensor1_ay = data[index];
