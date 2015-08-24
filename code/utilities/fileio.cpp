@@ -87,8 +87,8 @@ namespace fio {
  {
    int k = (int)(time * samp_freq);
 
-   if (sens_num == 1) return kin_data[2] + k;
-   else if (sens_num == 2) return kin_data[8] + k;
+   if      (sens_num == 1) return kin_data[2]  + k;
+   else if (sens_num == 2) return kin_data[8]  + k;
    else if (sens_num == 3) return kin_data[17] + k;
    else {
       std::cout << "Sensor number not supported" << std::endl;
@@ -279,9 +279,6 @@ namespace fio {
 
     input.open ( path.c_str() );
 
-    // defaults
-    select_sensor = 2;
-
     tag           = get_parameter_s   ("tag"        );
     time_window   = get_parameter_f   ("time_window"); // seconds to analyze a signal
     freq_range    = get_parameter_f   ("freq_range" ); // Hz
@@ -312,8 +309,12 @@ namespace fio {
     b_data_path   = (data_path   != "-1")  ? true : false;
     b_ref_path    = (ref_path    != "-1")  ? true : false;
     b_activity_ID = (activity_ID != "-1")  ? true : false;
+    b_select_sensor = (select_sensor >= 0) ? true : false;
 
     input.close();
+
+    // defaults
+    if ( !b_select_sensor ) select_sensor = 2;
 
     if (b_samp_freq) dt = 1.0f / samp_freq; else dt = -1.0f; // seconds
     b_taper        = (b_cutoff_freq) ? true : false;

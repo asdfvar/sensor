@@ -265,7 +265,9 @@ int eigen(const float mat[3][3],
    } while (maxR > MIN_ERR && count < MAX_COUNT);
 
    if ( count >= MAX_COUNT )
+   {
       std::cout << "Warning: Eigenvalues and eigenvectors may not have converged" << std::endl;
+   }
 
   /* The eigenvectors are transposed for output
    *

@@ -206,10 +206,10 @@ namespace fio {
       std::string data_path;   bool b_data_path;
       std::string ref_path;    bool b_ref_path;
       std::string activity_ID; bool b_activity_ID;
+      int   select_sensor;     bool b_select_sensor;
 
       float dt;
       bool  b_taper;
-      int   select_sensor;
 
       float        get_parameter_f   ( std::string parameter);
       int          get_parameter_i   ( std::string parameter);

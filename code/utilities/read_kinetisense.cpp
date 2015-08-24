@@ -12,6 +12,22 @@
 #include "fileio.h"
 
 /*
+** Function NAME: trim
+*/
+static std::string trim ( std::string input_string)
+{
+   unsigned int start, end;
+
+   for (start = 0; start < input_string.length() && (input_string[start] == '\n' || input_string[start] == ' '); start++) {}
+   if (start >= input_string.length()) start--;
+
+   for (end = input_string.length() - 1; end > 0 && (input_string[end] == '\n' || input_string[end] == ' '); end--) {}
+   if (end < 0) end++;
+
+   return input_string.substr(start, end - start + 1);
+}
+
+/*
  * Function NAME: parse_string
  */
 static std::string parse_string (
@@ -157,44 +173,46 @@ float **kinIO::read_kinetisense(
    {
       parameter = parse_string ( header, index );
 
+      parameter = trim( parameter );
+
       /*
       ** Alias to the appropriate sensor
       */
       if (parameter == "Sensor 1 ax") {
          sensor1_ax = data[index];
-      } else if (parameter == " Sensor 1 ay") {
+      } else if (parameter == "Sensor 1 ay") {
          sensor1_ay = data[index];
-      } else if (parameter == " Sensor 1 az") {
+      } else if (parameter == "Sensor 1 az") {
          sensor1_az = data[index];
-      } else if (parameter == " Sensor 1 wx") {
+      } else if (parameter == "Sensor 1 wx") {
          sensor1_wx = data[index];
-      } else if (parameter == " Sensor 1 wy") {
+      } else if (parameter == "Sensor 1 wy") {
          sensor1_wy = data[index];
-      } else if (parameter == " Sensor 1 wz") {
+      } else if (parameter == "Sensor 1 wz") {
          sensor1_wz = data[index];
-      } else if (parameter == " Sensor 2 ax") {
+      } else if (parameter == "Sensor 2 ax") {
          sensor2_ax = data[index];
-      } else if (parameter == " Sensor 2 ay") {
+      } else if (parameter == "Sensor 2 ay") {
          sensor2_ay = data[index];
-      } else if (parameter == " Sensor 2 az") {
+      } else if (parameter == "Sensor 2 az") {
          sensor2_az = data[index];
-      } else if (parameter == " Sensor 2 wx") {
+      } else if (parameter == "Sensor 2 wx") {
          sensor2_wx = data[index];
-      } else if (parameter == " Sensor 2 wy") {
+      } else if (parameter == "Sensor 2 wy") {
          sensor2_wy = data[index];
-      } else if (parameter == " Sensor 2 wz") {
+      } else if (parameter == "Sensor 2 wz") {
          sensor2_wz = data[index];
-      } else if (parameter == " Sensor 3 ax") {
+      } else if (parameter == "Sensor 3 ax") {
          sensor3_ax = data[index];
-      } else if (parameter == " Sensor 3 ay") {
+      } else if (parameter == "Sensor 3 ay") {
          sensor3_ay = data[index];
-      } else if (parameter == " Sensor 3 az") {
+      } else if (parameter == "Sensor 3 az") {
          sensor3_az = data[index];
-      } else if (parameter == " Sensor 3 wx") {
+      } else if (parameter == "Sensor 3 wx") {
          sensor3_wx = data[index];
-      } else if (parameter == " Sensor 3 wy") {
+      } else if (parameter == "Sensor 3 wy") {
          sensor3_wy = data[index];
-      } else if (parameter == " Sensor 3 wz") {
+      } else if (parameter == "Sensor 3 wz") {
          sensor3_wz = data[index];
       }
 
