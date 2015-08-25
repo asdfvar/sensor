@@ -51,8 +51,8 @@ namespace fio {
  {
    int k = (int)(time * samp_freq);
 
-   if (sens_num == 1) return kin_data[0] + k;
-   else if (sens_num == 2) return kin_data[6] + k;
+   if      (sens_num == 1) return kin_data[0]  + k;
+   else if (sens_num == 2) return kin_data[6]  + k;
    else if (sens_num == 3) return kin_data[12] + k;
    else {
       std::cout << "Sensor number not supported" << std::endl;
@@ -69,8 +69,8 @@ namespace fio {
  {
    int k = (int)(time * samp_freq);
 
-   if (sens_num == 1) return kin_data[1] + k;
-   else if (sens_num == 2) return kin_data[7] + k;
+   if      (sens_num == 1) return kin_data[1]  + k;
+   else if (sens_num == 2) return kin_data[7]  + k;
    else if (sens_num == 3) return kin_data[13] + k;
    else {
       std::cout << "Sensor number not supported" << std::endl;

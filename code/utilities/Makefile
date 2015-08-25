@@ -6,7 +6,8 @@ FLAGS = -O3 -Wall
 LIB = libsens.a
 
 OBJ = fft.o read_kinetisense.o fileio.o gettime.o write_data.o \
-      taper.o energy_expenditure.o filter.o memory_management.o
+      taper.o energy_expenditure.o filter.o memory_management.o \
+      string_utils.o
 
 all: $(OBJ)
 	$(CL) $(LIB) $(OBJ)
@@ -39,4 +40,7 @@ filter.o: filter.cpp
 	$(CPPC) $^ -c $(FLAGS)
 
 memory_management.o: memory_management.cpp
+	$(CPPC) $^ -c $(FLAGS)
+
+string_utils.o: string_utils.cpp
 	$(CPPC) $^ -c $(FLAGS)

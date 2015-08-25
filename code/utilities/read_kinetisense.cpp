@@ -10,73 +10,7 @@
 #include <string>
 #include <cstdlib>
 #include "fileio.h"
-
-/*
-** Function NAME: trim
-*/
-static std::string trim ( std::string input_string)
-{
-   unsigned int start, end;
-
-   for (start = 0; start < input_string.length() && (input_string[start] == '\n' || input_string[start] == ' '); start++) {}
-   if (start >= input_string.length()) start--;
-
-   for (end = input_string.length() - 1; end > 0 && (input_string[end] == '\n' || input_string[end] == ' '); end--) {}
-   if (end < 0) end++;
-
-   return input_string.substr(start, end - start + 1);
-}
-
-/*
- * Function NAME: parse_string
- */
-static std::string parse_string (
-                  std::string input_string,
-                  unsigned int index)
-{
-   unsigned int ka_parse = 0;
-   unsigned int kb_parse = 0;
-
-   for (unsigned int k = 0; k <= index; k++)
-   {
-      ka_parse = kb_parse;
-      kb_parse = input_string.find(",", ka_parse + 1);
-   }
-
-   if (ka_parse == kb_parse)
-   {
-      std::cout << __FILE__ << ":" << __LINE__ << ":"
-                << "Invalid index" << std::endl;
-      return "-1";
-   }
-
-   if (index == 0)
-   {
-      return input_string.substr(ka_parse, kb_parse - ka_parse);
-   }
-   else
-   {
-      return input_string.substr(ka_parse + 1, kb_parse - ka_parse - 1);
-   }
-
-}
-
-/*
- * Function NAME: count_delimits
- */
-static unsigned int count_delimits (
-                  std::string input_string,
-                  const char delimiter)
-{
-   unsigned int count = 0;
-   for (unsigned int k = 0; k < input_string.length(); k++)
-   {
-//std::cout << input_string[k] << std::endl;
-      if (input_string[k] == delimiter) count++;
-   }
-
-   return count;
-}
+#include "string_utils.h"
 
 namespace fio {
 
@@ -103,8 +37,6 @@ int kinIO::count_kinetisense_lines(
 
    return N_lines;
 }
-
-/**********************************************************************/
 
 /*
  * Function NAME: read_kinetisense
@@ -233,8 +165,6 @@ float **kinIO::read_kinetisense(
 
    return data;
 }
-
-/**********************************************************************/
 
 /*
  * Function NAME: read_kinetisense

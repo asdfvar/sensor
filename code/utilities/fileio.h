@@ -5,6 +5,10 @@
 #include <fstream>
 
 namespace fio {
+
+ /*
+ ** class NAME: kinIO
+ */
  class kinIO {
 
    public:
