@@ -4,7 +4,7 @@ INSTRUCTIONS:
 
    SETUP:
 
-To setup fftw, go to the respective library of files in ./libs/fftw-3.3.4/ and run the following commands as root:
+To setup fftw, go to the respective library of files in ./libs/fftw-3.3.4/ of the parent directory of this folder and run the following commands as root:
 
 ./configure --enable-float
 make
