@@ -373,7 +373,7 @@ namespace fio {
     do {
 
        std::getline (input, line);
-
+       line          = parse_string (line, "#", 0);
        inp_parameter = parse_string (line, "=", 0);
        inp_parameter = trim( inp_parameter );
 
@@ -416,6 +416,7 @@ namespace fio {
     do {
 
        std::getline (input, line);
+       line          = parse_string (line, "#", 0);
        inp_parameter = parse_string (line, "=", 0);
        inp_parameter = trim( inp_parameter );
 
@@ -458,6 +459,7 @@ namespace fio {
     do {
 
        std::getline (input, line);
+       line          = parse_string (line, "#", 0);
        inp_parameter = parse_string (line, "=", 0);
        inp_parameter = trim( inp_parameter );
 
@@ -500,6 +502,7 @@ namespace fio {
     do {
 
        std::getline (input, line);
+       line          = parse_string (line, "#", 0);
        inp_parameter = parse_string (line, "=", 0);
        inp_parameter = trim( inp_parameter );
 

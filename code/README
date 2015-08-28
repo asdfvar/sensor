@@ -18,9 +18,10 @@ After the setup step is done, to build, navigate to the ./code path and run the 
 
       TRAINING:
 
-Training is performed on data that has been generated from the Kinetisense sensor. Ensure that the *.kin files are transformed into the *.csv file format to be injested by the training program prior to training. This can be done with the Kinetisense software that comes with the sensor.
+Training is performed on data that has been generated from the Kinetisense sensor. Ensure that the *.kin files are transformed into the *.csv file format to be injested by the training executable prior to training. This can be done with the Kinetisense software that comes with the sensor.
 
-To start training, an input file must be provided.
+To start training, an input file must be provided. The parameters for the input into the sensor executable look like this:
+
 
 sensor      = <sensor number (1,2, or 3) Kinetisense specific>
 samp_freq   = <sampling frequency (Hz)>
@@ -44,6 +45,8 @@ age         = <age in years>
 weight      = <weight in Kg>
 height      = <height in cm>
 data_path   = <path to the data file to train on>
+
+The input files can optionally have comment lines that are precedded with a '#'.
 
 An additional file is needed to identify which references to load that are generated from the training program. Its file contents are:
 
