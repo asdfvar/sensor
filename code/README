@@ -20,29 +20,30 @@ After the setup step is done, to build, navigate to the ./code path and run the 
 
 Training is performed on data that has been generated from the Kinetisense sensor. Ensure that the *.kin files are transformed into the *.csv file format to be injested by the training program prior to training. This can be done with the Kinetisense software that comes with the sensor.
 
-To start training, an input file must be provided. Because the code is not yet robust enough to handle additional spaces and extra lines, the input file contents must not have empty lines or spaces:
+To start training, an input file must be provided.
 
-samp_freq=<sampling frequency (Hz)>
-time_window=<interval of time to match the signal (seconds)>
-ref_time=<Interval of time that makes up the reference signal (seconds)>
-data_path=<path to the data file to train on>
-activity_ID=<an integer number that corresponds with the activity found in the compendium of physical activities>
-ref_path=<output path to store the resulting reference data>
+sensor      = <sensor number (1,2, or 3) Kinetisense specific>
+samp_freq   = <sampling frequency (Hz)>
+time_window = <interval of time to match the signal (seconds)>
+ref_time    = <Interval of time that makes up the reference signal (seconds)>
+data_path   = <path to the data file to train on>
+activity_ID = <an integer number that corresponds with the activity found in the compendium of physical activities>
+ref_path    = <output path to store the resulting reference data>
 
 to train, run the command ./train <input filename>
 
 After training, the code can then use the reference file that was produced to analyze another data set to produce correlations, energy expenditure, etc. The parameters for the input into the sensor executable look like this:
 
-sensor=<sensor number (1,2, or 3) Kinetisense specific>
-tag=<tag name to be appended to the output files>
-samp_freq=<sampling frequency (Hz)>
-time_window=<interval of time to match the signal (seconds)>
-threshold=<number between 0 and 1 to determine the cutoff correlation to classify an activity>
-sex=<M or F>
-age=<age in years>
-weight=<weight in Kg>
-height=<height in cm>
-data_path=<path to the data file to train on>
+sensor      = <sensor number (1,2, or 3) Kinetisense specific>
+tag         = <tag name to be appended to the output files>
+samp_freq   = <sampling frequency (Hz)>
+time_window = <interval of time to match the signal (seconds)>
+threshold   = <number between 0 and 1 to determine the cutoff correlation to classify an activity>
+sex         = <M or F>
+age         = <age in years>
+weight      = <weight in Kg>
+height      = <height in cm>
+data_path   = <path to the data file to train on>
 
 An additional file is needed to identify which references to load that are generated from the training program. Its file contents are:
 

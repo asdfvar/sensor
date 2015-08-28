@@ -1,5 +1,6 @@
 #include "fileio.h"
 #include "energy_expenditure.h"
+#include "string_utils.h"
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -355,32 +356,41 @@ namespace fio {
 /******************************************************************/
 
  /*
-  * Function NAME: get_parameters_f
+  * Function NAME: get_parameter_f
   */
  float parameters::get_parameter_f (std::string parameter)
  {
+
+    parameter = trim( parameter );
 
     input.clear();
     input.seekg(0);
 
     std::string line;
     std::string inp_parameter;
-    std::string delimiter = "=";
     std::string value;
-    int delimiter_pos;
 
     do {
+
        std::getline (input, line);
-       delimiter_pos = line.find(delimiter);
-       inp_parameter = line.substr(0, delimiter_pos);
+
+       inp_parameter = parse_string (line, "=", 0);
+       inp_parameter = trim( inp_parameter );
+
     } while (parameter != inp_parameter && !input.eof());
 
-    if (input.eof()) {
+
+    if (input.eof())
+    {
        std::cout << parameter << " not found" << std::endl;
        return -1.0;
+
     } else {
-       value = line.substr(delimiter_pos+1, line.length());
+
+       value = parse_string (line, "=", 1);
+       value = trim (value);
        return atof(value.c_str());
+
     }
 
     return -1.0;
@@ -394,27 +404,35 @@ namespace fio {
  int parameters::get_parameter_i (std::string parameter)
  {
 
+    parameter = trim( parameter );
+
     input.clear();
     input.seekg(0, input.beg);
 
     std::string line;
     std::string inp_parameter;
-    std::string delimiter = "=";
     std::string value;
-    int delimiter_pos;
 
     do {
+
        std::getline (input, line);
-       delimiter_pos = line.find(delimiter);
-       inp_parameter = line.substr(0, delimiter_pos);
+       inp_parameter = parse_string (line, "=", 0);
+       inp_parameter = trim( inp_parameter );
+
     } while (parameter != inp_parameter && !input.eof());
 
-    if (input.eof()) {
+    if (input.eof())
+    {
+
        std::cout << parameter << " not found" << std::endl;
        return -1;
+
     } else {
-       value = line.substr(delimiter_pos+1, line.length());
-       return atof(value.c_str());
+
+       value = parse_string (line, "=", 1);
+       value = trim (value);
+       return atoi(value.c_str());
+
     }
 
     return -1;
@@ -428,27 +446,35 @@ namespace fio {
  std::string parameters::get_parameter_s (std::string parameter)
  {
 
+    parameter = trim( parameter );
+
     input.clear();
     input.seekg(0, input.beg);
 
     std::string line;
     std::string inp_parameter;
-    std::string delimiter = "=";
     std::string value;
-    int delimiter_pos;
 
     do {
+
        std::getline (input, line);
-       delimiter_pos = line.find(delimiter);
-       inp_parameter = line.substr(0, delimiter_pos);
+       inp_parameter = parse_string (line, "=", 0);
+       inp_parameter = trim( inp_parameter );
+
     } while (parameter != inp_parameter && !input.eof());
 
-    if (input.eof()) {
+    if (input.eof())
+    {
+
        std::cout << parameter << " not found" << std::endl;
        return "-1";
+
     } else {
-       value = line.substr(delimiter_pos+1, line.length());
+
+       value = parse_string (line, "=", 1);
+       value = trim (value);
        return value;
+
     }
 
     return "-1";
@@ -462,34 +488,48 @@ namespace fio {
  int parameters::get_parameter_sex (std::string parameter)
  {
 
+    parameter = trim( parameter );
+
     input.clear();
     input.seekg(0, input.beg);
 
     std::string line;
     std::string inp_parameter;
-    std::string delimiter = "=";
     std::string value;
-    int delimiter_pos;
 
     do {
+
        std::getline (input, line);
-       delimiter_pos = line.find(delimiter);
-       inp_parameter = line.substr(0, delimiter_pos);
+       inp_parameter = parse_string (line, "=", 0);
+       inp_parameter = trim( inp_parameter );
+
     } while (parameter != inp_parameter && !input.eof());
 
-    if (input.eof()) {
+    if (input.eof())
+    {
+
        std::cout << parameter << " not found" << std::endl;
        return -1;
+
     } else {
-       value = line.substr(delimiter_pos+1, line.length());
+
+       value = parse_string (line, "=", 1);
+       value = trim (value);
+
        if (value == "M")
+       {
           return MALE;
+       }
        else if (value == "F")
+       {
           return FEMALE;
-       else {
+       }
+       else
+       {
           std::cout << "Sex not specified" << std::endl;
           return -1;
        }
+
     }
 
     return -1;

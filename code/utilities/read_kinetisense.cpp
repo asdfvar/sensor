@@ -103,7 +103,7 @@ float **kinIO::read_kinetisense(
 
    for (unsigned int index = 0; index < num_params; index++)
    {
-      parameter = parse_string ( header, index );
+      parameter = parse_string ( header, ",", index );
 
       parameter = trim( parameter );
 
@@ -155,7 +155,7 @@ float **kinIO::read_kinetisense(
       std::getline (kin_data, line);
 
       for (unsigned int index = 0; index < num_params; index++) {
-         data_string    = parse_string ( line, index );
+         data_string    = parse_string ( line, ",", index );
          data[index][k] = atof(data_string.c_str());
       }
 

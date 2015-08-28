@@ -53,6 +53,7 @@ int main(int argc, char *argv[]) {
    float total_energy = 0.0f;
    int   select_sensor;
    matchedfilter *MF;
+
    MEMORY mem_buffer(6 * (N_window + 2));
 
    /* Setup Kinetisense data */

@@ -5,6 +5,7 @@
  */
 std::string parse_string (
                   std::string input_string,
+                  std::string delimiter,
                   unsigned int index)
 {
    unsigned int ka_parse = 0;
@@ -13,13 +14,11 @@ std::string parse_string (
    for (unsigned int k = 0; k <= index; k++)
    {
       ka_parse = kb_parse;
-      kb_parse = input_string.find(",", ka_parse + 1);
+      kb_parse = input_string.find( delimiter, ka_parse + 1);
    }
 
    if (ka_parse == kb_parse)
    {
-      std::cout << __FILE__ << ":" << __LINE__ << ":"
-                << "Invalid index" << std::endl;
       return "-1";
    }
 
@@ -41,6 +40,8 @@ std::string trim ( std::string input_string)
 {
    unsigned int start, end;
 
+   if (input_string.length() == 0) return "";
+
    for (start = 0;
            start < input_string.length() && (input_string[start] == '\n' || input_string[start] == ' ');
               start++) {}
@@ -50,8 +51,6 @@ std::string trim ( std::string input_string)
    for (end = input_string.length() - 1;
            end > 0 && (input_string[end] == '\n' || input_string[end] == ' ');
               end--) {}
-
-   if (end < 0) end++;
 
    return input_string.substr(start, end - start + 1);
 }
