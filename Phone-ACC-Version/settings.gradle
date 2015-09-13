@@ -1,0 +1,1 @@
+include ':app', ':commons-httpclient-3.1-patched', ':androidplot-core-0.6.1', ':androidplot-core-0.6.1-sources', ':androidplot-core-0.6.1-javadoc', ':achartengine-1.1.0', ':ftp4j-1.7.2'

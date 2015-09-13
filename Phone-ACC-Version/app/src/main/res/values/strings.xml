@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="Request">New Button</string>
+    <string name="Response">Large Text</string>
+    <string name="title_activity_http_response_viewer">http_response_viewer</string>
+    <string name="textViewVal1">MedFit HTTP Test</string>
+    <string name="buttonVal1">Request Data</string>
+    <string name="textViewVal2">HTTP Response</string>
+    <string name="title_activity_http_response_viewer2">http_response_viewer2</string>
+    <string name="title_activity_http_response_viewer3">http_response_viewer3</string>
+    <string name="textViewVal3">Large Text</string>
+    <string name="TextViewVal3">Http Response</string>
+    <string name="TextViewVal4">Http Response</string>
+    <string name="title_activity_dynamic_grapher">DynamicGrapher</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_ftp__upload_">FTP_Upload_Activity</string>
+    <string name="String2">Uploading...</string>
+    <string name="title_activity_train_">Train_Activity</string>
+    <string name="title_activity_sensor_">Sensor_Activity</string>
+    <string name="title_activity_ftp__train">FTP_Train</string>
+    <string name="title_activity_ftp__sensor">FTP_Sensor</string>
+</resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/aprHistoryPlot"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:layout_marginTop="10px"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
+        title="A/P/R History"
+        />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:id="@+id/button8"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="27dp"
+        android:layout_alignParentTop="true"
+        android:onClick="onStartButton"
+        android:layout_toLeftOf="@+id/button9"
+        android:layout_toStartOf="@+id/button9" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        android:id="@+id/button9"
+        android:layout_marginRight="25dp"
+        android:layout_marginEnd="25dp"
+        android:onClick="onStopButton"
+        android:layout_alignBaseline="@+id/button8"
+        android:layout_alignBottom="@+id/button8"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>
