@@ -1,6 +1,7 @@
 # Pre-compiled object files
 *.o
 
+# Specific directories and files
 code/output/
 code/submit/
 data/
