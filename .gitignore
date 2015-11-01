@@ -1,7 +1,10 @@
 # Pre-compiled object files
 *.o
+*.a
 
 # Specific directories and files
 code/output/
 code/submit/
 data/
+code/sensor
+code/train
