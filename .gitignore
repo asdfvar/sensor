@@ -1,0 +1,6 @@
+# Pre-compiled object files
+*.o
+
+code/output/
+code/submit/
+data/
