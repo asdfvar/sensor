@@ -9,7 +9,7 @@ PREPROC = ../preprocessing
 
 INC = -I$(UTILITIES) -I$(PREPROC)
 
-OBJ = matchedfilter.o phase_correlation.o match_filt_training.o run_mf.o
+OBJ = phase_correlation.o run_mf.o
 
 ## BUILD ALL
 

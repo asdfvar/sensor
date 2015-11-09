@@ -5,85 +5,87 @@
  *
  * Note that sig_1,2[i] is a vector which means sig_1,2 is an array of vectors
  */
-#include "matchedfilter.h"
-#include "memory_management.h"
 #include "phase_correlation.h"
-#include <iostream>
-#include <cmath>
+#include <math.h>
 
 /*
  * Function NAME: run_mf
  */
-void run_mf (matchedfilter *MF,
-             float         *primary_acceleration,
-             float         *secondary_acceleration,
-             float          dt,
-             float          samp_freq,
-             int            N_data,
-             MEMORY         mem_buffer)
+float run_mf ( float *primary_acceleration,
+               float *secondary_acceleration,
+               float  dt,
+               float  time_window,
+               float  ref_time_window,
+               float  samp_freq,
+               float  norm_ref_ax,
+               float  norm_ref_ay,
+               float *work_buffer)
 {
 
-   int   N_window                   = MF->get_N_window();
-   int   N_data_reference           = N_data - N_window + 1;
-   float ref_norm_primary_squared   = MF->get_norm_ax() * MF->get_norm_ax();
-   float ref_norm_secondary_squared = MF->get_norm_ay() * MF->get_norm_ay();
+   int   N_time_window              = (int)(time_window * samp_freq);
+   int   N_time_window_ref          = (int)(ref_time_window * samp_freq);
+   float ref_norm_primary_squared   = norm_ref_ax * norm_ref_ax;
+   float ref_norm_secondary_squared = norm_ref_ay * norm_ref_ay;
 
-   float *norm_primary_squared        = mem_buffer.allocate_float( N_data           );
-   float *cross_correlation_primary   = mem_buffer.allocate_float( N_data + 2       );
-   float *norm_secondary_squared      = mem_buffer.allocate_float( N_data           );
-   float *cross_correlation_secondary = mem_buffer.allocate_float( N_data + 2       );
-   float *cross_correlation           = mem_buffer.allocate_float( N_data_reference );
-   float *norm_squared                = mem_buffer.allocate_float( N_data_reference );
+   /*
+   ** Resurve memory for local variables
+   */
+   float *norm_primary_squared        = work_buffer;
+   float *cross_correlation_primary   = norm_primary_squared        + N_time_window;
+   float *norm_secondary_squared      = cross_correlation_primary   + N_time_window + 2;
+   float *cross_correlation_secondary = norm_secondary_squared      + N_time_window;
+   float *cross_correlation           = cross_correlation_secondary + N_time_window + 2;
+   float *norm_squared                = cross_correlation           + N_time_window;
 
    // norm_primary_squared[i] = primary_acc[i] \dot primary_acc[i]
-   phase::norm_squared (primary_acceleration,
-                        norm_primary_squared,
-                        N_window,
-                        N_data);
+   norm_squared_f (primary_acceleration,
+                 norm_primary_squared,
+                 N_time_window,
+                 N_time_window);
 
-   phase::norm_squared (secondary_acceleration,
-                        norm_secondary_squared,
-                        N_window,
-                        N_data);
+   norm_squared_f (secondary_acceleration,
+                 norm_secondary_squared,
+                 N_time_window,
+                 N_time_window);
 
-   for (int k = 0; k < N_data_reference; k++)
+   for (int k = 0; k < N_time_window_ref; k++)
    {
       norm_squared[k] = norm_primary_squared[k] + norm_secondary_squared[k];
    }
 
    float ref_norm_squared = ref_norm_primary_squared + ref_norm_secondary_squared;
 
-   for (int k = 0; k < N_data_reference; k++)
+   for (int k = 0; k < N_time_window_ref; k++)
    {
       norm_squared[k] *= ref_norm_squared;
    }
 
-   phase::phase_correlation (MF->access_ax(),
-                             primary_acceleration,
-                             cross_correlation_primary,
-                             N_data);
+   phase_correlation (MF->access_ax(),
+                      primary_acceleration,
+                      cross_correlation_primary,
+                      N_time_window);
 
 
 
-   phase::phase_correlation (MF->access_ay(),
-                             secondary_acceleration,
-                             cross_correlation_secondary,
-                             N_data);
+   phase_correlation (MF->access_ay(),
+                      secondary_acceleration,
+                      cross_correlation_secondary,
+                      N_time_window);
 
 
 
-   for (int k = 0; k < N_data_reference; k++)
+   for (int k = 0; k < N_time_window_ref; k++)
    {
       cross_correlation[k] = cross_correlation_primary[k] +
                              cross_correlation_secondary[k];
    }
 
-   for (int k = 0; k < N_data_reference; k++)
+   for (int k = 0; k < N_time_window_ref; k++)
    {
       cross_correlation[k] *= cross_correlation[k];
    }
 
-   for (int k = 0; k < N_data_reference; k++)
+   for (int k = 0; k < N_time_window_ref; k++)
    {
       cross_correlation[k] /= norm_squared[k];
    }
@@ -91,7 +93,7 @@ void run_mf (matchedfilter *MF,
    float max       = cross_correlation[0];
 
 
-   for (int index = 1; index < N_data_reference; index++)
+   for (int index = 1; index < N_time_window_ref; index++)
    {
       if (cross_correlation[index] > max)
       {
@@ -104,7 +106,5 @@ void run_mf (matchedfilter *MF,
 
    float correlation = sqrtf( max );
 
-   MF->set_correlation ( correlation );
-
-   return;
+   return correlation;
 }

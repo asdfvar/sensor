@@ -9,12 +9,10 @@
 #include "phase_correlation.h"
 #include <math.h>
 
-namespace phase
-{
 /*
  * Function NAME: norm_squared
  */
- void norm_squared (
+ void norm_squared_f (
              float *__restrict__ signal,
              float *__restrict__ norm,
              int   N_window,
@@ -73,5 +71,3 @@ namespace phase
  
     return;
  }
-
-}
