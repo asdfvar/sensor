@@ -20,5 +20,17 @@ void sensor_main(
  /*[ O]*/ int        *activity,          /* Determined activity                       */
  /*[ O]*/ float      *workspace)         /* pre-allocated buffer space. Size = TBD    */
 {
+
+   /*
+   ** PRE-PROCESSING
+   */
+   preproc (
+        ax,            /* Acceleration data in x               */
+        ay,            /* Acceleration data in y               */
+        az,            /* Acceleration data in z               */
+        &power,        /* Resulting power of the signal        */
+        &PARAMETERS,   /* Sampling frequency of the data       */
+        N_window);     /* Number of sample points              */
+
    return;
 }
