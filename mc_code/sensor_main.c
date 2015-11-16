@@ -1,4 +1,5 @@
 #include "sensor.h"
+#include "preproc.h"
 
 void sensor_main(
  /*[I ]*/ const float sampling_freq,     /* Sampling frequency                        */
@@ -18,8 +19,13 @@ void sensor_main(
  /*[ O]*/ float      *correlations,      /* Correlations for each of the references   */
  /*[ O]*/ float      *power,             /* Signal power                              */
  /*[ O]*/ int        *activity,          /* Determined activity                       */
- /*[ O]*/ float      *workspace)         /* pre-allocated buffer space. Size = TBD    */
+ /*[  ]*/ void       *workspace)         /* pre-allocated buffer space. Size = TBD    */
 {
+
+   float *workspace_float = (float*)workspace;
+
+   float dt = 1.0f / sampling_freq;
+   const int   N_window = (int)(sampling_freq * data_time_length);
 
    /*
    ** PRE-PROCESSING
@@ -28,8 +34,9 @@ void sensor_main(
         ax,            /* Acceleration data in x               */
         ay,            /* Acceleration data in y               */
         az,            /* Acceleration data in z               */
-        &power,        /* Resulting power of the signal        */
-        &PARAMETERS,   /* Sampling frequency of the data       */
+        power,         /* Resulting power of the signal        */
+        dt,
+        data_time_length,
         N_window);     /* Number of sample points              */
 
    return;

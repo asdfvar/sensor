@@ -1,5 +1,5 @@
-CPPC = g++
-CL = ar rcs
+CC  = gcc
+CL    = ar rcs
 FLAGS = -O3 -Wall
 
 LIBEXE = libpreproc.a
@@ -17,7 +17,7 @@ clean:
 	rm $(OBJ) $(LIBEXE)
 
 preproc.o: preproc.c
-	$(CPPC) $^ -c $(INC) $(FLAGS)
+	$(CC) $^ -c $(INC) $(FLAGS)
 
 eigen.o: eigen.c
-	$(CPPC) $^ -c $(INC)
+	$(CC) $^ -c $(INC)

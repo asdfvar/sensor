@@ -19,6 +19,6 @@ void sensor_main(
  /*[ O]*/ float      *correlations,      /* Correlations for each of the references   */
  /*[ O]*/ float      *power,             /* Signal power                              */
  /*[ O]*/ int        *activity,          /* Determined activity                       */
- /*[ O]*/ float      *workspace);        /* pre-allocated buffer space. Size = TBD    */
+ /*[ O]*/ void      *workspace);        /* pre-allocated buffer space. Size = TBD    */
 
 #endif

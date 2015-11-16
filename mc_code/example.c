@@ -35,7 +35,7 @@ int main()
    int num_ref_points = (int)((ref_time_length[0] + ref_time_length[1]) * num_references);
 
    float *references = malloc( num_ref_points * sizeof(*references) );
-   float *workspace = malloc( 10 * data_num_elements * sizeof(*workspace) );
+   void *workspace = malloc( 10 * data_num_elements * sizeof(float) );
 
    sensor_main (
        sampling_freq,     /* Sampling frequency                        */

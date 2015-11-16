@@ -43,14 +43,15 @@ static void matrix_mult_transpose(float       *__restrict__ C,
 {
 
    float tmp[3];
+   int i,j,k;
 
-   for (int i = 0; i < N; i++) {
-      for (int j = 0; j < N; j++) {
+   for (i = 0; i < N; i++) {
+      for (j = 0; j < N; j++) {
          tmp[j] = 0.0;
-         for (int k = 0; k < N; k++)
+         for (k = 0; k < N; k++)
             tmp[j] += A[i*N + k]*Bt[j*N + k];
       }
-      for (int j = 0; j < N; j++) C[i*N + j] = tmp[j];
+      for (j = 0; j < N; j++) C[i*N + j] = tmp[j];
    }
 
 }
@@ -78,10 +79,12 @@ static void transpose_matrix_mult_transpose(float       *__restrict__ Ct,
                                             const int N)
 {
 
-   for (int i = 0; i < N; i++) {
-      for (int j = 0; j < N; j++) {
+   int i,j,k;
+
+   for (i = 0; i < N; i++) {
+      for (j = 0; j < N; j++) {
          Ct[j*N + i] = 0.0;
-         for (int k = 0; k < N; k++)
+         for (k = 0; k < N; k++)
             Ct[j*N + i] += A[i*N + k]*Bt[j*N + k];
       }
    }
@@ -115,7 +118,7 @@ static void transpose_matrix_mult_transpose(float       *__restrict__ Ct,
  * of iterations.
  */
 
-int eigen(const float mat[3][3],
+int eigen(float mat[3][3],
           float *__restrict__ eigVl,
           float *__restrict__ eigVec)
 {

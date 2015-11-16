@@ -6,6 +6,6 @@
 
 #define ABS(A) ((A) > 0) ? (A) : -(A)
 
-int eigen(const float mat[3][3], float *eigVl, float *eigVec);
+int eigen(float mat[3][3], float *eigVl, float *eigVec);
 
 #endif

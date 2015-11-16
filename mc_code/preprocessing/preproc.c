@@ -1,21 +1,21 @@
 /* This routine pre-processes the data to prepare it for use in the activity
- * classification routine.
- *
- * The x,y,z directions of acceleration are supplied on input. On output,
- * the x,y,z directions will represent the acceleration data that has been
- * rotated so that the primary direction of acceleration is in x, the secondary
- * direction of acceleration is in y, and the third direction is in z. This
- * process will be known as the dimensionality reduction of the data.
- *
- * The dimensionality reduction is acheived by computing the eigenvectors of
- * the covariance matrix of the data. Because this matrix is a real-symmetric
- * matrix, its eigenvectors are real and orthogonal to each other. The data
- * is then projected onto these vectors to form a new basis to represent the data.
- * This new set of basis vectors happen to lie in the directions where the
- * variance in the data is the greatest. Because the direction of motion falls
- * primarily within a 2-D plan, the third dimension can be disregarded for
- * further processing.
- */
+** classification routine.
+**
+** The x,y,z directions of acceleration are supplied on input. On output,
+** the x,y,z directions will represent the acceleration data that has been
+** rotated so that the primary direction of acceleration is in x, the secondary
+** direction of acceleration is in y, and the third direction is in z. This
+** process will be known as the dimensionality reduction of the data.
+**
+** The dimensionality reduction is acheived by computing the eigenvectors of
+** the covariance matrix of the data. Because this matrix is a real-symmetric
+** matrix, its eigenvectors are real and orthogonal to each other. The data
+** is then projected onto these vectors to form a new basis to represent the data.
+** This new set of basis vectors happen to lie in the directions where the
+** variance in the data is the greatest. Because the direction of motion falls
+** primarily within a 2-D plan, the third dimension can be disregarded for
+** further processing.
+**/
 
 #include "eigen.h"
 
