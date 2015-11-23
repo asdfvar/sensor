@@ -31,6 +31,8 @@ void sensor_main(
 
    float *workspace_float = (float*)workspace;
 
+   float *current_reference_x = references_x;
+   float *current_reference_y = references_y;
    float *ref_buffer_x    = workspace_float; workspace_float += N_window + 2;
    float *ref_buffer_y    = workspace_float; workspace_float += N_window + 2;
 
@@ -51,13 +53,17 @@ void sensor_main(
    for (k = 0; k < num_references; k++)
    {
 
+      int   N_window_ref = (int)(sampling_freq * ref_time_length[k]);
+
       for (p = 0; p < N_window; p++) ref_buffer_x[p] = 0.0f;
       for (p = 0; p < N_window; p++) ref_buffer_y[p] = 0.0f;
+
+      for (p = 0; p < N_window_ref; p++) ref_buffer_x[p] = current_reference_x[p];
+      for (p = 0; p < N_window_ref; p++) ref_buffer_x[p] = current_reference_y[p];
       
       /*
       ** MATCHED-FILTER
       */
-#if 1
       float correlation =
                      run_mf(
                         ax,
@@ -66,10 +72,12 @@ void sensor_main(
                         ref_buffer_y,
                         dt,
                         data_time_length,
-                       *ref_time_length,
+                        ref_time_length[k],
                         sampling_freq,
                         workspace_float);
-#endif
+
+      current_reference_x += N_window_ref;
+      current_reference_y += N_window_ref;
 
    }
 
