@@ -18,21 +18,22 @@
              int   N_window,
              int   N_data)
  {
+    int k;
     int N_data_reference = N_data - N_window;
 
-    for (int k = 0; k < N_data; k++)
+    for (k = 0; k < N_data; k++)
     {
        norm[k] = signal[k] * signal[k];
     }
  
     float tmp = 0.0f;
-    for (int k = 0; k < N_window; k++)
+    for (k = 0; k < N_window; k++)
     {
        tmp += norm[k];
     }
  
     float tmp2;
-    for (int k = 0; k < N_data_reference; k++)
+    for (k = 0; k < N_data_reference; k++)
     {
        tmp2     = norm[k];
        norm[k]  = tmp;
@@ -54,16 +55,17 @@
  
     float tmp;
     int k;
+
+    for (k = 0; k < N_data; k++) cross_correlation[k] = signal[k];
  
-    // FFT
-    fft(signal, N_data);
+    fft(cross_correlation, N_data);
+    fft(ref, N_data);
  
-    /* Conjugate multiply the reference (conjugate)
-       to the signal and overwrite the signal */
+    /* Conjugate multiply the reference (conjugate) */
  
     for (k = 0; k < N_data+2; k+=2) {
-       tmp = ref[k]*signal[k] + ref[k+1]*signal[k+1];
-       cross_correlation[k+1] = ref[k]*signal[k+1] - ref[k+1]*signal[k];
+       tmp = ref[k]*cross_correlation[k] + ref[k+1]*cross_correlation[k+1];
+       cross_correlation[k+1] = ref[k]*cross_correlation[k+1] - ref[k+1]*cross_correlation[k];
        cross_correlation[k] = tmp;
     }
  

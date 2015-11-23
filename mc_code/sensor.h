@@ -14,11 +14,12 @@ void sensor_main(
  /*[I ]*/ float      *ref_time_length,   /* Time lengths for the references           */
  /*[I ]*/ const int  *reference_act_ids, /* Activity IDs for the references           */
  /*[I ]*/ const int   num_references,    /* Number of references                      */
- /*[I ]*/ float      *references,        /* References                                */
+ /*[I ]*/ float      *references_x,      /* Array of references in x                  */
+ /*[I ]*/ float      *references_y,      /* Array of references in y                  */
  /*[ O]*/ float      *energy,            /* Energy                                    */
  /*[ O]*/ float      *correlations,      /* Correlations for each of the references   */
  /*[ O]*/ float      *power,             /* Signal power                              */
  /*[ O]*/ int        *activity,          /* Determined activity                       */
- /*[ O]*/ void      *workspace);        /* pre-allocated buffer space. Size = TBD    */
+ /*[ O]*/ void       *workspace);        /* pre-allocated buffer space. Size = TBD    */
 
 #endif

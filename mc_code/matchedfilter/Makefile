@@ -1,4 +1,4 @@
-CPPC = g++
+CC = gcc
 CL = ar rcs
 FLAGS = -O3 -Wall
 
@@ -24,13 +24,13 @@ clean:
 ## Create Objects
 
 matchedfilter.o: matchedfilter.c
-	$(CPPC) $^ -c -std=c++0x $(INC) $(FLAGS)
+	$(CC) $^ -c $(INC) $(FLAGS)
 
 run_mf.o: run_mf.c
-	$(CPPC) $^ -c $(INC) $(FLAGS)
+	$(CC) $^ -c $(INC) $(FLAGS)
 
 phase_correlation.o: phase_correlation.c
-	$(CPPC) $^ -c $(INC) $(FLAGS)
+	$(CC) $^ -c $(INC) $(FLAGS)
 
 match_filt_training.o: match_filt_training.c
-	$(CPPC) $^ -c $(INC) $(FLAGS)
+	$(CC) $^ -c $(INC) $(FLAGS)

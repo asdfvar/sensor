@@ -34,7 +34,8 @@ int main()
 
    int num_ref_points = (int)((ref_time_length[0] + ref_time_length[1]) * num_references);
 
-   float *references = malloc( num_ref_points * sizeof(*references) );
+   float *references_x = malloc( num_ref_points * sizeof(*references_x) );
+   float *references_y = malloc( num_ref_points * sizeof(*references_y) );
    void *workspace = malloc( 10 * data_num_elements * sizeof(float) );
 
    sensor_main (
@@ -50,7 +51,8 @@ int main()
        ref_time_length,   /* Time lengths for the references           */
        reference_act_ids, /* Activity IDs for the references           */
        num_references,    /* Number of references                      */
-       references,        /* References                                */
+       references_x,      /* References                                */
+       references_y,      /* References                                */
       &energy,            /* Energy                                    */
        correlations,      /* Correlations for each of the references   */
       &power,             /* Signal power                              */

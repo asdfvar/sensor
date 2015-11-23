@@ -1,5 +1,6 @@
 #include "sensor.h"
 #include "preproc.h"
+#include "run_mf.h"
 
 void sensor_main(
  /*[I ]*/ const float sampling_freq,     /* Sampling frequency                        */
@@ -14,18 +15,24 @@ void sensor_main(
  /*[I ]*/ float      *ref_time_length,   /* Time lengths for the references           */
  /*[I ]*/ const int  *reference_act_ids, /* Activity IDs for the references           */
  /*[I ]*/ const int   num_references,    /* Number of references                      */
- /*[I ]*/ float      *references,        /* References                                */
+ /*[I ]*/ float      *references_x,      /* References                                */
+ /*[I ]*/ float      *references_y,      /* References                                */
  /*[ O]*/ float      *energy,            /* Energy                                    */
  /*[ O]*/ float      *correlations,      /* Correlations for each of the references   */
  /*[ O]*/ float      *power,             /* Signal power                              */
  /*[ O]*/ int        *activity,          /* Determined activity                       */
- /*[  ]*/ void       *workspace)         /* pre-allocated buffer space. Size = TBD    */
+ /*[**]*/ void       *workspace)         /* pre-allocated buffer space. Size = TBD    */
 {
 
-   float *workspace_float = (float*)workspace;
+   int k, p;
 
    float dt = 1.0f / sampling_freq;
    const int   N_window = (int)(sampling_freq * data_time_length);
+
+   float *workspace_float = (float*)workspace;
+
+   float *ref_buffer_x    = workspace_float; workspace_float += N_window + 2;
+   float *ref_buffer_y    = workspace_float; workspace_float += N_window + 2;
 
    /*
    ** PRE-PROCESSING
@@ -38,6 +45,33 @@ void sensor_main(
         dt,
         data_time_length,
         N_window);     /* Number of sample points              */
+
+   float max_correlation = -1.0f;
+
+   for (k = 0; k < num_references; k++)
+   {
+
+      for (p = 0; p < N_window; p++) ref_buffer_x[p] = 0.0f;
+      for (p = 0; p < N_window; p++) ref_buffer_y[p] = 0.0f;
+      
+      /*
+      ** MATCHED-FILTER
+      */
+#if 1
+      float correlation =
+                     run_mf(
+                        ax,
+                        ay,
+                        ref_buffer_x,
+                        ref_buffer_y,
+                        dt,
+                        data_time_length,
+                       *ref_time_length,
+                        sampling_freq,
+                        workspace_float);
+#endif
+
+   }
 
    return;
 }
