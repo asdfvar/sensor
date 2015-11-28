@@ -31,6 +31,7 @@ int main()
    float ref_time_length[2] = {1.5f, 1.2f}; // seconds
    const int reference_act_ids[2] = {17190, 1015}; // {waking, bicycling}
    const int num_references = 2;
+   float time_inc  = 1.5; // seconds
 
    int num_ref_points = (int)((ref_time_length[0] + ref_time_length[1]) * num_references);
 
@@ -40,7 +41,8 @@ int main()
 
    sensor_main (
        sampling_freq,     /* Sampling frequency                        */
-       data_time_length,  /* data time length in seconds               */
+       data_time_length,  /* Data time length in seconds               */
+       time_inc,          /* Time increment for next energy calculation*/
        ax,                /* Acceleration data in x                    */
        ay,                /* Acceleration data in x                    */
        az,                /* Acceleration data in x                    */

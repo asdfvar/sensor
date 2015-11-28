@@ -5,6 +5,7 @@
 void sensor_main(
  /*[I ]*/ const float sampling_freq,     /* Sampling frequency                        */
  /*[I ]*/ const float data_time_length,  /* data time length in seconds               */
+ /*[I ]*/ const float time_inc,          /* Time increment for next energy calculation*/
  /*[I ]*/ float      *ax,                /* Acceleration data in x                    */
  /*[I ]*/ float      *ay,                /* Acceleration data in x                    */
  /*[I ]*/ float      *az,                /* Acceleration data in x                    */
@@ -48,7 +49,8 @@ void sensor_main(
         data_time_length,
         N_window);     /* Number of sample points              */
 
-   float max_correlation = -1.0f;
+   float best_correlation = -1.0f;
+   int   best_activity    =  0;
 
    for (k = 0; k < num_references; k++)
    {
@@ -79,7 +81,22 @@ void sensor_main(
       current_reference_x += N_window_ref;
       current_reference_y += N_window_ref;
 
+      if (correlation > best_correlation)
+      {
+         best_correlation = correlation;
+         best_activity = activity[k];
+      }
    }
+
+   float energy_rate = energy_expenditure(
+                         weight,
+                         height,
+                         age,
+                         sex,
+                         best_activity,
+                        *power);
+
+   *energy = energy_rate * time_inc;
 
    return;
 }

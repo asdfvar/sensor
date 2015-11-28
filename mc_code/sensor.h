@@ -3,7 +3,8 @@
 
 void sensor_main(
  /*[I ]*/ const float sampling_freq,     /* Sampling frequency                        */
- /*[I ]*/ const float data_time_length,  /* data time length in seconds               */
+ /*[I ]*/ const float data_time_length,  /* Data time length in seconds               */
+ /*[I ]*/ const float time_inc,          /* Time increment for next energy calculation*/
  /*[I ]*/ float      *ax,                /* Acceleration data in x                    */
  /*[I ]*/ float      *ay,                /* Acceleration data in x                    */
  /*[I ]*/ float      *az,                /* Acceleration data in x                    */
