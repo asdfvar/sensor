@@ -1,5 +1,7 @@
 #include "sensor.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include "unit_test.h"
 
 enum {MALE = 1, FEMALE = 2};
 
@@ -33,11 +35,67 @@ int main()
    const int num_references = 2;
    float time_inc  = 1.5; // seconds
 
-   int num_ref_points = (int)((ref_time_length[0] + ref_time_length[1]) * num_references);
+   int num_ref_points = (int)((ref_time_length[0] + ref_time_length[1]) * sampling_freq);
 
    float *references_x = malloc( num_ref_points * sizeof(*references_x) );
    float *references_y = malloc( num_ref_points * sizeof(*references_y) );
    void *workspace = malloc( 10 * data_num_elements * sizeof(float) );
+
+   sinwave(
+       ax,
+       2*3.14159*4,
+       0.0f,
+       1.0f,
+       data_time_length,
+       sampling_freq);
+
+   sinwave(
+       ay,
+       2*3.14159*4,
+       0.0f,
+       1.0f,
+       data_time_length,
+       sampling_freq);
+
+   sinwave(
+       az,
+       2*3.14159*4,
+       0.0f,
+       0.2f,
+       data_time_length,
+       sampling_freq);
+
+   sinwave(
+       references_x,
+       2*3.14159*4,
+       0.0f,
+       1.0f,
+       ref_time_length[0],
+       sampling_freq);
+
+   sinwave(
+       references_y,
+       2*3.14159*4,
+       0.0f,
+       1.0f,
+       ref_time_length[0],
+       sampling_freq);
+
+   sinwave(
+       references_x + (int)(ref_time_length[0] * sampling_freq),
+       2*3.14159*4.4,
+       0.0f,
+       1.0f,
+       ref_time_length[1],
+       sampling_freq);
+
+   sinwave(
+       references_y + (int)(ref_time_length[0] * sampling_freq),
+       2*3.14159*4.4,
+       0.0f,
+       1.0f,
+       ref_time_length[1],
+       sampling_freq);
 
    sensor_main (
        sampling_freq,     /* Sampling frequency                        */
