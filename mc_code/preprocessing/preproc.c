@@ -85,6 +85,7 @@ void preproc(
 
    eigen(cov_mat, eigVal, &eigVec[0][0]);
 
+printf("eigVal = %f, %f, %f\n", eigVal[0], eigVal[1], eigVal[2]);
    float tmp;
 
    /* Re-order the eigenvalues in descending order along

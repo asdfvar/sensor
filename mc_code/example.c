@@ -3,10 +3,15 @@
 #include <stdlib.h>
 #include "unit_test.h"
 
+#define PI 3.14159265358979323f
+#define TWO_PI 6.283185307179586f
+
 enum {MALE = 1, FEMALE = 2};
 
 int main()
 {
+
+   int k;
 
    /*
    ** Outputs:
@@ -43,7 +48,7 @@ int main()
 
    sinwave(
        ax,
-       2*3.14159*4,
+       TWO_PI*4.0f,
        0.0f,
        1.0f,
        data_time_length,
@@ -51,7 +56,7 @@ int main()
 
    sinwave(
        ay,
-       2*3.14159*4,
+       TWO_PI*4.0f,
        0.0f,
        1.0f,
        data_time_length,
@@ -59,15 +64,17 @@ int main()
 
    sinwave(
        az,
-       2*3.14159*4,
+       TWO_PI*4.0f,
        0.0f,
-       0.2f,
+       0.01f,
        data_time_length,
        sampling_freq);
 
+   for (k = 0; k < (int)(data_time_length * sampling_freq); k++) az[k] = 0.0f;
+
    sinwave(
        references_x,
-       2*3.14159*4,
+       TWO_PI*4.0f,
        0.0f,
        1.0f,
        ref_time_length[0],
@@ -75,7 +82,7 @@ int main()
 
    sinwave(
        references_y,
-       2*3.14159*4,
+       TWO_PI*4.0f,
        0.0f,
        1.0f,
        ref_time_length[0],
@@ -83,7 +90,7 @@ int main()
 
    sinwave(
        references_x + (int)(ref_time_length[0] * sampling_freq),
-       2*3.14159*4.4,
+       TWO_PI*4.4f,
        0.0f,
        1.0f,
        ref_time_length[1],
@@ -91,7 +98,7 @@ int main()
 
    sinwave(
        references_y + (int)(ref_time_length[0] * sampling_freq),
-       2*3.14159*4.4,
+       TWO_PI*4.4f,
        0.0f,
        1.0f,
        ref_time_length[1],

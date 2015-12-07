@@ -1,6 +1,7 @@
 #include "sensor.h"
 #include "preproc.h"
 #include "run_mf.h"
+#include <stdio.h>
 
 void sensor_main(
  /*[I ]*/ const float sampling_freq,     /* Sampling frequency                        */
@@ -80,6 +81,8 @@ void sensor_main(
 
       current_reference_x += N_window_ref;
       current_reference_y += N_window_ref;
+
+printf("correlation = %f\n", correlation);
 
       if (correlation > best_correlation)
       {
