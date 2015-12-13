@@ -37,6 +37,7 @@ void sensor_main(
    float *current_reference_y = references_y;
    float *ref_buffer_x    = workspace_float; workspace_float += N_window + 2;
    float *ref_buffer_y    = workspace_float; workspace_float += N_window + 2;
+   int    N_data = (int)(data_time_length * sampling_freq);
 
    /*
    ** PRE-PROCESSING
@@ -62,7 +63,7 @@ void sensor_main(
       for (p = 0; p < N_window; p++) ref_buffer_y[p] = 0.0f;
 
       for (p = 0; p < N_window_ref; p++) ref_buffer_x[p] = current_reference_x[p];
-      for (p = 0; p < N_window_ref; p++) ref_buffer_x[p] = current_reference_y[p];
+      for (p = 0; p < N_window_ref; p++) ref_buffer_y[p] = current_reference_y[p];
       
       /*
       ** MATCHED-FILTER
@@ -79,9 +80,6 @@ void sensor_main(
                         sampling_freq,
                         workspace_float);
 
-      current_reference_x += N_window_ref;
-      current_reference_y += N_window_ref;
-
 printf("correlation = %f\n", correlation);
 
       if (correlation > best_correlation)
@@ -89,6 +87,10 @@ printf("correlation = %f\n", correlation);
          best_correlation = correlation;
          best_activity = activity[k];
       }
+
+      current_reference_x += N_window_ref;
+      current_reference_y += N_window_ref;
+
    }
 
    float energy_rate = energy_expenditure(

@@ -7,6 +7,7 @@
  */
 #include "phase_correlation.h"
 #include <math.h>
+#include <stdio.h>
 
 /*
  * Function NAME: run_mf
@@ -103,9 +104,7 @@ float run_mf ( float *primary_acceleration,
    {
       if (cross_correlation[index] > max)
       {
-
          max = cross_correlation[index];
-
       }
    }
 

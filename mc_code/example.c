@@ -48,9 +48,9 @@ int main()
 
    sinwave(
        ax,
-       TWO_PI*4.0f,
-       0.0f,
-       1.0f,
+       TWO_PI*4.0f, // omega
+       0.0f,        // phase
+       1.0f,        // amplitude
        data_time_length,
        sampling_freq);
 
@@ -66,11 +66,9 @@ int main()
        az,
        TWO_PI*4.0f,
        0.0f,
-       0.01f,
+       0.0f,
        data_time_length,
        sampling_freq);
-
-   for (k = 0; k < (int)(data_time_length * sampling_freq); k++) az[k] = 0.0f;
 
    sinwave(
        references_x,
@@ -84,13 +82,13 @@ int main()
        references_y,
        TWO_PI*4.0f,
        0.0f,
-       1.0f,
+       0.0f,
        ref_time_length[0],
        sampling_freq);
 
    sinwave(
        references_x + (int)(ref_time_length[0] * sampling_freq),
-       TWO_PI*4.4f,
+       TWO_PI*4.0f,
        0.0f,
        1.0f,
        ref_time_length[1],
@@ -98,7 +96,7 @@ int main()
 
    sinwave(
        references_y + (int)(ref_time_length[0] * sampling_freq),
-       TWO_PI*4.4f,
+       TWO_PI*4.0f,
        0.0f,
        1.0f,
        ref_time_length[1],
