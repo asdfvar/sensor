@@ -1,11 +1,10 @@
 CC = gcc
-CPPC = g++
 CL = ar rcs
 FLAGS = -O3 -Wall
 
-LIB = libutils.a
+LIB = libfft.a
 
-OBJ = energy_expenditure.o
+OBJ = fft.o dft_r2c.o
 
 all: $(OBJ)
 	$(CL) $(LIB) $(OBJ)
@@ -13,5 +12,8 @@ all: $(OBJ)
 clean:
 	rm $(OBJ) $(LIB)
 
-energy_expenditure.o: energy_expenditure.c
+fft.o: fft.c
+	$(CC) $^ -c $(FLAGS)
+
+dft_r2c.o: dft_r2c.c
 	$(CC) $^ -c $(FLAGS)

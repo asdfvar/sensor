@@ -4,10 +4,12 @@ FLAGS = -O3 -Wall
 
 LIBEXE = libmatflt.a
 
-UTILITIES = ../utilities
-PREPROC = ../preprocessing
+BASE = ..
+UTILITIES = $(BASE)/utilities
+PREPROC = $(BASE)/preprocessing
+FFT = $(BASE)/fft
 
-INC = -I$(UTILITIES) -I$(PREPROC)
+INC = -I$(UTILITIES) -I$(PREPROC) -I$(FFT)
 
 OBJ = phase_correlation.o run_mf.o
 
