@@ -1,5 +1,6 @@
 #include <math.h>
 #include "fft.h"
+#include <stdio.h>
 
 void dft_r2c(float *x,
              float *y,
@@ -9,30 +10,32 @@ void dft_r2c(float *x,
    float *w = workspace;
 
    int i,k;
+   int index;
 
    const float neg_two_pi_N_inv = - TWO_PI / (float)N;
 
    /*
    ** Compute the twiddle factors
    */
-   for (k = 0; k <= N; k+=2)
+   for (k = 0; k <= N; k++)
    {
-      w[k  ] = cosf( neg_two_pi_N_inv * k );
-      w[k+1] = sinf( neg_two_pi_N_inv * k );
+      w[2*k  ] = cosf( neg_two_pi_N_inv * k );
+      w[2*k+1] = sinf( neg_two_pi_N_inv * k );
    }
 
    /*
    **
    */
-   for (k = 0; k <= N/2; k+=2)
+   for (k = 0; k <= N/2; k++)
    {
-      y[k  ] = 0.0f;
-      y[k+1] = 0.0f;
+      y[2*k  ] = 0.0f;
+      y[2*k+1] = 0.0f;
 
-      for (i = 0; i <= N; i+=2)
+      for (i = 0; i < N; i++)
       {
-         y[k  ] += x[i] * w[ (k * i) % N    ];
-         y[k+1] += x[i] * w[ (k * i) % N + 1];
+         index = 2*k*i; index %= 2*N;
+         y[2*k  ] += x[i] * w[ index     ];
+         y[2*k+1] += x[i] * w[ index + 1 ];
       }
    }
 }

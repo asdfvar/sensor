@@ -23,25 +23,13 @@ int main()
    }
    printf("\n");
 
-   printf("produce DFT outputs of:\n");
-
    dft_r2c(x, y, N, workspace);
-
-   for (k = 0; k < N; k++)
-   {
-      printf("%f, ", y[k]);
-   }
-   printf("\n");
-
-   printf("FFTW outputs:\n");
 
    for (k = 0; k < N; k++) z[k] = x[k];
    fft(z, N);
 
-   for (k = 0; k < N; k++)
-   {
-      printf("%f, ", z[k]);
-   }
+   printf("FFTW      | DFT outputs:\n");
+   for (k = 0; k <= N; k++) printf("%f, %f\n", z[k], y[k]);
    printf("\n");
 
    return 0;
