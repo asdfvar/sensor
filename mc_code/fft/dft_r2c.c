@@ -24,7 +24,7 @@ void dft_r2c(float *x,
    }
 
    /*
-   **
+   ** Compute the DFT
    */
    for (k = 0; k <= N/2; k++)
    {

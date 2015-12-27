@@ -11,4 +11,15 @@ void dft_r2c(float *x,
              int N,
              float *workspace);
 
+void fft_l_r2c(float *x,
+               float *y,
+               float *w,
+               int    N,
+               float *workspace);
+
+void fft_front_r2c(float *x,
+                   float *y,
+                   int    N,
+                   float *workspace);
+
 #endif
