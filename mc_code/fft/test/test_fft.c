@@ -1,4 +1,5 @@
 #include "fft.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -11,6 +12,7 @@ int main()
    float *y  = (float*)malloc( (N+2) * sizeof(*x));
    float *y2 = (float*)malloc( (N+2) * sizeof(*x));
    float *z  = (float*)malloc( (N+2) * sizeof(*x));
+   float *w  = (float*)malloc( (N+2) * sizeof(*x));
    float *workspace = (float*)malloc( 1024 * sizeof(float));
 
    srand(0);
@@ -24,7 +26,17 @@ int main()
    }
    printf("\n");
 
-   dft_r2c(x, y, N, workspace);
+   /*
+   ** Compute the twiddle factors
+   */
+   const float neg_two_pi_N_inv = - TWO_PI / (float)N;
+   for (k = 0; k <= N; k++)
+   {
+      w[2*k  ] = cosf( neg_two_pi_N_inv * k );
+      w[2*k+1] = sinf( neg_two_pi_N_inv * k );
+   }
+
+   dft_r2c(x, y, w, N);
 
    fft_front_r2c(x, y2, N, workspace);
 

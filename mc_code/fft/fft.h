@@ -8,8 +8,8 @@ int ifft(float *x, int N);
 
 void dft_r2c(float *x,
              float *y,
-             int N,
-             float *workspace);
+             float *w,
+             int N);
 
 void fft_l_r2c(float *x,
                float *y,

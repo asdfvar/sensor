@@ -14,35 +14,18 @@ printf("input: ");
 for (k = 0; k < N; k++) printf("%f, ", x[k]);
 printf("\n");
 
-   if (N <= 2)
+   if (N <= 2 || N % 2 != 0)
    {
-      y[0] = x[0] + x[1];
-      y[1] = 0.0f;
-      y[2] = x[0] + x[1]*w[2];
-      y[3] = x[1]*w[3];
-      y[4] = x[0] - x[1];
-      y[5] = 0.0f;
+      dft_r2c(x,
+              y,
+              w,
+              N);
 
 printf("output: ");
 for (k = 0; k <= N/2; k++) printf("(%f, %f) ", y[2*k], y[2*k+1]);
 printf("\n");
 
       return;
-   }
-   else if (N == 5)
-   {
-#if 0
-      y[0] = x[0] + x[1] + x[2] + x[3] + x[4];
-      y[1] = 0.0f;
-      y[2] = x[0] + x[1]*w[2] + x[2]*w[4] + x[3]*w[6] + x[4]*w[8];
-      y[3] = x[1]*w[3] + x[2]*w[5] + x[3]*w[7] + x[4]*w[9];
-      y[4] = x[0]
-      y[5]
-      y[6]
-      y[7]
-      y[8]
-      y[9]
-#endif
    }
 
    float *x_even = workspace;
