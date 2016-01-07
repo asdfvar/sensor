@@ -2,18 +2,21 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "gettime.h"
 
-#define N 16
+#define N 512
 
 int main()
 {
 
    float *x  = (float*)malloc( (N+2) * sizeof(*x));
-   float *y  = (float*)malloc( (N+2) * sizeof(*x));
-   float *y2 = (float*)malloc( (N+2) * sizeof(*x));
-   float *z  = (float*)malloc( (N+2) * sizeof(*x));
-   float *w  = (float*)malloc( (N+2) * sizeof(*x));
-   float *workspace = (float*)malloc( 1024 * sizeof(float));
+   float *y  = (float*)malloc( (N+2) * sizeof(*y));
+   float *y2 = (float*)malloc( (N+2) * sizeof(*y2));
+   float *z  = (float*)malloc( (N+2) * sizeof(*z));
+   float *w  = (float*)malloc( (N+2) * sizeof(*w));
+   float *workspace = (float*)malloc( 2048 * sizeof(float));
+
+   float dt;
 
    srand(0);
 
@@ -36,12 +39,24 @@ int main()
       w[2*k+1] = sinf( neg_two_pi_N_inv * k );
    }
 
+   gettime();
    dft_r2c(x, y, w, N);
+   dt = gettime();
+   printf("DFT time = %.16f\n", dt);
 
+   gettime();
    fft_front_r2c(x, y2, N, workspace);
+   dt = gettime();
+   printf("Local FFT time = %.16f\n", dt);
 
    for (k = 0; k < N; k++) z[k] = x[k];
+
+#if 0
+   gettime();
    fft(z, N);
+   dt = gettime();
+   printf("FFTW time = %.16f\n", dt);
+#endif
 
    printf("FFTW      | DFT       | local FFT:\n");
    for (k = 0; k <= N; k++) printf("%f, %f, %f\n", z[k], y[k], y2[k]);

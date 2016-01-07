@@ -4,7 +4,8 @@ FLAGS = -O3 -Wall
 INC = -I..
 LIBS = -lm -lfftw3f
 
-OBJ = test_fft.o fft.o dft_r2c.o fft_front_r2c.o fft_l_r2c.o
+OBJ = test_fft.o fft.o dft_r2c.o fft_front_r2c.o fft_l_r2c.o \
+      gettime.o
 
 EXE = test
 
@@ -27,4 +28,7 @@ fft_l_r2c.o: ../fft_l_r2c.c
 	$(CC) $^ -c $(FLAGS) $(INC)
 
 fft_front_r2c.o: ../fft_front_r2c.c
+	$(CC) $^ -c $(FLAGS) $(INC)
+
+gettime.o: gettime.c
 	$(CC) $^ -c $(FLAGS) $(INC)
