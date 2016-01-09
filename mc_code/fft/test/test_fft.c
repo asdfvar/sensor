@@ -1,22 +1,25 @@
 #include "fft.h"
+#include <fftw3.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "gettime.h"
 
-#define N 512
+#define N 400
 
 int main()
 {
 
-   float *x  = (float*)malloc( (N+2) * sizeof(*x));
-   float *y  = (float*)malloc( (N+2) * sizeof(*y));
-   float *y2 = (float*)malloc( (N+2) * sizeof(*y2));
-   float *z  = (float*)malloc( (N+2) * sizeof(*z));
-   float *w  = (float*)malloc( (N+2) * sizeof(*w));
-   float *workspace = (float*)malloc( 2048 * sizeof(float));
+   float *buffer = (float*)malloc( 5*(N+2)*32768 * sizeof(float));
+   float *workspace = buffer;
 
-   float dt;
+   float *z  = workspace; workspace += N+2;
+   float *x  = workspace; workspace += N+2;
+   float *y  = workspace; workspace += N+2;
+   float *y2 = workspace; workspace += N+2;
+   float *w  = workspace; workspace += N+2;
+
+   float dt_dft, dt_fftw, dt_fftl;
 
    srand(0);
 
@@ -41,26 +44,26 @@ int main()
 
    gettime();
    dft_r2c(x, y, w, N);
-   dt = gettime();
-   printf("DFT time = %.16f\n", dt);
+   dt_dft = gettime();
 
    gettime();
    fft_front_r2c(x, y2, N, workspace);
-   dt = gettime();
-   printf("Local FFT time = %.16f\n", dt);
+   dt_fftw = gettime();
 
    for (k = 0; k < N; k++) z[k] = x[k];
 
-#if 0
    gettime();
    fft(z, N);
-   dt = gettime();
-   printf("FFTW time = %.16f\n", dt);
-#endif
+   dt_fftl = gettime();
 
    printf("FFTW      | DFT       | local FFT:\n");
    for (k = 0; k <= N; k++) printf("%f, %f, %f\n", z[k], y[k], y2[k]);
    printf("\n");
+
+   printf("DFT time = %.16f\n", dt_dft);
+   printf("Local FFT time = %.16f\n", dt_fftw);
+   printf("FFTW time = %.16f\n", dt_fftl);
+   free(buffer);
 
    return 0;
 }
