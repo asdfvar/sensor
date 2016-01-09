@@ -2,10 +2,10 @@
 #include "fft.h"
 #include <stdio.h>
 
-void dft_r2c(float *x,
-             float *y,
-             float *w,
-             int    N)
+inline void dft_r2c(float *x,
+                    float *y,
+                    float *w,
+                    int    N)
 {
    int i,k;
    int index;

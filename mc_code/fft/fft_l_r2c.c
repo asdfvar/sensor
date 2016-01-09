@@ -1,11 +1,11 @@
 #include "fft.h"
 #include <stdio.h>
 
-void fft_l_r2c(float *x,
-               float *y,
-               float *w,
-               int    N,
-               float *workspace)
+inline void fft_l_r2c(float *x,
+                      float *y,
+                      float *w,
+                      int    N,
+                      float *workspace)
 {
 
    int k;

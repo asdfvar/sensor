@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include "fft.h"
 
-void fft_front_r2c(float *x,
-                   float *y,
-                   int    N,
-                   float *workspace)
+inline void fft_front_r2c(float *x,
+                          float *y,
+                          int    N,
+                          float *workspace)
 {
 
    int k;

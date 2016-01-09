@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "gettime.h"
 
-#define N 400
+#define N 1024
 
 int main()
 {
@@ -24,6 +24,7 @@ int main()
    srand(0);
 
    int k;
+   int samples = 1000;
    printf("Inputs of\nx = ");
    for (k = 0; k < N; k++)
    {
@@ -43,26 +44,34 @@ int main()
    }
 
    gettime();
-   dft_r2c(x, y, w, N);
+   for (k = 0; k < samples; k++) {
+      dft_r2c(x, y, w, N);
+   }
    dt_dft = gettime();
 
    gettime();
-   fft_front_r2c(x, y2, N, workspace);
+   for (k = 0; k < samples; k++) {
+      fft_front_r2c(x, y2, N, workspace);
+   }
    dt_fftw = gettime();
 
    for (k = 0; k < N; k++) z[k] = x[k];
 
    gettime();
-   fft(z, N);
+   for (k = 0; k < samples/2; k++) {
+      fft(z, N);
+      ifft(z, N);
+   }
    dt_fftl = gettime();
+   fft(z, N);
 
    printf("FFTW      | DFT       | local FFT:\n");
    for (k = 0; k <= N; k++) printf("%f, %f, %f\n", z[k], y[k], y2[k]);
    printf("\n");
 
-   printf("DFT time = %.16f\n", dt_dft);
-   printf("Local FFT time = %.16f\n", dt_fftw);
-   printf("FFTW time = %.16f\n", dt_fftl);
+   printf("DFT time       = %.16f : ave: %.16f\n", dt_dft, dt_dft / (float) samples);
+   printf("Local FFT time = %.16f : ave: %.16f\n", dt_fftw, dt_fftw / (float) samples);
+   printf("FFTW time      = %.16f : ave: %.16f\n", dt_fftl, dt_fftl / (float) samples);
    free(buffer);
 
    return 0;
