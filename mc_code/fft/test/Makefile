@@ -4,7 +4,7 @@ FLAGS = -O3 -Wall
 INC = -I..
 LIBS = -lm -lfftw3f
 
-OBJ_FFT = test_fft.o fft.o dft_r2c.o fft_front_r2c.o fft_l_r2c.o \
+OBJ_FFT = test_fft.o fft.o dft_r2c.o local_fft_wrapper_r2c.o local_fft_r2c.o \
           gettime.o
 OBJ_TRIG = test_trig.o local_trig.o
 
@@ -31,10 +31,10 @@ fft.o: ../fft.c
 dft_r2c.o: ../dft_r2c.c
 	$(CC) $^ -c $(FLAGS) $(INC)
 
-fft_l_r2c.o: ../fft_l_r2c.c
+local_fft_r2c.o: ../local_fft_r2c.c
 	$(CC) $^ -c $(FLAGS) $(INC)
 
-fft_front_r2c.o: ../fft_front_r2c.c
+local_fft_wrapper_r2c.o: ../local_fft_wrapper_r2c.c
 	$(CC) $^ -c $(FLAGS) $(INC)
 
 gettime.o: gettime.c

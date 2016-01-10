@@ -1,11 +1,10 @@
 #include "fft.h"
-#include <stdio.h>
 
-inline void fft_l_r2c(float *x,
-                      float *y,
-                      float *w,
-                      int    N,
-                      float *workspace)
+inline void local_fft_r2c(float *x,
+                          float *y,
+                          float *w,
+                          int    N,
+                          float *workspace)
 {
 
    int k;
@@ -38,17 +37,17 @@ inline void fft_l_r2c(float *x,
       w_N_2[2*k+1] = w[2*2*k+1];
    }
 
-   fft_l_r2c(x_even,
-             S1,
-             w_N_2,
-             N/2,
-             workspace);
+   local_fft_r2c(x_even,
+                 S1,
+                 w_N_2,
+                 N/2,
+                 workspace);
 
-   fft_l_r2c(x_odd,
-             S2,
-             w_N_2,
-             N/2,
-             workspace);
+   local_fft_r2c(x_odd,
+                 S2,
+                 w_N_2,
+                 N/2,
+                 workspace);
 
    /*
    ** Expand based on conjugate symmetry

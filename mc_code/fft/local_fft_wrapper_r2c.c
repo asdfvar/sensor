@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include "fft.h"
 
-inline void fft_front_r2c(float *x,
-                          float *y,
-                          int    N,
-                          float *workspace)
+inline void local_fft_wrapper_r2c(float *x,
+                                  float *y,
+                                  int    N,
+                                  float *workspace)
 {
 
    int k;
@@ -30,11 +30,11 @@ inline void fft_front_r2c(float *x,
    for (k = 0; k < N; k++) nyquist = x[k] - nyquist;
    nyquist = -nyquist;
 
-   fft_l_r2c(x,
-             y,
-             w,
-             N,
-             workspace);
+   local_fft_r2c(x,
+                 y,
+                 w,
+                 N,
+                 workspace);
 
    y[N] = nyquist;
 

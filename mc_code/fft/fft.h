@@ -11,15 +11,15 @@ void dft_r2c(float *x,
              float *w,
              int N);
 
-void fft_l_r2c(float *x,
-               float *y,
-               float *w,
-               int    N,
-               float *workspace);
-
-void fft_front_r2c(float *x,
+void local_fft_r2c(float *x,
                    float *y,
+                   float *w,
                    int    N,
                    float *workspace);
+
+void local_fft_wrapper_r2c(float *x,
+                           float *y,
+                           int    N,
+                           float *workspace);
 
 #endif

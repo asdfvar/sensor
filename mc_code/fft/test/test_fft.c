@@ -51,7 +51,7 @@ int main()
 
    gettime();
    for (k = 0; k < samples; k++) {
-      fft_front_r2c(x, y2, N, workspace);
+      local_fft_wrapper_r2c(x, y2, N, workspace);
    }
    dt_fftw = gettime();
 
