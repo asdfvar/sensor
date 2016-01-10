@@ -64,7 +64,7 @@ void sensor_main(
 
       for (p = 0; p < N_window_ref; p++) ref_buffer_x[p] = current_reference_x[p];
       for (p = 0; p < N_window_ref; p++) ref_buffer_y[p] = current_reference_y[p];
-      
+
       /*
       ** MATCHED-FILTER
       */

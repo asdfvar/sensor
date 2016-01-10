@@ -5,6 +5,7 @@
              float *ref,
              float *sig,
              float *cross_correlation,
+             float *workspace,
              int   N_data);
 
  void norm_squared_f (

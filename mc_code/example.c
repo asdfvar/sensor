@@ -107,8 +107,8 @@ int main()
        data_time_length,  /* Data time length in seconds               */
        time_inc,          /* Time increment for next energy calculation*/
        ax,                /* Acceleration data in x                    */
-       ay,                /* Acceleration data in x                    */
-       az,                /* Acceleration data in x                    */
+       ay,                /* Acceleration data in y                    */
+       az,                /* Acceleration data in z                    */
        sex,               /* male = 1, female = 2                      */
        age,               /* Age in years                              */
        weight,            /* Weight in kg                              */

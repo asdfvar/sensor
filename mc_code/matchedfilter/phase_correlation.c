@@ -7,7 +7,8 @@
 
 #include "fft.h"
 #include "phase_correlation.h"
-#include <math.h>
+#include "local_trig.h"
+#include <stdio.h>
 
 /*
  * Function NAME: norm_squared
@@ -50,26 +51,49 @@
              float *__restrict__ ref,
              float *__restrict__ signal,
              float *__restrict__ cross_correlation,
+             float *__restrict__ workspace,
              int   N_data)
  {
  
     float tmp;
     int k;
 
-    for (k = 0; k < N_data; k++) cross_correlation[k] = signal[k];
+    float *buffer = workspace; workspace += N_data;
+
+    for (k = 0; k < N_data; k++) buffer[k] = ref[k];
+
+    local_fft_wrapper_r2c(buffer,
+                          ref,
+                          N_data,
+                          LOC_FFT_FWD,
+                          workspace);
  
-    fft(cross_correlation, N_data);
-    fft(ref, N_data);
- 
+    local_fft_wrapper_r2c(signal,
+                          buffer,
+                          N_data,
+                          LOC_FFT_FWD,
+                          workspace);
+
     /* Conjugate multiply the reference (conjugate) */
  
     for (k = 0; k < N_data+2; k+=2) {
-       tmp = ref[k]*cross_correlation[k] + ref[k+1]*cross_correlation[k+1];
-       cross_correlation[k+1] = ref[k]*cross_correlation[k+1] - ref[k+1]*cross_correlation[k];
-       cross_correlation[k] = tmp;
+       tmp = ref[k]*buffer[k] + ref[k+1]*buffer[k+1];
+       buffer[k+1] = ref[k]*buffer[k+1] - ref[k+1]*buffer[k];
+       buffer[k] = tmp;
     }
  
-    ifft(cross_correlation, N_data);
+    float *w = workspace; workspace += 2*N_data+2;
+    const float two_pi_N_inv = TWO_PI / (float)N_data;
+    for (k = 0; k <= N_data; k++)
+    {
+       w[2*k  ] = local_cos( two_pi_N_inv * k );
+       w[2*k+1] = local_sin( two_pi_N_inv * k );
+    }
+
+    idft_c2r(buffer,
+             cross_correlation,
+             w,
+             N_data);
  
     return;
  }

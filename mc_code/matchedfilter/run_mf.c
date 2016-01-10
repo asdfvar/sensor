@@ -6,8 +6,6 @@
  * Note that sig_1,2[i] is a vector which means sig_1,2 is an array of vectors
  */
 #include "phase_correlation.h"
-#include <math.h>
-#include <stdio.h>
 
 /*
  * Function NAME: run_mf
@@ -31,12 +29,12 @@ float run_mf ( float *primary_acceleration,
    /*
    ** Resurve memory for local variables
    */
-   float *norm_primary_squared        = work_buffer;
-   float *cross_correlation_primary   = norm_primary_squared        + N_time_window;
-   float *norm_secondary_squared      = cross_correlation_primary   + N_time_window + 2;
-   float *cross_correlation_secondary = norm_secondary_squared      + N_time_window;
-   float *cross_correlation           = cross_correlation_secondary + N_time_window + 2;
-   float *norm_squared                = cross_correlation           + N_time_window;
+   float *norm_primary_squared        = work_buffer; work_buffer += N_time_window;
+   float *cross_correlation_primary   = work_buffer; work_buffer += N_time_window + 2;
+   float *norm_secondary_squared      = work_buffer; work_buffer += N_time_window;
+   float *cross_correlation_secondary = work_buffer; work_buffer += N_time_window + 2;
+   float *cross_correlation           = work_buffer; work_buffer += N_time_window;
+   float *norm_squared                = work_buffer; work_buffer += N_time_window_ref;
 
    /*
    ** Compute the norm squared of the reference
@@ -75,11 +73,13 @@ float run_mf ( float *primary_acceleration,
    phase_correlation (reference_x,
                       primary_acceleration,
                       cross_correlation_primary,
+                      work_buffer,
                       N_time_window);
 
    phase_correlation (reference_y,
                       secondary_acceleration,
                       cross_correlation_secondary,
+                      work_buffer,
                       N_time_window);
 
    for (k = 0; k < N_time_window_ref; k++)
