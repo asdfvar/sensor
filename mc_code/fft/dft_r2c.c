@@ -20,9 +20,9 @@ inline void dft_r2c(float *x,
 
       for (i = 0; i < N; i++)
       {
-         index = 2*k*i; index %= 2*N;
-         y[2*k  ] += x[i] * w[ index     ];
-         y[2*k+1] += x[i] * w[ index + 1 ];
+         index = k*i; index %= N;
+         y[2*k  ] += x[i] * w[ 2*index     ];
+         y[2*k+1] += x[i] * w[ 2*index + 1 ];
       }
    }
 }

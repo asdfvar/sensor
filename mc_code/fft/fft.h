@@ -13,6 +13,11 @@ void dft_r2c(float *x,
              float *w,
              int N);
 
+void idft_c2r(float *x,
+              float *y,
+              float *w,
+              int N);
+
 void local_fft_r2c(float *x,
                    float *y,
                    float *w,
