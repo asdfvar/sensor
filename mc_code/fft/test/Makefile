@@ -5,7 +5,7 @@ INC = -I..
 LIBS = -lm -lfftw3f
 
 OBJ_FFT = test_fft.o fft.o dft_r2c.o local_fft_wrapper_r2c.o local_fft_r2c.o \
-          gettime.o
+          gettime.o local_trig.o
 OBJ_TRIG = test_trig.o local_trig.o
 
 EXE_FFT = test_fft

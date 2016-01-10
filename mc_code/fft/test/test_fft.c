@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "gettime.h"
 
-#define N 1024
+#define N 20
 
 int main()
 {
@@ -24,7 +24,7 @@ int main()
    srand(0);
 
    int k;
-   int samples = 1000;
+   int samples = 1;
    printf("Inputs of\nx = ");
    for (k = 0; k < N; k++)
    {
@@ -51,7 +51,7 @@ int main()
 
    gettime();
    for (k = 0; k < samples; k++) {
-      local_fft_wrapper_r2c(x, y2, N, workspace);
+      local_fft_wrapper_r2c(x, y2, N, LOC_FFT_FWD, workspace);
    }
    dt_fftw = gettime();
 
