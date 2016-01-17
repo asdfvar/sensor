@@ -3,9 +3,9 @@
 #include <stdio.h>
 
 inline void idft_c2r(float *x,
-                    float *y,
-                    float *w,
-                    int    N)
+                     float *y,
+                     float *w,
+                     int    N)
 {
    int i,k;
    int index, x_ind;
@@ -28,7 +28,6 @@ inline void idft_c2r(float *x,
          x_ind = 2*(N/2) - i;
          y[k] += x[2*x_ind]*w[2*index] + x[2*x_ind+1]*w[2*index+1];
       }
-      y[k] /= (float)N;
    }
 
 }

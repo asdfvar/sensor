@@ -94,6 +94,7 @@
              cross_correlation,
              w,
              N_data);
+    for (k = 0; k < N_data; k++) cross_correlation[k] /= (float)N_data;
  
     return;
  }

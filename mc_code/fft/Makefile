@@ -4,7 +4,8 @@ FLAGS = -O3 -Wall
 
 LIB = libfft.a
 
-OBJ = dft_r2c.o idft_c2r.o local_fft_r2c.o local_fft_wrapper_r2c.o local_trig.o
+OBJ = dft_r2c.o idft_c2r.o local_fft_r2c.o local_fft_wrapper_r2c.o\
+      local_ifft_c2r.o local_ifft_wrapper_c2r.o local_trig.o
 
 all: $(OBJ)
 	$(CL) $(LIB) $(OBJ)
@@ -25,6 +26,12 @@ local_fft_r2c.o: local_fft_r2c.c
 	$(CC) $^ -c $(FLAGS)
 
 local_fft_wrapper_r2c.o: local_fft_wrapper_r2c.c
+	$(CC) $^ -c $(FLAGS)
+
+local_ifft_c2r.o: local_ifft_c2r.c
+	$(CC) $^ -c $(FLAGS)
+
+local_ifft_wrapper_c2r.o: local_ifft_wrapper_c2r.c
 	$(CC) $^ -c $(FLAGS)
 
 local_trig.o: local_trig.c

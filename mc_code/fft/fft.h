@@ -18,6 +18,11 @@ void idft_c2r(float *x,
               float *w,
               int N);
 
+void idft_c2c(float *x,
+              float *y,
+              float *w,
+              int N);
+
 void local_fft_r2c(float *x,
                    float *y,
                    float *w,
@@ -29,5 +34,27 @@ void local_fft_wrapper_r2c(float *x,
                            int    N,
                            int    dir,
                            float *workspace);
+
+void local_ifft_c2r(float *x,
+                    float *y,
+                    float *w,
+                    int    N,
+                    float *workspace);
+
+void local_ifft_c2c(float *x,
+                    float *y,
+                    float *w,
+                    int    N,
+                    float *workspace);
+
+void local_ifft_wrapper_c2r(float *x,
+                            float *y,
+                            int    N,
+                            float *workspace);
+
+void local_ifft_wrapper_c2c(float *x,
+                            float *y,
+                            int    N,
+                            float *workspace);
 
 #endif

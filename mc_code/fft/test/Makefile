@@ -4,8 +4,9 @@ FLAGS = -O3 -Wall
 INC = -I..
 LIBS = -lm -lfftw3f
 
-OBJ_FFT = test_fft.o fft.o idft_c2r.o dft_r2c.o local_fft_wrapper_r2c.o local_fft_r2c.o \
-          gettime.o local_trig.o
+OBJ_FFT = test_fft.o fft.o idft_c2r.o idft_c2c.o dft_r2c.o local_fft_wrapper_r2c.o local_fft_r2c.o \
+          local_ifft_wrapper_c2r.o local_ifft_c2r.o \
+          local_ifft_c2c.o gettime.o local_trig.o
 OBJ_TRIG = test_trig.o local_trig.o
 
 EXE_FFT = test_fft
@@ -34,10 +35,22 @@ dft_r2c.o: ../dft_r2c.c
 idft_c2r.o: ../idft_c2r.c
 	$(CC) $^ -c $(FLAGS) $(INC)
 
+idft_c2c.o: ../idft_c2c.c
+	$(CC) $^ -c $(FLAGS) $(INC)
+
 local_fft_r2c.o: ../local_fft_r2c.c
 	$(CC) $^ -c $(FLAGS) $(INC)
 
 local_fft_wrapper_r2c.o: ../local_fft_wrapper_r2c.c
+	$(CC) $^ -c $(FLAGS) $(INC)
+
+local_ifft_c2r.o: ../local_ifft_c2r.c
+	$(CC) $^ -c $(FLAGS) $(INC)
+
+local_ifft_wrapper_c2r.o: ../local_ifft_wrapper_c2r.c
+	$(CC) $^ -c $(FLAGS) $(INC)
+
+local_ifft_c2c.o: ../local_ifft_c2c.c
 	$(CC) $^ -c $(FLAGS) $(INC)
 
 gettime.o: gettime.c
