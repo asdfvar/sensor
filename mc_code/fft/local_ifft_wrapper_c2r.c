@@ -25,12 +25,17 @@ void local_ifft_wrapper_c2r(float *x,
 
 printf("initial input: ");
 for (k = 0; k <= N/2; k++) printf("(%f, %f), ", x[2*k], x[2*k+1]);
+printf("initial w: ");
+for (k = 0; k < N; k++) printf("(%f, %f), ", w[2*k], w[2*k+1]);
 printf("\n");
 printf("\n");
 
    local_ifft_c2r(x,
                   y,
                   w,
+                  0,
+                  1,
+                  N,
                   N,
                   workspace);
 

@@ -6,7 +6,7 @@ LIBS = -lm -lfftw3f
 
 OBJ_FFT = test_fft.o fft.o idft_c2r.o idft_c2c.o dft_r2c.o local_fft_wrapper_r2c.o local_fft_r2c.o \
           local_ifft_wrapper_c2r.o local_ifft_c2r.o \
-          local_ifft_c2c.o gettime.o local_trig.o
+          local_ifft_c2c.o gettime.o local_trig.o get_element_conj_sym.o
 OBJ_TRIG = test_trig.o local_trig.o
 
 EXE_FFT = test_fft
@@ -60,4 +60,7 @@ test_trig.o: test_trig.c
 	$(CC) $^ -c $(FLAGS) $(INC)
 
 local_trig.o: ../local_trig.c
+	$(CC) $^ -c $(FLAGS) $(INC)
+
+get_element_conj_sym.o: ../get_element_conj_sym.c
 	$(CC) $^ -c $(FLAGS) $(INC)

@@ -28,15 +28,4 @@ inline void idft_c2c(float *x,
 
    }
 
-printf("%s:%d:inputs: ",__FILE__,__LINE__);
-for (k = 0; k < N; k++) printf("%f + %fj, ", x[2*k], x[2*k+1]);
-printf("\n");
-printf("w: ");
-for (k = 0; k < N; k++) printf("%f + %fj, ", w[2*k],  w[2*k+1]);
-printf("\n");
-printf("outputs: ");
-for (k = 0; k < N; k++) printf("%f + %fj, ", y[2*k], y[2*k+1]);
-printf("\n");
-printf("\n");
-
 }
