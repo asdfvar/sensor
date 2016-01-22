@@ -25,4 +25,5 @@ inline void dft_r2c(float *x,
          y[2*k+1] += x[i] * w[ 2*index + 1 ];
       }
    }
+
 }

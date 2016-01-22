@@ -53,6 +53,6 @@ inline void local_fft_wrapper_r2c(float *x,
       for (k = 0; k < N; k++) y[k] *= scale;
    }
 
-   y[N] = nyquist;
+   if ( N % 2 == 0) y[N] = nyquist;
 
 }

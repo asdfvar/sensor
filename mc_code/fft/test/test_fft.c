@@ -1,11 +1,11 @@
 #include "fft.h"
-#include <fftw3.h>
+//#include <fftw3.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "gettime.h"
 
-#define N_size 16
+#define N_size 18
 
 int main()
 {
@@ -76,29 +76,38 @@ int main()
    for (k = 0; k < N_size; k++) x[k] = (float)rand() / (float)RAND_MAX;
    for (k = 0; k < N_size; k++) z[k] = x[k];
 
-   local_fft_wrapper_r2c(z, y, N_size, LOC_FFT_FWD, workspace);
+   int new_size = 10;
+
+   local_fft_wrapper_r2c(z, y, new_size, LOC_FFT_FWD, workspace);
+
+   printf("x = ");
+   for (k = 0; k < new_size; k++) printf("%f, ", x[k]);
+   printf("\n");
+   printf("fft(x) = ");
+   for (k = 0; k <= new_size/2; k++) printf("%f + %fj, ", y[2*k], y[2*k+1]);
+   printf("\n");
 
    /*
    ** Compute the twiddle factors
    */
-   const float two_pi_N_inv = TWO_PI / (float)N_size;
-   for (k = 0; k <= N_size; k++)
+   const float two_pi_N_inv = TWO_PI / (float)new_size;
+   for (k = 0; k <= new_size; k++)
    {
       w[2*k  ] = cosf( two_pi_N_inv * k );
       w[2*k+1] = sinf( two_pi_N_inv * k );
    }
 #if 0
-   idft_c2r(y, z, w, N_size);
-   for (k = 0; k < N_size; k++) z[k] /= (float)N_size;
+   idft_c2r(y, z, w, new_size);
+   for (k = 0; k < new_size; k++) z[k] /= (float)new_size;
 #else
    local_ifft_wrapper_c2r(y,
                           z,
-                          N_size,
+                          new_size,
                           workspace);
 #endif
 
    printf("x  |   idft(fft(x)):\n");
-   for (k = 0; k < N_size; k++) printf("%f, %f\n", x[k], z[k]);
+   for (k = 0; k < new_size; k++) printf("%f, %f\n", x[k], z[k]);
    printf("\n");
 
    free(buffer);

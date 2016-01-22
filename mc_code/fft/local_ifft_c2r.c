@@ -21,10 +21,6 @@ inline void local_ifft_c2r(float *x,
    workspace    += 2*N;
    float *S2     = workspace;
    workspace    += 2*N;
-#if 0
-   float *x_odd  = workspace;
-   workspace    += 2*N;
-#endif
 
    if (N <= 2 || N % 2 != 0)
    {
@@ -53,35 +49,8 @@ inline void local_ifft_c2r(float *x,
                w,
                N);
 
-printf("%s:%d:inputs: ",__FILE__,__LINE__);
-for (k = 0; k <= N/2; k++) printf("%f+%fj, ", x_sub[2*k], x_sub[2*k+1]);
-printf("\n");
-printf("outputs: ");
-for (k = 0; k < N; k++) printf("%f, ", y[k]);
-printf("\n");
-printf("\n");
-
       return;
    }
-
-#if 0
-   for (k = 0; k <= N/2; k++)
-   {
-      x_even[2*k  ] = x[2*(2*k)  ];
-      x_even[2*k+1] = x[2*(2*k)+1];
-   }
-
-   for (k = 0, index = 1; k < N/2/2; k++, index+=2)
-   {
-      x_odd[2*k  ] = x[2*index  ];
-      x_odd[2*k+1] = x[2*index+1];
-   }
-   for (k = N/2/2, index = N/2-1; k < N/2; k++, index-=2)
-   {
-      x_odd[2*k  ] =  x[2*index  ];
-      x_odd[2*k+1] = -x[2*index+1];
-   }
-#endif
 
    for (k = 0; k < N; k++)
    {
@@ -109,30 +78,6 @@ printf("\n");
                   N_orig,
                   workspace);
 
-#if 0
-   /*
-   ** Expand based on conjugate symmetry
-   */
-   int p;
-   for (k = N/2/2+1, p = (N/2+1)/2-1; k < N/2; k++, p--)
-   {
-      S1[2*k  ] =  S1[2*p  ];
-      S1[2*k+1] = -S1[2*p+1];
-      S2[2*k  ] =  S2[2*p  ];
-      S2[2*k+1] = -S2[2*p+1];
-   }
-#endif
-
-printf("S1: ");
-for (k = 0; k < N/2; k++) printf("%f, ", S1[k]);
-printf("\n");
-printf("S2: ");
-for (k = 0; k < N/2; k++) printf("%f+%fj, ", S2[2*k], S2[2*k+1]);
-printf("\n");
-printf("w: ");
-for (k = 0; k < N; k++) printf("%f+%fj, ", w[2*k], w[2*k+1]);
-printf("\n");
-
    for (k = 0, index = 0; index < N/2; k++, index++)
    {
       y[index] = S1[k] + (w[2*k]*S2[2*k] - w[2*k+1]*S2[2*k+1]);
@@ -142,18 +87,5 @@ printf("\n");
    {
       y[index] = S1[k] - (w[2*k]*S2[2*k] - w[2*k+1]*S2[2*k+1]);
    }
-
-printf("start = %d, stride = %d\n", start, stride);
-printf("%s:%d:inputs: ",__FILE__,__LINE__);
-for (k = 0; k < N; k++) printf("%f+%fj, ",
-                              get_element_conj_sym( x, start, stride,
-                                                    N_orig, k, 1),
-                              get_element_conj_sym( x, start, stride,
-                                                    N_orig, k, 2));
-printf("\n");
-printf("outputs: ");
-for (k = 0; k < N; k++) printf("%f, ", y[k]);
-printf("\n");
-printf("\n");
 
 }
