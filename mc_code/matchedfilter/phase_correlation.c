@@ -82,19 +82,10 @@
        buffer[k] = tmp;
     }
  
-    float *w = workspace; workspace += 2*N_data+2;
-    const float two_pi_N_inv = TWO_PI / (float)N_data;
-    for (k = 0; k <= N_data; k++)
-    {
-       w[2*k  ] = local_cos( two_pi_N_inv * k );
-       w[2*k+1] = local_sin( two_pi_N_inv * k );
-    }
+    local_ifft_wrapper_c2r(buffer,
+                           cross_correlation,
+                           N_data,
+                           workspace);
 
-    idft_c2r(buffer,
-             cross_correlation,
-             w,
-             N_data);
-    for (k = 0; k < N_data; k++) cross_correlation[k] /= (float)N_data;
- 
     return;
  }
