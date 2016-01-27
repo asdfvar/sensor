@@ -8,6 +8,7 @@ void preproc(
      float *power,          /* Resulting power of the signal  */
      float dt,
      float time_window,
+     float *workspace,
      const int   N);        /* Number of sample points        */
 
 #endif

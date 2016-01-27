@@ -6,6 +6,7 @@
  * Note that sig_1,2[i] is a vector which means sig_1,2 is an array of vectors
  */
 #include "phase_correlation.h"
+#include <math.h>
 
 /*
  * Function NAME: run_mf
@@ -108,7 +109,7 @@ float run_mf ( float *primary_acceleration,
       }
    }
 
-   float correlation = sqrtf( max );
+   float correlation = sqrt( max );
 
    return correlation;
 }

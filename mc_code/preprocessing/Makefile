@@ -8,7 +8,7 @@ UTILITIES = ../utilities
 
 INC = -I$(UTILITIES)
 
-OBJ = preproc.o eigen.o
+OBJ = preproc.o eigen.o filter.o
 
 all: $(OBJ)
 	$(CL) $(LIBEXE) $(OBJ)
@@ -21,3 +21,6 @@ preproc.o: preproc.c
 
 eigen.o: eigen.c
 	$(CC) $^ -c $(INC)
+
+filter.o: filter.c
+	$(CC) $^ -c $(INC) $(FLAGS)

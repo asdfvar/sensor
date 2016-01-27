@@ -18,6 +18,7 @@
 **/
 
 #include "eigen.h"
+#include "filter.h"
 #include <stdio.h>
 
 /*
@@ -30,6 +31,7 @@ void preproc(
      float *__restrict__ power,          /* Resulting power of the signal   */
      float dt,                           /* Delta time increment            */
      float time_window,                  /* Time window                     */
+     float *workspace,
      const int   N)                      /* Number of sample points         */
 {
 
@@ -109,17 +111,35 @@ printf("eigVal = %f, %f, %f\n", eigVal[0], eigVal[1], eigVal[2]);
       }
    }
 
-   /* Re-orient the axes in the direction of motion */
+   /* Re-orient the axes in the direction of motion.
+    * The z-direction will be assumed to be near zero.
+    */
 
    float *eigVec_1 = &eigVec[0][0];
    float *eigVec_2 = &eigVec[1][0];
-   float *eigVec_3 = &eigVec[2][0];
+
+   float x, y;
 
    for (k = 0; k < N; k++) {
-      ax[k] = ax[k]*eigVec_1[0] + ay[k]*eigVec_1[1] + az[k]*eigVec_1[2];
-      ay[k] = ax[k]*eigVec_2[0] + ay[k]*eigVec_2[1] + az[k]*eigVec_2[2];
-      az[k] = ax[k]*eigVec_3[0] + ay[k]*eigVec_3[1] + az[k]*eigVec_3[2];
+      x = ax[k]*eigVec_1[0] + ay[k]*eigVec_1[1] + az[k]*eigVec_1[2];
+      y = ax[k]*eigVec_2[0] + ay[k]*eigVec_2[1] + az[k]*eigVec_2[2];
+      ax[k] = x;
+      ay[k] = y;
+      az[k] = 0.0f;
    }
+
+   int points = (int)(0.05f / dt);
+   if (points % 2 == 0) points++;
+
+   filter (ax,
+           points,
+           N,
+           workspace);
+
+   filter (ay,
+           points,
+           N,
+           workspace);
 
    return;
 }

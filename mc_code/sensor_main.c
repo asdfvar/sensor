@@ -49,6 +49,7 @@ void sensor_main(
         power,         /* Resulting power of the signal        */
         dt,
         data_time_length,
+        workspace_float,
         N_window);     /* Number of sample points              */
 
    float best_correlation = -1.0f;
