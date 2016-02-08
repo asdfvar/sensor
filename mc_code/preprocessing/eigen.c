@@ -247,6 +247,17 @@ int eigen(float mat[3][3],
 
    do {
 
+#if 0
+   if (count < 3) {
+   printf("old A = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", A[i][j]);
+      }
+      printf("\n");
+   }
+   }
+#endif
       /* Q */
       /* Q is found using the Gram-Schmidt process on A and normalized */
 
@@ -276,6 +287,17 @@ int eigen(float mat[3][3],
       norm = sqrtf(norm);
       for (k = 0; k < 3; k++) q3[k] /= norm;
 
+#if 1
+   if (count < 3) {
+   printf("old Q = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", Q[i][j]);
+      }
+      printf("\n");
+   }
+   }
+#endif
       /* R */
       /* R is found now that we have Q and A */
 
@@ -346,9 +368,29 @@ int eigen(float mat[3][3],
    }
    printf("\n");
 
+#if 0
+   printf("old Q = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", V[i][j]);
+      }
+      printf("\n");
+   }
+#endif
+#if 0
+   printf("old R = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", R[i][j]);
+      }
+      printf("\n");
+   }
+printf("\n");
+#endif
+
    //////////////////////////////////////////////////////////
 
-#if 0
+#if 1
    // A = mat
    for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
@@ -356,6 +398,8 @@ int eigen(float mat[3][3],
 
    float *a = &A[0][0];
    float *q = &Q[0][0];
+   float Qk[3][3];
+   float *qk = &Qk[0][0];
 
    float *r = &R[0][0];
    float U[3][3];
@@ -367,31 +411,50 @@ int eigen(float mat[3][3],
    float v[3];
    int column;
 
-   for (count = 0; count < 1; count++)
+   // Q = I
+   for (k = 0; k < 9; k++) q[k]    = 0.0f;
+   for (k = 0; k < 3; k++) Q[k][k] = 1.0f;
+
+   for (count = 0; count < 100; count++)
    {
       // R = A
       for (i = 0; i < 3; i++)
          for (j = 0; j < 3; j++)
             R[i][j] = A[i][j];
 
-      // Q = I
-      for (k = 0; k < 9; k++) q[k]    = 0.0f;
-      for (k = 0; k < 3; k++) Q[k][k] = 1.0f;
+      for (k = 0; k < 9; k++) qk[k]    = 0.0f;
+      for (k = 0; k < 3; k++) Qk[k][k] = 1.0f;
+
+#if 0
+   printf("A = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", A[i][j]);
+      }
+      printf("\n");
+   }
+#endif
 
       for (column = 0; column < 2; column++)
       {
          // x = column of R
-         for (k = 0; k < 3; k++) x[k] = R[k][column];
+         for (k = 0; k < 3; k++)      x[k] = R[k][column];
+         for (k = 0; k < column; k++) x[k] = 0.0f;
+//printf("x = %f, %f, %f\n", x[0], x[1], x[2]);
 
          // v = x - |x|*e_column
          norm = 0.0f;
          for (k = 0; k < 3; k++) norm += x[k]*x[k];
+         norm = sqrtf(norm);
+//printf("norm(x) = %f\n", norm);
          for (k = 0; k < 3; k++) v[k]  = x[k]; v[column] -= norm;
+//printf("pre v = %f, %f, %f\n", v[0], v[1], v[2]);
 
          // v = unit vector(v)
          norm = 0.0f;
          for (k = 0; k < 3; k++) norm += v[k]*v[k];
          norm = sqrtf(norm);
+//printf("norm(v) = %f\n", norm);
          if (norm > 0.0000001f)
          {
             for (k = 0; k < 3; k++) v[k] /= norm;
@@ -400,20 +463,41 @@ int eigen(float mat[3][3],
          {
             for (k = 0; k < 3; k++) v[k] = 0.0f;
          }
+//printf("v = %f, %f, %f\n", v[0], v[1], v[2]);
 
          // U = I - 2*v*v'
          outer_product( &U[0][0], v, 3, v, 3);
          for (k = 0; k < 9; k++) u[k]    = -2.0f * u[k];
-         for (k = 0; k < 3; k++) U[k][k] =  1.0f - U[k][k];
+         for (k = 0; k < 3; k++) U[k][k] =  1.0f + U[k][k];
+#if 0
+   printf("U = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", U[i][j]);
+      }
+      printf("\n");
+   }
+#endif
 
          // R = U * R
          matrix_mult( t, u, r, 3);
          for (k = 0; k < 9; k++) r[k] = t[k];
+#if 0
+   printf("R' = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", R[i][j]);
+      }
+      printf("\n");
+   }
+#endif
 
          // Q = Q * U
-         matrix_mult( q, q, u, 3);
+         matrix_mult( qk, qk, u, 3);
+
       }
 
+#if 1
    printf("Q = \n");
    for (i = 0; i < 3; i++) {
       for (j = 0; j < 3; j++) {
@@ -421,9 +505,46 @@ int eigen(float mat[3][3],
       }
       printf("\n");
    }
+#endif
+
       // A = R * Q
-      matrix_mult( a, r, q, 3);
+      matrix_mult( a, r, qk, 3);
+
+      // Q = Q * Qk
+      matrix_mult( q, q, qk, 3);
+#if 1
+   printf("A' = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", A[i][j]);
+      }
+      printf("\n");
    }
+#endif
+
+   }
+
+#if 0
+   printf("Q = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", Q[i][j]);
+      }
+      printf("\n");
+   }
+#endif
+#if 0
+   printf("R = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", R[i][j]);
+      }
+      printf("\n");
+   }
+#endif
+
+  // eigenvalues = diag(R)
+  // eigenvectors = ***(Q)
 
   /*
    *          [---v1---]
