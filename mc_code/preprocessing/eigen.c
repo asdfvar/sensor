@@ -354,14 +354,20 @@ int eigen(float mat[3][3],
       for (j = 0; j < 3; j++)
          A[i][j] = mat[i][j];
 
+   float *a = &A[0][0];
+   float *q = &Q[0][0];
+
+   float *r = &R[0][0];
    float U[3][3];
+   float *u = &U[0][0];
    float T[3][3];
+   float *t = &T[0][0];
 
    float x[3];
    float v[3];
    int column;
 
-   for (count = 0; count < 1000; count++)
+   for (count = 0; count < 1; count++)
    {
       // R = A
       for (i = 0; i < 3; i++)
@@ -369,22 +375,23 @@ int eigen(float mat[3][3],
             R[i][j] = A[i][j];
 
       // Q = I
-      for (k = 0; k < 9; k++) Q[k]    = 0.0f;
-      for (k = 1; k < 3; k++) Q[k][k] = 1.0f;
+      for (k = 0; k < 9; k++) q[k]    = 0.0f;
+      for (k = 0; k < 3; k++) Q[k][k] = 1.0f;
 
       for (column = 0; column < 2; column++)
       {
-         // x = column k of R
+         // x = column of R
          for (k = 0; k < 3; k++) x[k] = R[k][column];
 
          // v = x - |x|*e_column
          norm = 0.0f;
          for (k = 0; k < 3; k++) norm += x[k]*x[k];
-         for (k = 0; k < 3; k++) v[k] = x[k]; v[column] -= norm;
+         for (k = 0; k < 3; k++) v[k]  = x[k]; v[column] -= norm;
 
          // v = unit vector(v)
          norm = 0.0f;
          for (k = 0; k < 3; k++) norm += v[k]*v[k];
+         norm = sqrtf(norm);
          if (norm > 0.0000001f)
          {
             for (k = 0; k < 3; k++) v[k] /= norm;
@@ -396,19 +403,26 @@ int eigen(float mat[3][3],
 
          // U = I - 2*v*v'
          outer_product( &U[0][0], v, 3, v, 3);
-         for (k = 0; k < 9; k++) U[k]    = -2.0f * U[k];
-         for (k = 1; k < 3; k++) U[k][k] =  1.0f - U[k];
+         for (k = 0; k < 9; k++) u[k]    = -2.0f * u[k];
+         for (k = 0; k < 3; k++) U[k][k] =  1.0f - U[k][k];
 
          // R = U * R
-         matrix_mult( &T[0][0], &U[0][0], &R[0][0], 3);
-         for (k = 0; k < 9; k++) R[k] = T[k];
+         matrix_mult( t, u, r, 3);
+         for (k = 0; k < 9; k++) r[k] = t[k];
 
          // Q = Q * U
-         matrix_mult( &Q[0][0], &Q[0][0], &U[0][0], 3);
+         matrix_mult( q, q, u, 3);
       }
 
+   printf("Q = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", Q[i][j]);
+      }
+      printf("\n");
+   }
       // A = R * Q
-      matrix_mult( &A[0][0], &R[0][0], &Q[0][0], 3);
+      matrix_mult( a, r, q, 3);
    }
 
   /*
