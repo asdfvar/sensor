@@ -92,6 +92,61 @@ static void transpose_matrix_mult_transpose(float       *__restrict__ Ct,
 }
 
 /*
+ * Function NAME: matrix_mult
+ * 
+ * Compute the matrix multiplication of the NxN matrices A and B.
+ *
+ * C = A * B
+ *
+ * Inputs:
+ * A  - The matrix A
+ * B  - The matrix B
+ * N  - The dimensions (NxN) of the matrices A and B
+ *
+ * Output:
+ * C  - The result of A*B
+ *
+ * C can be computed in place (A = C).
+ * Only supports up to 3x3.
+*/
+
+static void matrix_mult(float       *__restrict__ C,
+                        const float *__restrict__ A,
+                        const float *__restrict__ B,
+                        const int                 N)
+{
+
+   float tmp[3];
+   int i,j,k;
+
+   for (i = 0; i < N; i++)
+   {
+      for (j = 0; j < N; j++)
+      {
+         tmp[j] = 0.0f;
+         for (k = 0; k < N; k++)
+            tmp[j] += A[i*N + k]*B[k*N + j];
+      }
+      for (j = 0; j < N; j++) C[i*N + j] = tmp[j];
+   }
+
+}
+
+
+static void outer_product(float       *__restrict__ C,
+                          const float *__restrict__ a,
+                          const int                 M,
+                          const float *__restrict__ b,
+                          const int                 N)
+{
+   int i,j;
+
+   for (i = 0; i < M; i++)
+      for (j = 0; j < N; j++)
+         C[i*N + j] = a[i] * b[j];
+}
+
+/*
  * Function NAME: eigen
  */
 /* Determine the eigenvectors of a 3x3 real symetric matrix
@@ -281,6 +336,99 @@ int eigen(float mat[3][3],
    for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
          eigVec[i*3 + j] = V[j][i];
+
+   printf("eigen vectors = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", eigVec[i*3 + j]);
+      }
+      printf("\n");
+   }
+   printf("\n");
+
+   //////////////////////////////////////////////////////////
+
+#if 0
+   // A = mat
+   for (i = 0; i < 3; i++)
+      for (j = 0; j < 3; j++)
+         A[i][j] = mat[i][j];
+
+   float U[3][3];
+   float T[3][3];
+
+   float x[3];
+   float v[3];
+   int column;
+
+   for (count = 0; count < 1000; count++)
+   {
+      // R = A
+      for (i = 0; i < 3; i++)
+         for (j = 0; j < 3; j++)
+            R[i][j] = A[i][j];
+
+      // Q = I
+      for (k = 0; k < 9; k++) Q[k]    = 0.0f;
+      for (k = 1; k < 3; k++) Q[k][k] = 1.0f;
+
+      for (column = 0; column < 2; column++)
+      {
+         // x = column k of R
+         for (k = 0; k < 3; k++) x[k] = R[k][column];
+
+         // v = x - |x|*e_column
+         norm = 0.0f;
+         for (k = 0; k < 3; k++) norm += x[k]*x[k];
+         for (k = 0; k < 3; k++) v[k] = x[k]; v[column] -= norm;
+
+         // v = unit vector(v)
+         norm = 0.0f;
+         for (k = 0; k < 3; k++) norm += v[k]*v[k];
+         if (norm > 0.0000001f)
+         {
+            for (k = 0; k < 3; k++) v[k] /= norm;
+         }
+         else
+         {
+            for (k = 0; k < 3; k++) v[k] = 0.0f;
+         }
+
+         // U = I - 2*v*v'
+         outer_product( &U[0][0], v, 3, v, 3);
+         for (k = 0; k < 9; k++) U[k]    = -2.0f * U[k];
+         for (k = 1; k < 3; k++) U[k][k] =  1.0f - U[k];
+
+         // R = U * R
+         matrix_mult( &T[0][0], &U[0][0], &R[0][0], 3);
+         for (k = 0; k < 9; k++) R[k] = T[k];
+
+         // Q = Q * U
+         matrix_mult( &Q[0][0], &Q[0][0], &U[0][0], 3);
+      }
+
+      // A = R * Q
+      matrix_mult( &A[0][0], &R[0][0], &Q[0][0], 3);
+   }
+
+  /*
+   *          [---v1---]
+   * eigVec = [---v2---]
+   *          [---v3---]
+   */
+   for (i = 0; i < 3; i++)
+      for (j = 0; j < 3; j++)
+         eigVec[i*3 + j] = Q[j][i];
+
+   printf("new eigen vectors = \n");
+   for (i = 0; i < 3; i++) {
+      for (j = 0; j < 3; j++) {
+         printf("%f, ", eigVec[i*3 + j]);
+      }
+      printf("\n");
+   }
+   printf("\n");
+#endif
 
    return count;
 
