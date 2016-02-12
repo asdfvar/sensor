@@ -65,13 +65,11 @@
     local_fft_wrapper_r2c(buffer,
                           ref,
                           N_data,
-                          LOC_FFT_FWD,
                           workspace);
  
     local_fft_wrapper_r2c(signal,
                           buffer,
                           N_data,
-                          LOC_FFT_FWD,
                           workspace);
 
     /* Conjugate multiply the reference (conjugate) */

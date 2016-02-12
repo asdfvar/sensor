@@ -5,7 +5,6 @@
 inline void local_fft_wrapper_r2c(float *x,
                                   float *y,
                                   int    N,
-                                  int    dir,
                                   float *workspace)
 {
 
@@ -18,21 +17,10 @@ inline void local_fft_wrapper_r2c(float *x,
    /*
    ** Compute the twiddle factors
    */
-   if (dir == LOC_FFT_FWD)
+   for (k = 0; k <= N; k++)
    {
-      for (k = 0; k <= N; k++)
-      {
-         w[2*k  ] = cosf( -two_pi_N_inv * (float)k );
-         w[2*k+1] = sinf( -two_pi_N_inv * (float)k );
-      }
-   }
-   else if (dir == LOC_FFT_BACK)
-   {
-      for (k = 0; k <= N; k++)
-      {
-         w[2*k  ] = cosf( -two_pi_N_inv * (float)k );
-         w[2*k+1] = sinf( -two_pi_N_inv * (float)k );
-      }
+      w[2*k  ] = cosf( -two_pi_N_inv * (float)k );
+      w[2*k+1] = sinf( -two_pi_N_inv * (float)k );
    }
 
    /*
@@ -47,12 +35,6 @@ inline void local_fft_wrapper_r2c(float *x,
                  w,
                  N,
                  workspace);
-
-   if (dir == LOC_FFT_BACK)
-   {
-      const float scale = 1.0f / (float)N;
-      for (k = 0; k < N; k++) y[k] *= scale;
-   }
 
    if ( N % 2 == 0) y[N] = nyquist;
 
