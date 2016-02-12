@@ -102,6 +102,7 @@ int main()
        ref_time_length[1],
        sampling_freq);
 
+#if 0
    srand(0);
 
    for (k = 0; k < (int)(data_time_length*sampling_freq); k++)
@@ -111,6 +112,7 @@ int main()
       az[k] = (float)rand() / (float)RAND_MAX;
    }
    printf("\n");
+#endif
 
    sensor_main (
        sampling_freq,     /* Sampling frequency                        */

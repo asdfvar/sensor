@@ -1,115 +1,40 @@
 /* Routine to compute the eigenvalues and eigenvectors of a real symmetric 3x3 matrix.
- * The algorithm for this routine can be generalized to any NxN matrix.
- *
- * The algorithm used here for computing the eigenvalues and eigenvectos uses the
- * QR decomposition of the matrix and then iteratively repeats this process as follows:
- *
- * The input matrix is copied to a temporary array A.
- * Then the Q and R decomposition is computed from A (A = QR).
- * A new A term is computed via A := RQ.
- * Then the above 2 lines are repeated until a desired convergence is aquired.
- * The eigenvalues are the diagonal terms of A and the
- * eigenvectors are the columns of the product of all the Q terms in succession
- * V = Q_0 * Q_1 * ... * Q_n
- */
+** The algorithm for this routine can be generalized to any NxN matrix.
+**
+** The algorithm used here for computing the eigenvalues and eigenvectos uses the
+** QR decomposition of the matrix and then iteratively repeats this process as follows:
+**
+** The input matrix is copied to a temporary array A.
+** Then the Q and R decomposition is computed from A (A = QR).
+** A new A term is computed via A := RQ.
+** Then the above 2 lines are repeated until a desired convergence is aquired.
+** The eigenvalues are the diagonal terms of A and the
+** eigenvectors are the columns of the product of all the Q terms in succession
+** V = Q_0 * Q_1 * ... * Q_n
+*/
 
 #include <math.h>
 #include <stdio.h>
 #include "eigen.h"
 
 /*
- * Function NAME: matrix_mult_transpose
- * 
- * Compute the matrix multiplication of the NxN matrices A and B.
- *
- * C = A * B
- *
- * Inputs:
- * A  - The matrix A
- * Bt - The transpose of matrix B
- * N  - The dimensions (NxN) of the matrices A and B
- *
- * Output:
- * C  - The result of A*B
- *
- * C can be computed in place.
- * Only supports up to 3x3.
+** Function NAME: matrix_mult
+** 
+** Compute the matrix multiplication of the NxN matrices A and B.
+**
+** C = A * B
+**
+** Inputs:
+** A  - The matrix A
+** B  - The matrix B
+** N  - The dimensions (NxN) of the matrices A and B
+**
+** Output:
+** C  - The result of A*B
+**
+** C can be computed in place (A = C).
+** Only supports up to 3x3.
 */
-
-static void matrix_mult_transpose(float       *__restrict__ C,
-                                  const float *__restrict__ A,
-                                  const float *__restrict__ Bt,
-                                  const int N)
-{
-
-   float tmp[3];
-   int i,j,k;
-
-   for (i = 0; i < N; i++) {
-      for (j = 0; j < N; j++) {
-         tmp[j] = 0.0;
-         for (k = 0; k < N; k++)
-            tmp[j] += A[i*N + k]*Bt[j*N + k];
-      }
-      for (j = 0; j < N; j++) C[i*N + j] = tmp[j];
-   }
-
-}
- 
-/*
- * Function NAME: transpose_matrix_mult_transpose
- * 
- * Compute the matrix multiplication of the NxN matrices A and B.
- *
- * C = A * B
- *
- * Inputs:
- * A  - The matrix A
- * Bt - The transpose of matrix B
- * N  - The dimensions (NxN) of the matrices A and B
- *
- * Output:
- * Ct - The transposed result of A*B
- *
- */
-
-static void transpose_matrix_mult_transpose(float       *__restrict__ Ct,
-                                            const float *__restrict__ A,
-                                            const float *__restrict__ Bt,
-                                            const int N)
-{
-
-   int i,j,k;
-
-   for (i = 0; i < N; i++) {
-      for (j = 0; j < N; j++) {
-         Ct[j*N + i] = 0.0;
-         for (k = 0; k < N; k++)
-            Ct[j*N + i] += A[i*N + k]*Bt[j*N + k];
-      }
-   }
-
-}
-
-/*
- * Function NAME: matrix_mult
- * 
- * Compute the matrix multiplication of the NxN matrices A and B.
- *
- * C = A * B
- *
- * Inputs:
- * A  - The matrix A
- * B  - The matrix B
- * N  - The dimensions (NxN) of the matrices A and B
- *
- * Output:
- * C  - The result of A*B
- *
- * C can be computed in place (A = C).
- * Only supports up to 3x3.
-*/
-
 static void matrix_mult(float       *__restrict__ C,
                         const float *__restrict__ A,
                         const float *__restrict__ B,
@@ -132,7 +57,21 @@ static void matrix_mult(float       *__restrict__ C,
 
 }
 
-
+/*
+** Function NAME: outer_product
+** 
+** Compute the outer product of two vectors
+**
+** C = a * b'
+**
+** Inputs:
+** a  - vector a of length M
+** b  - vector b of length N
+**
+** Output:
+** C  - the result of size MxN of a * b'
+**
+*/
 static void outer_product(float       *__restrict__ C,
                           const float *__restrict__ a,
                           const int                 M,
@@ -147,31 +86,31 @@ static void outer_product(float       *__restrict__ C,
 }
 
 /*
- * Function NAME: eigen
- */
-/* Determine the eigenvectors of a 3x3 real symetric matrix
- * (or at least have real eigenvalues and eigenvectors)
- *
- * Input:
- * mat[3][3] - 3x3 matrix to compute the eigenvalues and eigenvectors from
- *
- * Output:
- * eigVl -  3 element array to hold the eigenvalues
- * eigVec - 3x3 element array to hold the eigenvalues in the following order:
- *               [ eigenvector 1 ]
- *               [ eigenvector 2 ]
- *               [ eigenvector 3 ]
- *
- * Note:
- * Some matrices are kept in their transpose form to take
- * advantage of any potential auto vectorization offered
- * by the compiler whenever certain operations happen in
- * contiguous memory.
- *
- * On exit, this routine returns the number of iterations
- * performed until it converged or reached its maximum number
- * of iterations.
- */
+** Function NAME: eigen
+**
+** Determine the eigenvectors of a 3x3 real symetric matrix
+** (or at least have real eigenvalues and eigenvectors)
+**
+** Input:
+** mat[3][3] - 3x3 matrix to compute the eigenvalues and eigenvectors from
+**
+** Output:
+** eigVl -  3 element array to hold the eigenvalues
+** eigVec - 3x3 element array to hold the eigenvalues in the following order:
+**               [ eigenvector 1 ]
+**               [ eigenvector 2 ]
+**               [ eigenvector 3 ]
+**
+** Note:
+** Some matrices are kept in their transpose form to take
+** advantage of any potential auto vectorization offered
+** by the compiler whenever certain operations happen in
+** contiguous memory.
+**
+** On exit, this routine returns the number of iterations
+** performed until it converged or reached its maximum number
+** of iterations.
+*/
 
 int eigen(float mat[3][3],
           float *__restrict__ eigVl,
@@ -184,12 +123,12 @@ int eigen(float mat[3][3],
    float prod1, prod2;
 
   /* A will be kept in its transposed form.
-   * a1, a2, and a3 will alias the vector compenents comprising A
-   *
-   *     [---a1---]
-   * A = [---a2---]
-   *     [---a3---]
-   */
+  ** a1, a2, and a3 will alias the vector compenents comprising A
+  **
+  **     [---a1---]
+  ** A = [---a2---]
+  **     [---a3---]
+  */
    float A[3][3];
    float *a1 = &A[0][0];
    float *a2 = &A[1][0];
@@ -201,43 +140,41 @@ int eigen(float mat[3][3],
    for (k = 0; k < 9; k++) a3[k] = mat[k][2];
 
   /* Q will be kept in its transposed form.
-   * Q is intended to hold the Q component of
-   * the QR decomposition of A.
-   * q1, q2, and q3 will alias the vector components comprising Q
-   *
-   *     [---q1---]
-   * Q = [---q2---]
-   *     [---q3---]
-   */
+  ** Q is intended to hold the Q component of
+  ** the QR decomposition of A.
+  ** q1, q2, and q3 will alias the vector components comprising Q
+  **
+  **     [---q1---]
+  ** Q = [---q2---]
+  **     [---q3---]
+  */
    float Q[3][3];
    float *q1 = &Q[0][0];
    float *q2 = &Q[1][0];
    float *q3 = &Q[2][0];
 
   /* R is inetended to hold the R component of
-   * the QR decomposition of A.
-   *
-   *     [    |    |    ]
-   * R = [ r1 | r2 | r3 ]
-   *     [    |    |    ]
-   */
+  ** the QR decomposition of A.
+  **
+  **     [    |    |    ]
+  ** R = [ r1 | r2 | r3 ]
+  **     [    |    |    ]
+  */
    float R[3][3];
 
   /* V is intended to hold the eigenvectors along its
-   * columns. It starts out as the identity matrix and
-   * will converge to the eigenvectors over enough iterations.
-   *
-   *     [    |    |    ]
-   * V = [ v1 | v2 | v3 ]
-   *     [    |    |    ]
-   */
+  ** columns. It starts out as the identity matrix and
+  ** will converge to the eigenvectors over enough iterations.
+  **
+  **     [    |    |    ]
+  ** V = [ v1 | v2 | v3 ]
+  **     [    |    |    ]
+  */
    float V[3][3];
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         if (i == j) V[i][j] = 1.0;
-         else V[i][j] = 0.0;
-      }
-   }
+   float *v = &V[0][0];
+
+   for (k = 0; k < 9; k++) v[k]    = 0.0f;
+   for (k = 0; k < 3; k++) V[k][k] = 1.0f;
 
    // Parameters used for convergence computation
    unsigned int count = 0;
@@ -245,87 +182,83 @@ int eigen(float mat[3][3],
    float R1, R2, R3;
    float maxR;
 
-   do {
+   // A = mat
+   for (i = 0; i < 3; i++)
+      for (j = 0; j < 3; j++)
+         A[i][j] = mat[i][j];
 
-#if 0
-   if (count < 3) {
-   printf("old A = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", A[i][j]);
+   float *a = &A[0][0];
+   float P[3][3];
+   float *p = &P[0][0];
+
+   float *r = &R[0][0];
+   float U[3][3];
+   float *u = &U[0][0];
+   float T[3][3];
+   float *t = &T[0][0];
+
+   float x[3];
+   float uv[3];
+   int column;
+
+   // V = I
+   for (k = 0; k < 9; k++) v[k]    = 0.0f;
+   for (k = 0; k < 3; k++) V[k][k] = 1.0f;
+
+   do
+   {
+      // R = A
+      for (i = 0; i < 3; i++)
+         for (j = 0; j < 3; j++)
+            R[i][j] = A[i][j];
+
+      for (k = 0; k < 9; k++) p[k]    = 0.0f;
+      for (k = 0; k < 3; k++) P[k][k] = 1.0f;
+
+      for (column = 0; column < 2; column++)
+      {
+         // x = column of R
+         for (k = 0; k < 3; k++)      x[k] = R[k][column];
+         for (k = 0; k < column; k++) x[k] = 0.0f;
+
+         // uv = x - |x|*e_column
+         norm = 0.0f;
+         for (k = 0; k < 3; k++) norm += x[k]*x[k];
+         norm = sqrtf(norm);
+         for (k = 0; k < 3; k++) uv[k]  = x[k]; uv[column] -= norm;
+
+         // uv = unit vector(uv)
+         norm = 0.0f;
+         for (k = 0; k < 3; k++) norm += uv[k]*uv[k];
+         norm = sqrtf(norm);
+         if (norm > 0.000001f)
+         {
+            for (k = 0; k < 3; k++) uv[k] /= norm;
+         }
+         else
+         {
+            for (k = 0; k < 3; k++) uv[k] = 0.0f;
+         }
+
+         // U = I - 2*uv*uv'
+         outer_product( &U[0][0], uv, 3, uv, 3);
+         for (k = 0; k < 9; k++) u[k]    = -2.0f * u[k];
+         for (k = 0; k < 3; k++) U[k][k] =  1.0f + U[k][k];
+
+         // R = U * R
+         matrix_mult( t, u, r, 3);
+         for (k = 0; k < 9; k++) r[k] = t[k];
+
+         // P = P * U
+         matrix_mult( p, p, u, 3);
+
       }
-      printf("\n");
-   }
-   }
-#endif
-      /* Q */
-      /* Q is found using the Gram-Schmidt process on A and normalized */
 
-      // q1
-      for (k = 0; k < 3; k++) q1[k] = a1[k];
-      norm = 0.0;
-      for (k = 0; k < 3; k++) norm += q1[k]*q1[k];
-      norm = sqrtf(norm);
-      for (k = 0; k < 3; k++) q1[k] /= norm;
+      // A = R * P
+      matrix_mult( a, r, p, 3);
 
-      // q2
-      prod1 = 0.0;
-      for (k = 0; k < 3; k++) prod1 += q1[k]*a2[k];
-      for (k = 0; k < 3; k++) q2[k] = a2[k] - prod1 * q1[k];
-      norm = 0.0;
-      for (k = 0; k < 3; k++) norm += q2[k]*q2[k];
-      norm = sqrtf(norm);
-      for (k = 0; k < 3; k++) q2[k] /= norm;
-
-      // q3
-      prod1 = prod2 = 0.0;
-      for (k = 0; k < 3; k++) prod1 += q1[k]*a3[k];
-      for (k = 0; k < 3; k++) prod2 += q2[k]*a3[k];
-      for (k = 0; k < 3; k++) q3[k] = a3[k] - prod1 * q1[k] - prod2 * q2[k];
-      norm = 0.0;
-      for (k = 0; k < 3; k++) norm += q3[k]*q3[k];
-      norm = sqrtf(norm);
-      for (k = 0; k < 3; k++) q3[k] /= norm;
-
-#if 1
-   if (count < 3) {
-   printf("old Q = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", Q[i][j]);
-      }
-      printf("\n");
-   }
-   }
-#endif
-      /* R */
-      /* R is found now that we have Q and A */
-
-      // r1
-      R[0][0] = 0.0;
-      for (k = 0; k < 3; k++) R[0][0] += q1[k]*a1[k];
-      R[1][0] = 0.0;
-      R[2][0] = 0.0;
-
-      // r2
-      R[0][1] = 0.0;
-      for (k = 0; k < 3; k++) R[0][1] += q1[k]*a2[k];
-      R[1][1] = 0.0;
-      for (k = 0; k < 3; k++) R[1][1] += q2[k]*a2[k];
-      R[2][1] = 0.0;
-
-      // r3
-      R[0][2] = 0.0;
-      for (k = 0; k < 3; k++) R[0][2] += q1[k]*a3[k];
-      R[1][2] = 0.0;
-      for (k = 0; k < 3; k++) R[1][2] += q2[k]*a3[k];
-      R[2][2] = 0.0;
-      for (k = 0; k < 3; k++) R[2][2] += q3[k]*a3[k];
-
-      // V_{k+1} := V_k*Q
-      matrix_mult_transpose(&V[0][0], &V[0][0], &Q[0][0], 3);
-      // A_{k+1} = R*Q. Where A_k = Q*R.
-      transpose_matrix_mult_transpose(&A[0][0], &R[0][0], &Q[0][0], 3);
+      // V = V * P
+      matrix_mult( v, v, p, 3);
 
       // Extract the eigenvalues
       for (k = 0; k < 3; k++) eigVl[k] = A[k][k];
@@ -344,208 +277,6 @@ int eigen(float mat[3][3],
 
    } while (maxR > MIN_ERR && count < MAX_COUNT);
 
-   if ( count >= MAX_COUNT )
-   {
-      printf("Warning: Eigenvalues and eigenvectors may not have converged\n");
-   }
-
-  /* The eigenvectors are transposed for output
-   *
-   *          [---v1---]
-   * eigVec = [---v2---] = transpose(V)
-   *          [---v3---]
-   */
-   for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
-         eigVec[i*3 + j] = V[j][i];
-
-   printf("eigen vectors = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", eigVec[i*3 + j]);
-      }
-      printf("\n");
-   }
-   printf("\n");
-
-#if 0
-   printf("old Q = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", V[i][j]);
-      }
-      printf("\n");
-   }
-#endif
-#if 0
-   printf("old R = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", R[i][j]);
-      }
-      printf("\n");
-   }
-printf("\n");
-#endif
-
-   //////////////////////////////////////////////////////////
-
-#if 1
-   // A = mat
-   for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
-         A[i][j] = mat[i][j];
-
-   float *a = &A[0][0];
-   float *q = &Q[0][0];
-   float Qk[3][3];
-   float *qk = &Qk[0][0];
-
-   float *r = &R[0][0];
-   float U[3][3];
-   float *u = &U[0][0];
-   float T[3][3];
-   float *t = &T[0][0];
-
-   float x[3];
-   float v[3];
-   int column;
-
-   // Q = I
-   for (k = 0; k < 9; k++) q[k]    = 0.0f;
-   for (k = 0; k < 3; k++) Q[k][k] = 1.0f;
-
-   for (count = 0; count < 100; count++)
-   {
-      // R = A
-      for (i = 0; i < 3; i++)
-         for (j = 0; j < 3; j++)
-            R[i][j] = A[i][j];
-
-      for (k = 0; k < 9; k++) qk[k]    = 0.0f;
-      for (k = 0; k < 3; k++) Qk[k][k] = 1.0f;
-
-#if 0
-   printf("A = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", A[i][j]);
-      }
-      printf("\n");
-   }
-#endif
-
-      for (column = 0; column < 2; column++)
-      {
-         // x = column of R
-         for (k = 0; k < 3; k++)      x[k] = R[k][column];
-         for (k = 0; k < column; k++) x[k] = 0.0f;
-//printf("x = %f, %f, %f\n", x[0], x[1], x[2]);
-
-         // v = x - |x|*e_column
-         norm = 0.0f;
-         for (k = 0; k < 3; k++) norm += x[k]*x[k];
-         norm = sqrtf(norm);
-//printf("norm(x) = %f\n", norm);
-         for (k = 0; k < 3; k++) v[k]  = x[k]; v[column] -= norm;
-//printf("pre v = %f, %f, %f\n", v[0], v[1], v[2]);
-
-         // v = unit vector(v)
-         norm = 0.0f;
-         for (k = 0; k < 3; k++) norm += v[k]*v[k];
-         norm = sqrtf(norm);
-//printf("norm(v) = %f\n", norm);
-         if (norm > 0.0000001f)
-         {
-            for (k = 0; k < 3; k++) v[k] /= norm;
-         }
-         else
-         {
-            for (k = 0; k < 3; k++) v[k] = 0.0f;
-         }
-//printf("v = %f, %f, %f\n", v[0], v[1], v[2]);
-
-         // U = I - 2*v*v'
-         outer_product( &U[0][0], v, 3, v, 3);
-         for (k = 0; k < 9; k++) u[k]    = -2.0f * u[k];
-         for (k = 0; k < 3; k++) U[k][k] =  1.0f + U[k][k];
-#if 0
-   printf("U = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", U[i][j]);
-      }
-      printf("\n");
-   }
-#endif
-
-         // R = U * R
-         matrix_mult( t, u, r, 3);
-         for (k = 0; k < 9; k++) r[k] = t[k];
-#if 0
-   printf("R' = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", R[i][j]);
-      }
-      printf("\n");
-   }
-#endif
-
-         // Q = Q * U
-         matrix_mult( qk, qk, u, 3);
-
-      }
-
-#if 1
-   printf("Q = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", Q[i][j]);
-      }
-      printf("\n");
-   }
-#endif
-
-      // A = R * Q
-      matrix_mult( a, r, qk, 3);
-
-      // Q = Q * Qk
-      matrix_mult( q, q, qk, 3);
-#if 1
-   printf("A' = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", A[i][j]);
-      }
-      printf("\n");
-   }
-#endif
-
-   }
-
-#if 0
-   printf("Q = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", Q[i][j]);
-      }
-      printf("\n");
-   }
-#endif
-#if 0
-   printf("R = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", R[i][j]);
-      }
-      printf("\n");
-   }
-#endif
-
-  // eigenvalues = diag(R)
-  // eigenvectors = ***(Q)
-
   /*
    *          [---v1---]
    * eigVec = [---v2---]
@@ -553,17 +284,7 @@ printf("\n");
    */
    for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-         eigVec[i*3 + j] = Q[j][i];
-
-   printf("new eigen vectors = \n");
-   for (i = 0; i < 3; i++) {
-      for (j = 0; j < 3; j++) {
-         printf("%f, ", eigVec[i*3 + j]);
-      }
-      printf("\n");
-   }
-   printf("\n");
-#endif
+         eigVec[i*3 + j] = V[j][i];
 
    return count;
 
