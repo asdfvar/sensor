@@ -24,8 +24,9 @@ float run_mf ( float *primary_acceleration,
 
    int k;
 
-   int   N_time_window              = (int)(time_window * samp_freq);
-   int   N_time_window_ref          = (int)(ref_time_window * samp_freq);
+   int N_time_window      = (int)(time_window * samp_freq);
+   int N_time_window_ref  = (int)(ref_time_window * samp_freq);
+   int N_data_reference   = N_time_window - N_time_window_ref + 1;
 
    /*
    ** Resurve memory for local variables
@@ -34,8 +35,8 @@ float run_mf ( float *primary_acceleration,
    float *cross_correlation_primary   = work_buffer; work_buffer += N_time_window + 2;
    float *norm_secondary_squared      = work_buffer; work_buffer += N_time_window;
    float *cross_correlation_secondary = work_buffer; work_buffer += N_time_window + 2;
-   float *cross_correlation           = work_buffer; work_buffer += N_time_window;
-   float *norm_squared                = work_buffer; work_buffer += N_time_window_ref;
+   float *cross_correlation           = work_buffer; work_buffer += N_data_reference;
+   float *norm_squared                = work_buffer; work_buffer += N_data_reference;
 
    /*
    ** Compute the norm squared of the reference
@@ -59,14 +60,14 @@ float run_mf ( float *primary_acceleration,
                    N_time_window_ref,
                    N_time_window);
 
-   for (k = 0; k < N_time_window_ref; k++)
+   for (k = 0; k < N_data_reference; k++)
    {
       norm_squared[k] = norm_primary_squared[k] + norm_secondary_squared[k];
    }
 
    float ref_norm_squared = ref_norm_primary_squared + ref_norm_secondary_squared;
 
-   for (k = 0; k < N_time_window_ref; k++)
+   for (k = 0; k < N_data_reference; k++)
    {
       norm_squared[k] *= ref_norm_squared;
    }
@@ -83,25 +84,25 @@ float run_mf ( float *primary_acceleration,
                       work_buffer,
                       N_time_window);
 
-   for (k = 0; k < N_time_window_ref; k++)
+   for (k = 0; k < N_data_reference; k++)
    {
       cross_correlation[k] = cross_correlation_primary[k] +
                              cross_correlation_secondary[k];
    }
 
-   for (k = 0; k < N_time_window_ref; k++)
+   for (k = 0; k < N_data_reference; k++)
    {
       cross_correlation[k] *= cross_correlation[k];
    }
 
-   for (k = 0; k < N_time_window_ref; k++)
+   for (k = 0; k < N_data_reference; k++)
    {
       cross_correlation[k] /= norm_squared[k];
    }
 
    int index;
    float max = cross_correlation[0];
-   for (index = 1; index < N_time_window_ref; index++)
+   for (index = 1; index < N_data_reference; index++)
    {
       if (cross_correlation[index] > max)
       {
