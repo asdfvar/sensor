@@ -1,5 +1,6 @@
 #include "local_trig.h"
 #include "fft.h"
+#include <math.h>
 
 inline void local_fft_wrapper_r2c(float *x,
                                   float *y,
@@ -21,16 +22,16 @@ inline void local_fft_wrapper_r2c(float *x,
    {
       for (k = 0; k <= N; k++)
       {
-         w[2*k  ] = local_cos( -two_pi_N_inv * (float)k );
-         w[2*k+1] = local_sin( -two_pi_N_inv * (float)k );
+         w[2*k  ] = cosf( -two_pi_N_inv * (float)k );
+         w[2*k+1] = sinf( -two_pi_N_inv * (float)k );
       }
    }
    else if (dir == LOC_FFT_BACK)
    {
       for (k = 0; k <= N; k++)
       {
-         w[2*k  ] = local_cos( -two_pi_N_inv * (float)k );
-         w[2*k+1] = local_sin( -two_pi_N_inv * (float)k );
+         w[2*k  ] = cosf( -two_pi_N_inv * (float)k );
+         w[2*k+1] = sinf( -two_pi_N_inv * (float)k );
       }
    }
 

@@ -1,6 +1,7 @@
 #include "local_trig.h"
 #include "fft.h"
 #include <stdio.h>
+#include <math.h>
 
 void local_ifft_wrapper_c2r(float *x,
                             float *y,
@@ -19,8 +20,8 @@ void local_ifft_wrapper_c2r(float *x,
    */
    for (k = 0; k <= N; k++)
    {
-      w[2*k  ] = local_cos( two_pi_N_inv * (float)k );
-      w[2*k+1] = local_sin( two_pi_N_inv * (float)k );
+      w[2*k  ] = cosf( two_pi_N_inv * (float)k );
+      w[2*k+1] = sinf( two_pi_N_inv * (float)k );
    }
 
    local_ifft_c2r(x,
