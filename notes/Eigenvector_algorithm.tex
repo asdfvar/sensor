@@ -1,0 +1,37 @@
+\documentclass[11pt]{amsart}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{amsmath}
+
+\title{\LaTeX}
+\date{}
+
+\def\R{\mathbb{R}}
+\def\T{\mathbb{T}}
+
+\begin{document}
+
+\begin{center}
+Eigen-vector and Eigen-value Calculation Algorithm
+\end{center}
+
+\section{Method}
+Each matrix has a unique QR factorization (check on this). The method used for computing the eigen-* of a symmetric matrix is with a repeated computation of QR decompositions. A given matrix $A$ can be represented in its decomposted form $A = QR$. Then $Q'AQ = RQ$ ($Q' = Q^{-1}$). Representing $A_1 = RQ$ and iteratively repeating the process will eventually converge to a diagonal matrix whose diagonal represents the eigen-values and the product of the $Q_i$ terms on the right represents the respective eigen-vectors.  Proofs of these statements can be found in any standard text on or relating to numerical linear algebra.
+
+The method used here for QR Factorization is with Householder reflections.
+
+\section{QR Factorization}
+The collision operator of the boltzmann equation is
+
+\begin{equation}
+\label{BoltzmannRHS}
+\int_{\mathbb{R}^3} \int_0^{2 \pi} \int_0^{\frac{\pi}{2}} \left( f' f_1' - f f_1 \right) \sigma g sin(\theta) d \theta d \epsilon d u'
+\end{equation}
+%
+Where $g$ is the relative velocity of colliding molecules and $\sigma = b/(sin(\theta) \frac{\partial \theta}{\partial b})$ is the differential cross section where $b$ is the radius of the molecule.
+\begin{equation*}
+f_m \int_{\mathbb{R}^3} \int_0^{2 \pi} \int_0^{\frac{\pi}{2}} f_{M1} \sigma g sin(\theta) d \theta d \epsilon d u' - f \int_{\mathbb{R}^3} \int_0^{2 \pi} \int_0^{\frac{\pi}{2}} f_1 \sigma g sin(\theta) d \theta d \epsilon d u'
+\end{equation*}
+%
+
+\end{document}
