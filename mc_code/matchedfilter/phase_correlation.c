@@ -1,9 +1,9 @@
 /* This routine computes the cross correlation between the reference and the
- * signal.
- *
- * On input, the reference and signal and in the time domain. On output,
- * The signal is the cross correlation between the reference and the signal.
- */
+** signal.
+**
+** On input, the reference and signal and in the time domain. On output,
+** The signal is the cross correlation between the reference and the signal.
+*/
 
 #include "fft.h"
 #include "phase_correlation.h"
@@ -11,17 +11,25 @@
 #include <stdio.h>
 
 /*
- * Function NAME: norm_squared
- */
+** Function NAME: norm_squared
+**
+** Computes an array of the square of the normalizing factor
+** over a specefied length.
+**
+** norm_i^2 = sum(signal_j*2, j = i to i + N_window - 1)
+*/
  void norm_squared_f (
-             float *__restrict__ signal,
-             float *__restrict__ norm,
-             int   N_window,
-             int   N_data)
+  /*[I ]*/   float *__restrict__ signal,
+  /*[I ]*/   float *__restrict__ norm,
+  /*[I ]*/   int                 N_window,
+  /*[I ]*/   int                 N_data)
  {
     int k;
     int N_data_reference = N_data - N_window;
 
+    /*
+    ** Start by setting norm = signal^2
+    */
     for (k = 0; k < N_data; k++)
     {
        norm[k] = signal[k] * signal[k];
@@ -33,6 +41,11 @@
        tmp += norm[k];
     }
  
+    /*
+    ** Populate the norm array with the final result by using a technique
+    ** of subtracting off the first element and adding on the last element
+    ** at the appropriate places.
+    */
     float tmp2;
     for (k = 0; k < N_data_reference; k++)
     {
@@ -48,11 +61,11 @@
  * Function NAME: phase_correlation
  */
  void phase_correlation(
-             float *__restrict__ ref,
-             float *__restrict__ signal,
-             float *__restrict__ cross_correlation,
-             float *__restrict__ workspace,
-             int   N_data)
+  /*[I*]*/       float *__restrict__ ref,
+  /*[I ]*/       float *__restrict__ signal,
+  /*[ O]*/       float *__restrict__ cross_correlation,
+  /*[**]*/       float *__restrict__ workspace,
+  /*[I ]*/       int                 N_data)
  {
  
     float tmp;
