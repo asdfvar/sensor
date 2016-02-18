@@ -123,21 +123,12 @@ int eigen(float mat[3][3],
    float prod1, prod2;
 
   /* A will be kept in its transposed form.
-  ** a1, a2, and a3 will alias the vector compenents comprising A
   **
   **     [---a1---]
   ** A = [---a2---]
   **     [---a3---]
   */
    float A[3][3];
-   float *a1 = &A[0][0];
-   float *a2 = &A[1][0];
-   float *a3 = &A[2][0];
-
-   // Copy the transpose of the input matrix into A
-   for (k = 0; k < 9; k++) a1[k] = mat[k][0];
-   for (k = 0; k < 9; k++) a2[k] = mat[k][1];
-   for (k = 0; k < 9; k++) a3[k] = mat[k][2];
 
   /* Q will be kept in its transposed form.
   ** Q is intended to hold the Q component of
