@@ -28,6 +28,7 @@ void local_fft_r2c(float *x,
                    float *w,
                    int    N,
                    int    level,
+                   int    start,
                    float *workspace);
 
 void local_fft_wrapper_r2c(float *x,

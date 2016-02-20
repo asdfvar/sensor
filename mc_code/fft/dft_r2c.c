@@ -5,14 +5,15 @@
 inline void dft_r2c(float *x,
                     float *y,
                     float *w,
-                    int    w_start,
-                    int    w_stride,
+                    int    start,
+                    int    stride,
                     int    N)
 {
    int i,k;
    int index;
 
    float *w_ptr;
+   float *x_ptr;
 
    /*
    ** Compute the DFT
@@ -28,13 +29,20 @@ inline void dft_r2c(float *x,
 
          w_ptr = ref_element(
                         w,
-                        w_start,
-                        w_stride,
+                        0,
+                        stride,
                         index,
                         2);
 
-         y[2*k  ] += x[i] * w_ptr[0];
-         y[2*k+1] += x[i] * w_ptr[1];
+         x_ptr = ref_element(
+                        x,
+                        start,
+                        stride,
+                        i,
+                        1);
+
+         y[2*k  ] += x_ptr[0] * w_ptr[0];
+         y[2*k+1] += x_ptr[0] * w_ptr[1];
       }
    }
 

@@ -5,6 +5,7 @@ inline void local_fft_r2c(float *x,
                           float *w,
                           int    N,
                           int    level,
+                          int    start,
                           float *workspace)
 {
 
@@ -17,37 +18,32 @@ inline void local_fft_r2c(float *x,
       dft_r2c(x,
               y,
               w,
-              0,
+              start,
               stride,
               N);
 
       return;
    }
 
-   float *x_even = workspace;
-   workspace    += N;
-   float *x_odd  = workspace;
-   workspace    += N;
    float *S1     = workspace;
    workspace    += 2*N;
    float *S2     = workspace;
    workspace    += 2*N;
 
-   for (k = 0; k < N/2; k++) x_even[k] = x[2*k  ];
-   for (k = 0; k < N/2; k++) x_odd[k]  = x[2*k+1];
-
-   local_fft_r2c(x_even,
+   local_fft_r2c(x,
                  S1,
                  w,
                  N/2,
                  level + 1,
+                 start,
                  workspace);
 
-   local_fft_r2c(x_odd,
+   local_fft_r2c(x,
                  S2,
                  w,
                  N/2,
                  level + 1,
+                 start + 1,
                  workspace);
 
    /*
