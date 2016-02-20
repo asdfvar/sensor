@@ -1,5 +1,4 @@
 #include "fft.h"
-//#include <fftw3.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,7 +44,7 @@ int main()
 
    gettime();
    for (k = 0; k < samples; k++) {
-      dft_r2c(x, y, w, N_size);
+      dft_r2c(x, y, w, 0, 1, N_size);
    }
    dt_dft = gettime();
 

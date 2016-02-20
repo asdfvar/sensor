@@ -6,7 +6,7 @@ LIBS = -lm -lfftw3f
 
 OBJ_FFT = test_fft.o fft.o idft_c2r.o idft_c2c.o dft_r2c.o local_fft_wrapper_r2c.o local_fft_r2c.o \
           local_ifft_wrapper_c2r.o local_ifft_c2r.o \
-          local_ifft_c2c.o gettime.o get_element_conj_sym.o
+          local_ifft_c2c.o gettime.o get_element.o
 OBJ_TRIG = test_trig.o
 OBJ_SHARED = local_trig.o
 
@@ -63,5 +63,5 @@ test_trig.o: test_trig.c
 local_trig.o: ../local_trig.c
 	$(CC) $^ -c $(FLAGS) $(INC)
 
-get_element_conj_sym.o: ../get_element_conj_sym.c
+get_element.o: ../get_element.c
 	$(CC) $^ -c $(FLAGS) $(INC)

@@ -3,6 +3,25 @@
 
 #define WORDS 2
 
+/* Function NAME: ref_element
+**
+*/
+inline float *ref_element(
+                      float *x,       /* The  array                       */
+                      int    start,   /* starting location on the array   */
+                      int    stride,  /* elements to stride by from start */
+                      int    element, /* the select element from start    */
+                      int    words)   /* number of words per element      */
+{
+   float *el_ptr;
+
+   el_ptr = x + (start + element * stride) * words;
+   return el_ptr;
+}
+
+/* Function NAME: get_element_conj_sym
+**
+*/
 inline float get_element_conj_sym(
                       float *x,       /* The conjugate symmetric array    */
                       int    start,   /* starting location on the array   */

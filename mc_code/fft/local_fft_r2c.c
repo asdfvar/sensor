@@ -4,16 +4,21 @@ inline void local_fft_r2c(float *x,
                           float *y,
                           float *w,
                           int    N,
+                          int    level,
                           float *workspace)
 {
 
    int k;
+
+   int stride = 1 << level;
 
    if (N <= 2 || N % 2 != 0)
    {
       dft_r2c(x,
               y,
               w,
+              0,
+              stride,
               N);
 
       return;
@@ -23,8 +28,6 @@ inline void local_fft_r2c(float *x,
    workspace    += N;
    float *x_odd  = workspace;
    workspace    += N;
-   float *w_N_2  = workspace;
-   workspace    += N;
    float *S1     = workspace;
    workspace    += 2*N;
    float *S2     = workspace;
@@ -32,21 +35,19 @@ inline void local_fft_r2c(float *x,
 
    for (k = 0; k < N/2; k++) x_even[k] = x[2*k  ];
    for (k = 0; k < N/2; k++) x_odd[k]  = x[2*k+1];
-   for (k = 0; k < N/2; k++) {
-      w_N_2[2*k  ] = w[2*2*k  ];
-      w_N_2[2*k+1] = w[2*2*k+1];
-   }
 
    local_fft_r2c(x_even,
                  S1,
-                 w_N_2,
+                 w,
                  N/2,
+                 level + 1,
                  workspace);
 
    local_fft_r2c(x_odd,
                  S2,
-                 w_N_2,
+                 w,
                  N/2,
+                 level + 1,
                  workspace);
 
    /*

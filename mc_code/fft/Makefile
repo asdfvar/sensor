@@ -6,7 +6,7 @@ LIB = libfft.a
 
 OBJ = dft_r2c.o idft_c2r.o idft_c2c.o local_fft_r2c.o local_fft_wrapper_r2c.o \
       local_ifft_c2r.o local_ifft_c2c.o local_ifft_wrapper_c2r.o local_trig.o \
-      get_element_conj_sym.o
+      get_element.o
 
 all: $(OBJ)
 	$(CL) $(LIB) $(OBJ)
@@ -44,5 +44,5 @@ local_ifft_wrapper_c2r.o: local_ifft_wrapper_c2r.c
 local_trig.o: local_trig.c
 	$(CC) $^ -c $(FLAGS)
 
-get_element_conj_sym.o: get_element_conj_sym.c
+get_element.o: get_element.c
 	$(CC) $^ -c $(FLAGS)

@@ -8,7 +8,7 @@ inline void idft_c2r(float *x,
                      int    N)
 {
    int i,k;
-   int index, x_ind;
+   int index;
    float xr, xi;
 
    /*

@@ -34,6 +34,7 @@ inline void local_fft_wrapper_r2c(float *x,
                  y,
                  w,
                  N,
+                 0,
                  workspace);
 
    if ( N % 2 == 0) y[N] = nyquist;

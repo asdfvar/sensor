@@ -9,6 +9,8 @@ int ifft(float *x, int N);
 void dft_r2c(float *x,
              float *y,
              float *w,
+             int    w_start,
+             int    w_stride,
              int N);
 
 void idft_c2r(float *x,
@@ -25,6 +27,7 @@ void local_fft_r2c(float *x,
                    float *y,
                    float *w,
                    int    N,
+                   int    level,
                    float *workspace);
 
 void local_fft_wrapper_r2c(float *x,
@@ -62,5 +65,12 @@ float get_element_conj_sym(
                       int    N,       /* number of elements in this array */
                       int    element, /* the select element from start    */
                       int    part);   /* real part = 1, imag part = 2     */
+
+inline float *ref_element(
+                      float *x,       /* The  array                       */
+                      int    start,   /* starting location on the array   */
+                      int    stride,  /* elements to stride by from start */
+                      int    element, /* the select element from start    */
+                      int    words);   /* number of words per element      */
 
 #endif
