@@ -44,7 +44,7 @@ int main()
 
    float *references_x = malloc( num_ref_points * sizeof(*references_x) );
    float *references_y = malloc( num_ref_points * sizeof(*references_y) );
-   void *workspace = malloc( 26 * data_num_elements * sizeof(float) );
+   void *workspace = malloc( 40873 ); // 26 * data_num_elements * sizeof(float)
 
    sinwave(
        ax,
