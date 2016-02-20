@@ -6,22 +6,23 @@ LIBS = -lm -lfftw3f
 
 OBJ_FFT = test_fft.o fft.o idft_c2r.o idft_c2c.o dft_r2c.o local_fft_wrapper_r2c.o local_fft_r2c.o \
           local_ifft_wrapper_c2r.o local_ifft_c2r.o \
-          local_ifft_c2c.o gettime.o local_trig.o get_element_conj_sym.o
-OBJ_TRIG = test_trig.o local_trig.o
+          local_ifft_c2c.o gettime.o get_element_conj_sym.o
+OBJ_TRIG = test_trig.o
+OBJ_SHARED = local_trig.o
 
 EXE_FFT = test_fft
 EXE_TRIG = test_trig
 
 all: FFT_TEST TRIG_TEST
 
-TRIG_TEST: $(OBJ_TRIG)
-	$(CC) $(OBJ_TRIG) $(INC) $(LIBS) -o $(EXE_TRIG)
+TRIG_TEST: $(OBJ_TRIG) $(OBJ_SHARED)
+	$(CC) $(OBJ_TRIG) $(OBJ_SHARED) $(INC) $(LIBS) -o $(EXE_TRIG)
 
-FFT_TEST: $(OBJ_FFT)
+FFT_TEST: $(OBJ_FFT) $(OBJ_SHARED) $(OBJ_SHARED)
 	$(CC) $(OBJ_FFT) $(INC) $(LIBS) -o $(EXE_FFT)
 
 clean:
-	rm $(OBJ_FFT) $(OBJ_TRIG) $(EXE_FFT) $(EXE_TRIG)
+	rm $(OBJ_FFT) $(OBJ_TRIG) $(OBJ_SHARED) $(EXE_FFT) $(EXE_TRIG)
 
 test_fft.o: test_fft.c
 	$(CC) $^ -c $(FLAGS) $(INC)

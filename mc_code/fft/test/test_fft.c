@@ -51,7 +51,7 @@ int main()
 
    gettime();
    for (k = 0; k < samples; k++) {
-      local_fft_wrapper_r2c(x, y2, N_size, LOC_FFT_FWD, workspace);
+      local_fft_wrapper_r2c(x, y2, N_size, workspace);
    }
    dt_fftw = gettime();
 
@@ -78,7 +78,7 @@ int main()
 
    int new_size = 10;
 
-   local_fft_wrapper_r2c(z, y, new_size, LOC_FFT_FWD, workspace);
+   local_fft_wrapper_r2c(z, y, new_size, workspace);
 
    printf("x = ");
    for (k = 0; k < new_size; k++) printf("%f, ", x[k]);
@@ -96,17 +96,12 @@ int main()
       w[2*k  ] = cosf( two_pi_N_inv * k );
       w[2*k+1] = sinf( two_pi_N_inv * k );
    }
-#if 0
-   idft_c2r(y, z, w, new_size);
-   for (k = 0; k < new_size; k++) z[k] /= (float)new_size;
-#else
    local_ifft_wrapper_c2r(y,
                           z,
                           new_size,
                           workspace);
-#endif
 
-   printf("x  |   idft(fft(x)):\n");
+   printf("x  |   ifft(fft(x)):\n");
    for (k = 0; k < new_size; k++) printf("%f, %f\n", x[k], z[k]);
    printf("\n");
 
