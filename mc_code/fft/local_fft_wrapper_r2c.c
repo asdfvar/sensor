@@ -1,6 +1,7 @@
 #include "local_trig.h"
 #include "fft.h"
 #include <math.h>
+#include <stdio.h>
 
 inline void local_fft_wrapper_r2c(float *x,
                                   float *y,
@@ -34,7 +35,7 @@ inline void local_fft_wrapper_r2c(float *x,
                  y,
                  w,
                  N,
-                 0,
+                 1,
                  0,
                  workspace);
 

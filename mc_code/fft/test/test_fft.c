@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "gettime.h"
 
-#define N_size 18
+#define N_size 28
 
 int main()
 {
@@ -49,9 +49,11 @@ int main()
    dt_dft = gettime();
 
    gettime();
+#if 1
    for (k = 0; k < samples; k++) {
       local_fft_wrapper_r2c(x, y2, N_size, workspace);
    }
+#endif
    dt_fftw = gettime();
 
    for (k = 0; k < N_size; k++) z[k] = x[k];
@@ -64,6 +66,7 @@ int main()
    dt_fftl = gettime();
    fft(z, N_size);
 
+#if 1
    printf("FFTW      | DFT       | local FFT:\n");
    for (k = 0; k <= N_size+1; k++) printf("%f, %f, %f\n", z[k], y[k], y2[k]);
    printf("\n");
@@ -71,11 +74,12 @@ int main()
    printf("DFT time       = %.16f : ave: %.16f\n", dt_dft, dt_dft / (float) samples);
    printf("Local FFT time = %.16f : ave: %.16f\n", dt_fftw, dt_fftw / (float) samples);
    printf("FFTW time      = %.16f : ave: %.16f\n", dt_fftl, dt_fftl / (float) samples);
+#endif
 
    for (k = 0; k < N_size; k++) x[k] = (float)rand() / (float)RAND_MAX;
    for (k = 0; k < N_size; k++) z[k] = x[k];
 
-   int new_size = 10;
+   int new_size = N_size;
 
    local_fft_wrapper_r2c(z, y, new_size, workspace);
 
@@ -86,15 +90,6 @@ int main()
    for (k = 0; k <= new_size/2; k++) printf("%f + %fj, ", y[2*k], y[2*k+1]);
    printf("\n");
 
-   /*
-   ** Compute the twiddle factors
-   */
-   const float two_pi_N_inv = TWO_PI / (float)new_size;
-   for (k = 0; k <= new_size; k++)
-   {
-      w[2*k  ] = cosf( two_pi_N_inv * k );
-      w[2*k+1] = sinf( two_pi_N_inv * k );
-   }
    local_ifft_wrapper_c2r(y,
                           z,
                           new_size,

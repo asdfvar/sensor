@@ -4,14 +4,12 @@ inline void local_fft_r2c(float *x,
                           float *y,
                           float *w,
                           int    N,
-                          int    level,
+                          int    stride,
                           int    start,
                           float *workspace)
 {
 
    int k;
-
-   int stride = 1 << level;
 
    if (N <= 2 || N % 2 != 0)
    {
@@ -34,7 +32,7 @@ inline void local_fft_r2c(float *x,
                  S1,
                  w,
                  N/2,
-                 level + 1,
+                 stride*2,
                  start,
                  workspace);
 
@@ -42,8 +40,8 @@ inline void local_fft_r2c(float *x,
                  S2,
                  w,
                  N/2,
-                 level + 1,
-                 start + 1,
+                 stride*2,
+                 start + stride,
                  workspace);
 
    /*
@@ -60,13 +58,30 @@ inline void local_fft_r2c(float *x,
 
    for (k = 0; k < N/2; k++)
    {
-      y[2*k  ] = S1[2*k  ] + (w[2*k]*S2[2*k  ] - w[2*k+1]*S2[2*k+1]);
-      y[2*k+1] = S1[2*k+1] + (w[2*k]*S2[2*k+1] + w[2*k+1]*S2[2*k  ]);
+      float *w_ptr = ref_element(
+                        w,
+                        0,
+                        stride,
+                        k,
+                        2);
+
+      y[2*k  ] = S1[2*k  ] + (w_ptr[0]*S2[2*k  ] - w_ptr[1]*S2[2*k+1]);
+      y[2*k+1] = S1[2*k+1] + (w_ptr[0]*S2[2*k+1] + w_ptr[1]*S2[2*k  ]);
    }
 
    // Nyquist
    y[N] = y[N+1] = 0.0f;
-   for (k = 0; k < N; k++) y[N] = x[k] - y[N];
+   for (k = 0; k < N; k++)
+   {
+      float *x_ptr = ref_element(
+                     x,
+                     start,
+                     stride,
+                     k,
+                     1);
+
+      y[N] = x_ptr[0] - y[N];
+   }
    y[N] = -y[N];
 
 }

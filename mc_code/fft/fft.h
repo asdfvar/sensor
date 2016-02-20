@@ -27,7 +27,7 @@ void local_fft_r2c(float *x,
                    float *y,
                    float *w,
                    int    N,
-                   int    level,
+                   int    stride,
                    int    start,
                    float *workspace);
 
