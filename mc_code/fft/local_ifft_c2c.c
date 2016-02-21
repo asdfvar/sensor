@@ -13,10 +13,9 @@ inline void local_ifft_c2c(float *x,
 
    int k, index;
 
-   float *S1     = workspace;
-   workspace    += 2*N;
+   float *S1     = y;
    float *S2     = workspace;
-   workspace    += 2*N;
+   workspace    += N;
 
    if (N <= 2 || N % 2 != 0)
    {
@@ -50,6 +49,8 @@ inline void local_ifft_c2c(float *x,
                   N_orig,
                   workspace);
 
+   float *y_half = y + N;
+
    for (k = 0, index = 0; index < N/2; k++, index++)
    {
 
@@ -60,10 +61,23 @@ inline void local_ifft_c2c(float *x,
                      k,
                      2);
 
-      y[2*index  ] = S1[2*k  ] + (w_ptr[0]*S2[2*k  ] - w_ptr[1]*S2[2*k+1]);
-      y[2*index+1] = S1[2*k+1] + (w_ptr[0]*S2[2*k+1] + w_ptr[1]*S2[2*k  ]);
+      float tmp1[2];
+      float tmp2[2];
+
+      tmp1[0] = S1[2*k  ] + (w_ptr[0]*S2[2*k  ] - w_ptr[1]*S2[2*k+1]);
+      tmp1[1] = S1[2*k+1] + (w_ptr[0]*S2[2*k+1] + w_ptr[1]*S2[2*k  ]);
+
+      tmp2[0] = S1[2*k  ] - (w_ptr[0]*S2[2*k  ] - w_ptr[1]*S2[2*k+1]);
+      tmp2[1] = S1[2*k+1] - (w_ptr[0]*S2[2*k+1] + w_ptr[1]*S2[2*k  ]);
+
+      y[2*index  ] = tmp1[0];
+      y[2*index+1] = tmp1[1];
+
+      y_half[2*index  ] = tmp2[0];
+      y_half[2*index+1] = tmp2[1];
    }
 
+#if 0
    for (k = 0, index = N/2; index < N; k++, index++)
    {
 
@@ -77,5 +91,6 @@ inline void local_ifft_c2c(float *x,
       y[2*index  ] = S1[2*k   ] - (w_ptr[0]*S2[2*k  ] - w_ptr[1]*S2[2*k+1]);
       y[2*index+1] = S1[2*k +1] - (w_ptr[0]*S2[2*k+1] + w_ptr[1]*S2[2*k  ]);
    }
+#endif
 
 }

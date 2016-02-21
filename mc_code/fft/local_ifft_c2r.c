@@ -13,9 +13,13 @@ inline void local_ifft_c2r(float *x,
 
    int k, index;
 
+   /*
+   ** S1 will alias to y for optimimal
+   ** memory resources
+   */
    float *S1     = y;
    float *S2     = workspace;
-   workspace    += 2*N;
+   workspace    += N;
 
    if (N <= 2 || N % 2 != 0)
    {
