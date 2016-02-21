@@ -31,13 +31,20 @@ inline void local_fft_wrapper_r2c(float *x,
    for (k = 0; k < N; k++) nyquist = x[k] - nyquist;
    nyquist = -nyquist;
 
+   float *fft_output = workspace;
+
    local_fft_r2c(x,
-                 y,
+                 fft_output,
                  w,
                  N,
                  1,
-                 0,
-                 workspace);
+                 0);
+
+   for (k = 0; k <= N/2; k++)
+   {
+      y[2*k  ] = fft_output[2*k  ];
+      y[2*k+1] = fft_output[2*k+1];
+   }
 
    if ( N % 2 == 0) y[N] = nyquist;
 

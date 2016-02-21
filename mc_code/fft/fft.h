@@ -34,8 +34,7 @@ void local_fft_r2c(float *x,
                    float *w,
                    int    N,
                    int    stride,
-                   int    start,
-                   float *workspace);
+                   int    start);
 
 void local_fft_wrapper_r2c(float *x,
                            float *y,

@@ -5,8 +5,7 @@ inline void local_fft_r2c(float *x,
                           float *w,
                           int    N,
                           int    stride,
-                          int    start,
-                          float *workspace)
+                          int    start)
 {
 
    int k;
@@ -24,24 +23,21 @@ inline void local_fft_r2c(float *x,
    }
 
    float *S1     = y;
-   float *S2     = workspace;
-   workspace    += N;
+   float *S2     = y + N;
 
    local_fft_r2c(x,
                  S1,
                  w,
                  N/2,
                  stride*2,
-                 start,
-                 workspace);
+                 start);
 
    local_fft_r2c(x,
                  S2,
                  w,
                  N/2,
                  stride*2,
-                 start + stride,
-                 workspace);
+                 start + stride);
 
    /*
    ** Expand based on conjugate symmetry
