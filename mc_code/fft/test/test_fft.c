@@ -49,11 +49,9 @@ int main()
    dt_dft = gettime();
 
    gettime();
-#if 1
    for (k = 0; k < samples; k++) {
       local_fft_wrapper_r2c(x, y2, N_size, workspace);
    }
-#endif
    dt_fftw = gettime();
 
    for (k = 0; k < N_size; k++) z[k] = x[k];
@@ -66,7 +64,6 @@ int main()
    dt_fftl = gettime();
    fft(z, N_size);
 
-#if 1
    printf("FFTW      | DFT       | local FFT:\n");
    for (k = 0; k <= N_size+1; k++) printf("%f, %f, %f\n", z[k], y[k], y2[k]);
    printf("\n");
@@ -74,7 +71,6 @@ int main()
    printf("DFT time       = %.16f : ave: %.16f\n", dt_dft, dt_dft / (float) samples);
    printf("Local FFT time = %.16f : ave: %.16f\n", dt_fftw, dt_fftw / (float) samples);
    printf("FFTW time      = %.16f : ave: %.16f\n", dt_fftl, dt_fftl / (float) samples);
-#endif
 
    for (k = 0; k < N_size; k++) x[k] = (float)rand() / (float)RAND_MAX;
    for (k = 0; k < N_size; k++) z[k] = x[k];
@@ -98,6 +94,10 @@ int main()
    printf("x  |   ifft(fft(x)):\n");
    for (k = 0; k < new_size; k++) printf("%f, %f\n", x[k], z[k]);
    printf("\n");
+
+   float sum = 0.0f;
+   for (k = 0; k < new_size; k++) sum += (x[k] - z[k]) * (x[k] - z[k]);
+   printf("sum squared error = %f\n", sum);
 
    free(buffer);
 
