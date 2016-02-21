@@ -10,9 +10,9 @@ inline void idft_c2r(float *x,
                      int    N,
                      int    N_orig)
 {
-   int i,k;
-   int index;
-   float xr, xi;
+   int   i, k;
+   int   index;
+   float x_val[2];
    float *w_ptr;
 
    /*
@@ -25,7 +25,7 @@ inline void idft_c2r(float *x,
       for (i = 0; i < N; i++)
       {
 
-         xr = get_element_conj_sym(
+         x_val[0] = get_element_conj_sym(
                           x,      /* The conjugate symmetric array    */
                           start,  /* starting location on the array   */
                           stride, /* elements to stride by from start */
@@ -33,7 +33,7 @@ inline void idft_c2r(float *x,
                           i,      /* the select element from start    */
                           1);     /* real part = 1, imag part = 2     */
 
-         xi = get_element_conj_sym(
+         x_val[1] = get_element_conj_sym(
                           x,      /* The conjugate symmetric array    */
                           start,  /* starting location on the array   */
                           stride, /* elements to stride by from start */
@@ -50,7 +50,7 @@ inline void idft_c2r(float *x,
                         index,
                         2);
 
-         y[k] += xr*w_ptr[0] - xi*w_ptr[1];
+         y[k] += x_val[0]*w_ptr[0] - x_val[1]*w_ptr[1];
       }
 
    }

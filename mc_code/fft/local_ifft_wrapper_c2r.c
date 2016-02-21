@@ -25,7 +25,6 @@ void local_ifft_wrapper_c2r(float *x,
    }
 
    float *ifft_output = workspace;
-   workspace += 2*N;
 
    local_ifft_c2r(x,
                   ifft_output,

@@ -12,8 +12,8 @@ inline void local_ifft_c2c(float *x,
 
    int k, index;
 
-   float *S1     = y;
-   float *S2     = y + N;
+   float *S1 = y;
+   float *S2 = y + N;
 
    if (N <= 2 || N % 2 != 0)
    {

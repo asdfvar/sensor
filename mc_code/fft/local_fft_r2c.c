@@ -22,8 +22,8 @@ inline void local_fft_r2c(float *x,
       return;
    }
 
-   float *S1     = y;
-   float *S2     = y + N;
+   float *S1 = y;
+   float *S2 = y + N;
 
    local_fft_r2c(x,
                  S1,
@@ -64,6 +64,7 @@ inline void local_fft_r2c(float *x,
 
       tmp[0] = S1[2*k  ] + (w_ptr[0]*S2[2*k  ] - w_ptr[1]*S2[2*k+1]);
       tmp[1] = S1[2*k+1] + (w_ptr[0]*S2[2*k+1] + w_ptr[1]*S2[2*k  ]);
+
       y[2*k  ] = tmp[0];
       y[2*k+1] = tmp[1];
    }

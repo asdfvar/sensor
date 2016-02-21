@@ -13,11 +13,11 @@ inline void local_ifft_c2r(float *x,
    int k, index;
 
    /*
-   ** S1 will alias to y for optimimal
-   ** memory resources
+   ** S1 and S2 will alias to y for optimimal
+   ** memory resource usage.
    */
-   float *S1     = y;
-   float *S2     = y + N/2;
+   float *S1 = y;
+   float *S2 = y + N/2;
 
    if (N <= 2 || N % 2 != 0)
    {
