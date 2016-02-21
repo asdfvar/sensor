@@ -77,20 +77,4 @@ inline void local_ifft_c2c(float *x,
       y_half[2*index+1] = tmp2[1];
    }
 
-#if 0
-   for (k = 0, index = N/2; index < N; k++, index++)
-   {
-
-      float *w_ptr = ref_element(
-                     w,
-                     0,
-                     stride,
-                     k,
-                     2);
-
-      y[2*index  ] = S1[2*k   ] - (w_ptr[0]*S2[2*k  ] - w_ptr[1]*S2[2*k+1]);
-      y[2*index+1] = S1[2*k +1] - (w_ptr[0]*S2[2*k+1] + w_ptr[1]*S2[2*k  ]);
-   }
-#endif
-
 }
