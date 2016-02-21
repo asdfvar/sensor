@@ -7,15 +7,13 @@ inline void local_ifft_c2c(float *x,
                            int    start,
                            int    stride,
                            int    N,
-                           int    N_orig,
-                           float *workspace)
+                           int    N_orig)
 {
 
    int k, index;
 
    float *S1     = y;
-   float *S2     = workspace;
-   workspace    += N;
+   float *S2     = y + N;
 
    if (N <= 2 || N % 2 != 0)
    {
@@ -37,8 +35,7 @@ inline void local_ifft_c2c(float *x,
                   start,
                   2*stride,
                   N/2,
-                  N_orig,
-                  workspace);
+                  N_orig);
 
    local_ifft_c2c(x,
                   S2,
@@ -46,8 +43,7 @@ inline void local_ifft_c2c(float *x,
                   start + stride,
                   2*stride,
                   N/2,
-                  N_orig,
-                  workspace);
+                  N_orig);
 
    float *y_half = y + N;
 

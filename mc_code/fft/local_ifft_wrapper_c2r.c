@@ -24,14 +24,18 @@ void local_ifft_wrapper_c2r(float *x,
       w[2*k+1] = sinf( two_pi_N_inv * (float)k );
    }
 
+   float *ifft_output = workspace;
+   workspace += 2*N;
+
    local_ifft_c2r(x,
-                  y,
+                  ifft_output,
                   w,
                   0,
                   1,
                   N,
-                  N,
-                  workspace);
+                  N);
+
+   for (k = 0; k < N; k++) y[k] = ifft_output[k];
 
    const float scale = 1.0f / (float)N;
    for (k = 0; k < N; k++) y[k] *= scale;

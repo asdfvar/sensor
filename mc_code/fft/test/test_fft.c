@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "gettime.h"
 
-#define N_size 28
+#define N_size 38
 
 int main()
 {
@@ -98,6 +98,23 @@ int main()
    float sum = 0.0f;
    for (k = 0; k < new_size; k++) sum += (x[k] - z[k]) * (x[k] - z[k]);
    printf("sum squared error = %f\n", sum);
+
+#if 0
+   sum = 0.0f;
+   int p;
+   for (p = 2; p < 40; p+=2)
+   {
+      local_fft_wrapper_r2c(z, y, p, workspace);
+      local_ifft_wrapper_c2r(y, z, p, workspace);
+      for (k = 0; k < p; k++) 
+      {
+         float error = (x[k] - z[k]) * (x[k] - z[k]);
+         if (error > sum) sum = error;
+         if (error > 0.001f) printf("size = %d\n", p);
+      }
+   }
+   printf("max squared error over several sized FFTs = %f\n", sum);
+#endif
 
    free(buffer);
 

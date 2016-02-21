@@ -47,8 +47,7 @@ void local_ifft_c2r(float *x,
                     int    start,
                     int    stride,
                     int    N,
-                    int    N_orig,
-                    float *workspace);
+                    int    N_orig);
 
 void local_ifft_c2c(float *x,
                     float *y,
@@ -56,8 +55,7 @@ void local_ifft_c2c(float *x,
                     int    start,
                     int    stride,
                     int    N,
-                    int    N_orig,
-                    float *workspace);
+                    int    N_orig);
 
 void local_ifft_wrapper_c2r(float *x,
                             float *y,
