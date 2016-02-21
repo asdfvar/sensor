@@ -16,12 +16,17 @@ void dft_r2c(float *x,
 void idft_c2r(float *x,
               float *y,
               float *w,
+              int    start,
+              int    stride,
               int N);
 
 void idft_c2c(float *x,
               float *y,
               float *w,
-              int N);
+              int    start,
+              int    stride,
+              int    N_orig,
+              int    N);
 
 void local_fft_r2c(float *x,
                    float *y,

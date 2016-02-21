@@ -5,11 +5,14 @@
 inline void idft_c2r(float *x,
                      float *y,
                      float *w,
+                     int    start,
+                     int    stride,
                      int    N)
 {
    int i,k;
    int index;
    float xr, xi;
+   float *w_ptr;
 
    /*
    ** Compute the DFT
@@ -38,7 +41,15 @@ inline void idft_c2r(float *x,
                           2);   /* real part = 1, imag part = 2     */
 
          index = k*i; index %= N;
-         y[k] += xr*w[2*index] - xi*w[2*index+1];
+
+         w_ptr = ref_element(
+                        w,
+                        0,
+                        stride,
+                        index,
+                        2);
+
+         y[k] += xr*w_ptr[0] - xi*w_ptr[1];
       }
 
    }

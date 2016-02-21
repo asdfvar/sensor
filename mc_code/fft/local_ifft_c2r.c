@@ -15,8 +15,6 @@ inline void local_ifft_c2r(float *x,
 
    float *x_sub = workspace;
    workspace    += 2*N;
-   float *w_N_2  = workspace;
-   workspace    += 2*N;
    float *S1     = workspace;
    workspace    += 2*N;
    float *S2     = workspace;
@@ -47,21 +45,17 @@ inline void local_ifft_c2r(float *x,
       idft_c2r(x_sub,
                y,
                w,
+               start,
+               stride,
                N);
 
       return;
    }
 
-   for (k = 0; k < N; k++)
-   {
-      w_N_2[(2*k) % (2*N)  ] = w[(2*(2*k))   % (2*N)];
-      w_N_2[(2*k+1) % (2*N)] = w[(2*(2*k)+1) % (2*N)];
-   }
-
    // evens
    local_ifft_c2r(x,
                   S1,
-                  w_N_2,
+                  w,
                   start,
                   2 * stride,
                   N/2,
@@ -71,7 +65,7 @@ inline void local_ifft_c2r(float *x,
    // odds
    local_ifft_c2c(x,
                   S2,
-                  w_N_2,
+                  w,
                   start + stride,
                   2 * stride,
                   N/2,
@@ -80,12 +74,28 @@ inline void local_ifft_c2r(float *x,
 
    for (k = 0, index = 0; index < N/2; k++, index++)
    {
-      y[index] = S1[k] + (w[2*k]*S2[2*k] - w[2*k+1]*S2[2*k+1]);
+
+      float *w_ptr = ref_element(
+                        w,
+                        0,
+                        stride,
+                        k,
+                        2);
+
+      y[index] = S1[k] + (w_ptr[0]*S2[2*k] - w_ptr[1]*S2[2*k+1]);
    }
 
    for (k = 0, index = N/2; index < N; k++, index++)
    {
-      y[index] = S1[k] - (w[2*k]*S2[2*k] - w[2*k+1]*S2[2*k+1]);
+
+      float *w_ptr = ref_element(
+                        w,
+                        0,
+                        stride,
+                        k,
+                        2);
+
+      y[index] = S1[k] - (w_ptr[0]*S2[2*k] - w_ptr[1]*S2[2*k+1]);
    }
 
 }
