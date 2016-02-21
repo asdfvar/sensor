@@ -7,7 +7,8 @@ inline void idft_c2r(float *x,
                      float *w,
                      int    start,
                      int    stride,
-                     int    N)
+                     int    N,
+                     int    N_orig)
 {
    int i,k;
    int index;
@@ -25,20 +26,20 @@ inline void idft_c2r(float *x,
       {
 
          xr = get_element_conj_sym(
-                          x,    /* The conjugate symmetric array    */
-                          0,    /* starting location on the array   */
-                          1,    /* elements to stride by from start */
-                          N,    /* number of elements in this array */
-                          i,    /* the select element from start    */
-                          1);   /* real part = 1, imag part = 2     */
+                          x,      /* The conjugate symmetric array    */
+                          start,  /* starting location on the array   */
+                          stride, /* elements to stride by from start */
+                          N_orig, /* number of elements in this array */
+                          i,      /* the select element from start    */
+                          1);     /* real part = 1, imag part = 2     */
 
          xi = get_element_conj_sym(
-                          x,    /* The conjugate symmetric array    */
-                          0,    /* starting location on the array   */
-                          1,    /* elements to stride by from start */
-                          N,    /* number of elements in this array */
-                          i,    /* the select element from start    */
-                          2);   /* real part = 1, imag part = 2     */
+                          x,      /* The conjugate symmetric array    */
+                          start,  /* starting location on the array   */
+                          stride, /* elements to stride by from start */
+                          N_orig, /* number of elements in this array */
+                          i,      /* the select element from start    */
+                          2);     /* real part = 1, imag part = 2     */
 
          index = k*i; index %= N;
 

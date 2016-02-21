@@ -18,7 +18,8 @@ void idft_c2r(float *x,
               float *w,
               int    start,
               int    stride,
-              int N);
+              int    N,
+              int    N_orig);
 
 void idft_c2c(float *x,
               float *y,

@@ -13,8 +13,6 @@ inline void local_ifft_c2r(float *x,
 
    int k, index;
 
-   float *x_sub = workspace;
-   workspace    += 2*N;
    float *S1     = workspace;
    workspace    += 2*N;
    float *S2     = workspace;
@@ -23,31 +21,13 @@ inline void local_ifft_c2r(float *x,
    if (N <= 2 || N % 2 != 0)
    {
 
-      for (k = 0; k < N; k++)
-      {
-         x_sub[2*k] = get_element_conj_sym(
-                             x,       /* The conjugate symmetric array    */
-                             start,   /* starting location on the array   */
-                             stride,  /* elements to stride by from start */
-                             N_orig,  /* number of elements in this array */
-                             k,       /* the select element from start    */
-                             1);      /* real part = 1, imag part = 2     */
-
-         x_sub[2*k+1] = get_element_conj_sym(
-                             x,       /* The conjugate symmetric array    */
-                             start,   /* starting location on the array   */
-                             stride,  /* elements to stride by from start */
-                             N_orig,  /* number of elements in this array */
-                             k,       /* the select element from start    */
-                             2);      /* real part = 1, imag part = 2     */
-      }
-
-      idft_c2r(x_sub,
+      idft_c2r(x,
                y,
                w,
                start,
                stride,
-               N);
+               N,
+               N_orig);
 
       return;
    }
