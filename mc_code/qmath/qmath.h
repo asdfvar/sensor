@@ -7,7 +7,9 @@
   ** For micro-controller compiled code
   */
 
-  #include "iqmath.h"
+  #include "QmathLib.h"
+
+  #define BYTES_PER_ELMNT 2
 
   // type declaration
   #define QMATH_q1     _q1
@@ -60,18 +62,48 @@
   #define QMATH_Q14mpy(A, B)   _Q14mpy(A, B)
 
   // square root
-  #define QMATH_Q9sqrt(A)      _Q(X)sqrt(A)
+  #define QMATH_Q1sqrt(A)      _Q1sqrt(A)
+  #define QMATH_Q2sqrt(A)      _Q2sqrt(A)
+  #define QMATH_Q3sqrt(A)      _Q3sqrt(A)
+  #define QMATH_Q4sqrt(A)      _Q4sqrt(A)
+  #define QMATH_Q5sqrt(A)      _Q5sqrt(A)
+  #define QMATH_Q6sqrt(A)      _Q6sqrt(A)
+  #define QMATH_Q7sqrt(A)      _Q7sqrt(A)
+  #define QMATH_Q8sqrt(A)      _Q8sqrt(A)
+  #define QMATH_Q9sqrt(A)      _Q9sqrt(A)
+  #define QMATH_Q10sqrt(A)     _Q10sqrt(A)
+  #define QMATH_Q11sqrt(A)     _Q11sqrt(A)
+  #define QMATH_Q12sqrt(A)     _Q12sqrt(A)
+  #define QMATH_Q13sqrt(A)     _Q13sqrt(A)
+  #define QMATH_Q14sqrt(A)     _Q14sqrt(A)
+  #define QMATH_Q15sqrt(A)     _Q15sqrt(A)
 
   // division
-  #define QMATH_Q9div(A, B)    _Q(X)div(A, B)
+  #define QMATH_Q1div(A, B)    _Q1div(A, B)
+  #define QMATH_Q2div(A, B)    _Q2div(A, B)
+  #define QMATH_Q3div(A, B)    _Q3div(A, B)
+  #define QMATH_Q4div(A, B)    _Q4div(A, B)
+  #define QMATH_Q5div(A, B)    _Q5div(A, B)
+  #define QMATH_Q6div(A, B)    _Q6div(A, B)
+  #define QMATH_Q7div(A, B)    _Q7div(A, B)
+  #define QMATH_Q8div(A, B)    _Q8div(A, B)
+  #define QMATH_Q9div(A, B)    _Q9div(A, B)
+  #define QMATH_Q10div(A, B)   _Q10div(A, B)
+  #define QMATH_Q11div(A, B)   _Q11div(A, B)
+  #define QMATH_Q12div(A, B)   _Q12div(A, B)
+  #define QMATH_Q13div(A, B)   _Q13div(A, B)
+  #define QMATH_Q14div(A, B)   _Q14div(A, B)
+  #define QMATH_Q15div(A, B)   _Q15div(A, B)
 
-#else
+#else ///////////////////////////////////////
 
   /*
   ** For PC compiled code
   */
 
   #include <math.h>
+
+  #define BYTES_PER_ELMNT 4
 
   #define QMATH_q1     float
   #define QMATH_q2     float
@@ -122,9 +154,39 @@
   #define QMATH_Q14mpy(A, B)   (A * B)
   #define QMATH_Q15mpy(A, B)   (A * B)
 
+  // square root
+  #define QMATH_Q1sqrt(A)      sqrtf(A)
+  #define QMATH_Q2sqrt(A)      sqrtf(A)
+  #define QMATH_Q3sqrt(A)      sqrtf(A)
+  #define QMATH_Q4sqrt(A)      sqrtf(A)
+  #define QMATH_Q5sqrt(A)      sqrtf(A)
+  #define QMATH_Q6sqrt(A)      sqrtf(A)
+  #define QMATH_Q7sqrt(A)      sqrtf(A)
+  #define QMATH_Q8sqrt(A)      sqrtf(A)
   #define QMATH_Q9sqrt(A)      sqrtf(A)
+  #define QMATH_Q11sqrt(A)     sqrtf(A)
+  #define QMATH_Q12sqrt(A)     sqrtf(A)
+  #define QMATH_Q13sqrt(A)     sqrtf(A)
+  #define QMATH_Q14sqrt(A)     sqrtf(A)
+  #define QMATH_Q15sqrt(A)     sqrtf(A)
+  #define QMATH_Q16sqrt(A)     sqrtf(A)
 
+  // division
+  #define QMATH_Q1div(A, B)    (A / B)
+  #define QMATH_Q2div(A, B)    (A / B)
+  #define QMATH_Q3div(A, B)    (A / B)
+  #define QMATH_Q4div(A, B)    (A / B)
+  #define QMATH_Q5div(A, B)    (A / B)
+  #define QMATH_Q6div(A, B)    (A / B)
+  #define QMATH_Q7div(A, B)    (A / B)
+  #define QMATH_Q8div(A, B)    (A / B)
   #define QMATH_Q9div(A, B)    (A / B)
+  #define QMATH_Q10div(A, B)   (A / B)
+  #define QMATH_Q11div(A, B)   (A / B)
+  #define QMATH_Q12div(A, B)   (A / B)
+  #define QMATH_Q13div(A, B)   (A / B)
+  #define QMATH_Q14div(A, B)   (A / B)
+  #define QMATH_Q15div(A, B)   (A / B)
 
 #endif
 
