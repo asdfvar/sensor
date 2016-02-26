@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "qmath.h"
+#include "stdint.h"
 
 int main()
 {
@@ -25,6 +26,18 @@ int main()
    circ = QMATH_Q10mpy(diameter, pi);
 
    printf("circumference = %f\n", circ);
+
+#ifdef PC
+   int16_t p = 14848; // 3.625 in Q12
+   int16_t q = 5120;  // 1.25 in Q12
+   int16_t r;
+
+   //r = (p >> 6) * (q >> 6);
+   r = (p * q) >> 12; // 14848 * 10^-12 * 5120*10^-12 = (18560*10^-12)*10^-12
+   printf("r = %d\n", r);
+   printf("float(r) = %f\n", (float)(int)r * 0.5f * 0.5f * 0.5f * 0.5f * 0.5f * 0.5f * 0.5f * 0.5f * 0.5f * 0.5f * 0.5f * 0.5f);
+
+#endif
 
    return 0;
 }
