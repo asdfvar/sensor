@@ -16,10 +16,10 @@ int main()
    /*
    ** Outputs:
    */
-   float energy;                   /* output. Energy */
+   float energy;                   /* output. Energy                                  */
    float correlations[2];          /* output. Correlations for each of the references */
-   float power;                    /* output. Signal power */
-   int   activity;                 /* output. Determined activity */
+   float power;                    /* output. Signal power                            */
+   int   activity;                 /* output. Determined activity                     */
 
    const float sampling_freq = 100.0f; // Hz
    const float data_time_length = 4.0f; // seconds

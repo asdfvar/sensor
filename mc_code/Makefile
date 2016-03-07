@@ -1,6 +1,6 @@
 BASE = .
 CC   = gcc
-OBJ  = sensor_main.o example.o
+OBJ  = sensor_main.o sensor_example.o
 LIBS = -lpreproc -lmatflt -lutils -ltest -lfft -lfftw3f -lm
 
 MATCHEDFILTER = matchedfilter/
@@ -14,7 +14,7 @@ INC  = -I$(BASE)/$(PREPROCESSING) -I$(BASE)/$(MATCHEDFILTER) \
 LIBPATHS = -L$(BASE)/$(PREPROCESSING) -L$(BASE)/$(MATCHEDFILTER) \
            -L$(BASE)/$(UTILITIES) -L$(BASE)/$(UNITTEST) -L$(BASE)/$(FFT)
 
-EXE = example
+EXE = sensor_example
 
 all: $(OBJ)
 	cd $(MATCHEDFILTER) && $(MAKE)
@@ -35,5 +35,5 @@ clean:
 sensor_main.o: sensor_main.c
 	$(CC) $^ -c $(INC)
 
-example.o: example.c
+sensor_example.o: sensor_example.c
 	$(CC) $^ -c $(INC)
