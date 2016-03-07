@@ -1,6 +1,7 @@
 BASE = .
 CC   = gcc
-OBJ  = sensor_main.o sensor_example.o
+OBJ  = sensor_main.o sensor_example.o \
+       training_main.o
 LIBS = -lpreproc -lmatflt -lutils -ltest -lfft -lfftw3f -lm
 
 MATCHEDFILTER = matchedfilter/
@@ -36,4 +37,7 @@ sensor_main.o: sensor_main.c
 	$(CC) $^ -c $(INC)
 
 sensor_example.o: sensor_example.c
+	$(CC) $^ -c $(INC)
+
+training_main.o: training_main.c
 	$(CC) $^ -c $(INC)

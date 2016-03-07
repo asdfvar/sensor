@@ -3,6 +3,9 @@
 #include "run_mf.h"
 #include <stdio.h>
 
+/*
+** Function NAME: training_main
+*/
 void training_main(
  /*[I ]*/ const float  sampling_freq,          /* Sampling frequency                          */
  /*[I ]*/ const float  data_time_length,       /* data time length in seconds                 */
@@ -42,7 +45,11 @@ void training_main(
    int cand_ref, data_it;
 
    float best_ref_correlation = -1.0f;
+   int   best_ref_index = 0;
 
+   /*
+   ** Loop through the candidate references
+   */
    for (cand_ref = 0; cand_ref < num_samples; cand_ref++)
    {
 
@@ -56,14 +63,14 @@ void training_main(
       ** PRE-PROCESSING
       */
       preproc (
-           ax_buffer,     /* Acceleration data in x               */
-           ay_buffer,     /* Acceleration data in y               */
-           az_buffer,     /* Acceleration data in z               */
-           power,         /* Resulting power of the signal        */
+           ax_buffer,         /* Acceleration data in x               */
+           ay_buffer,         /* Acceleration data in y               */
+           az_buffer,         /* Acceleration data in z               */
+           power,             /* Resulting power of the signal        */
            dt,
            data_time_length,
            workspace_float,
-           N_window);     /* Number of sample points              */
+           N_window);         /* Number of sample points              */
 
       for (k = 0; k < N_window; k++) ref_buffer_x[k] = 0.0f;
       for (k = 0; k < N_window; k++) ref_buffer_y[k] = 0.0f;
@@ -73,6 +80,9 @@ void training_main(
 
       float sum_data_correlation = 0.0f;
       
+      /*
+      ** Test the given candidate reference against the rest of the data
+      */
       for (data_it = 0; data_it < num_samples; data_it++)
       {
 
@@ -86,19 +96,19 @@ void training_main(
          ** PRE-PROCESSING
          */
          preproc (
-              ax_buffer,     /* Acceleration data in x               */
-              ay_buffer,     /* Acceleration data in y               */
-              az_buffer,     /* Acceleration data in z               */
-              power,         /* Resulting power of the signal        */
+              ax_buffer,         /* Acceleration data in x               */
+              ay_buffer,         /* Acceleration data in y               */
+              az_buffer,         /* Acceleration data in z               */
+              power,             /* Resulting power of the signal        */
               dt,
               data_time_length,
               workspace_float,
-              N_window);     /* Number of sample points              */
+              N_window);         /* Number of sample points              */
       
          /*
          ** MATCHED-FILTER
          */
-          correlation = run_mf(
+         correlation = run_mf(
                            ax_buffer,
                            ay_buffer,
                            ref_buffer_x,
@@ -109,10 +119,22 @@ void training_main(
                            sampling_freq,
                            workspace_float);
 
-         }
+         sum_data_correlation += correlation;
 
       }
+
+      if (sum_data_correlation > best_ref_correlation)
+      {
+         best_ref_correlation = sum_data_correlation;
+         best_ref_index       = start_ref_index;
+      }
    }
+
+   /*
+   ** Populate the reference data with the best solution
+   */
+   for (k = 0; k < N_window_ref; k++) reference_x[k] = ax[best_ref_index + k];
+   for (k = 0; k < N_window_ref; k++) reference_y[k] = ay[best_ref_index + k];
 
    return;
 }
