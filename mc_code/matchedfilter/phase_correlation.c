@@ -74,6 +74,7 @@
     int k;
     float norm = 0.0f;
 
+    // sum + and - frequencies of the conjugate symmetric data
     for (k = 0; k < N_data; k++) norm += 2.0f * reference[k] * reference[k];
 
     // nyquist

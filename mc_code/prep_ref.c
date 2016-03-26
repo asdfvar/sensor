@@ -19,6 +19,9 @@ void prep_ref(
    int   N_window_ref     = sampling_freq * ref_time_length;
    float *workspace_float = (float*)workspace;
 
+   /*
+   ** PRE-PROCESSING
+   */
    preproc (
         ref_ax,            /* Acceleration in x               */
         ref_ay,            /* Acceleration in y               */
@@ -29,16 +32,15 @@ void prep_ref(
         workspace_float,
         N_window_ref);         /* Number of sample points         */
 
-
-   float *buffer = workspace; workspace        += N_window;
+   float *buffer = workspace_float; workspace_float += N_window;
 
    for (k = 0; k < N_window; k++) buffer[k]     = 0.0f;
    for (k = 0; k < N_window_ref; k++) buffer[k] = ref_ax[k];
-   
+
    local_fft_wrapper_r2c(buffer,
                          ref_ax,
                          N_window,
-                         workspace);
+                         workspace_float);
 
    for (k = 0; k < N_window; k++) buffer[k]     = 0.0f;
    for (k = 0; k < N_window_ref; k++) buffer[k] = ref_ay[k];
@@ -46,7 +48,7 @@ void prep_ref(
    local_fft_wrapper_r2c(buffer,
                          ref_ay,
                          N_window,
-                         workspace);
+                         workspace_float);
 
    return;
 }

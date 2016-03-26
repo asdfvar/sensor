@@ -24,36 +24,36 @@ float run_mf ( float *primary_acceleration,
 
    int k;
 
-   int N_time_window      = (int)(time_window * samp_freq);
-   int N_time_window_ref  = (int)(ref_time_window * samp_freq);
-   int N_data_reference   = N_time_window - N_time_window_ref + 1;
+   int N_window         = (int)(time_window * samp_freq);
+   int N_window_ref     = (int)(ref_time_window * samp_freq);
+   int N_data_reference = N_window - N_window_ref + 1;
 
    /*
    ** Resurve memory for local variables
    */
-   float *norm_primary_squared        = work_buffer; work_buffer += N_time_window;
-   float *cross_correlation_primary   = work_buffer; work_buffer += N_time_window + 2;
-   float *norm_secondary_squared      = work_buffer; work_buffer += N_time_window;
-   float *cross_correlation_secondary = work_buffer; work_buffer += N_time_window + 2;
+   float *norm_primary_squared        = work_buffer; work_buffer += N_window;
+   float *cross_correlation_primary   = work_buffer; work_buffer += N_window + 2;
+   float *norm_secondary_squared      = work_buffer; work_buffer += N_window;
+   float *cross_correlation_secondary = work_buffer; work_buffer += N_window + 2;
    float *cross_correlation           = work_buffer; work_buffer += N_data_reference;
    float *norm_squared                = work_buffer; work_buffer += N_data_reference;
 
    /*
    ** Compute the norm squared of the reference
    */
-   float ref_norm_primary_squared   = freq_norm_squared_f (reference_x, N_time_window);
-   float ref_norm_secondary_squared = freq_norm_squared_f (reference_y, N_time_window);
+   float ref_norm_primary_squared   = freq_norm_squared_f (reference_x, N_window);
+   float ref_norm_secondary_squared = freq_norm_squared_f (reference_y, N_window);
 
    // norm_primary_squared[i] = primary_acc[i] \dot primary_acc[i]
    norm_squared_f (primary_acceleration,
                    norm_primary_squared,
-                   N_time_window_ref,
-                   N_time_window);
+                   N_window_ref,
+                   N_window);
 
    norm_squared_f (secondary_acceleration,
                    norm_secondary_squared,
-                   N_time_window_ref,
-                   N_time_window);
+                   N_window_ref,
+                   N_window);
 
    for (k = 0; k < N_data_reference; k++)
    {
@@ -71,13 +71,13 @@ float run_mf ( float *primary_acceleration,
                       primary_acceleration,
                       cross_correlation_primary,
                       work_buffer,
-                      N_time_window);
+                      N_window);
 
    phase_correlation (reference_y,
                       secondary_acceleration,
                       cross_correlation_secondary,
                       work_buffer,
-                      N_time_window);
+                      N_window);
 
    for (k = 0; k < N_data_reference; k++)
    {

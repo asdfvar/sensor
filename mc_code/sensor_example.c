@@ -38,26 +38,30 @@ int main()
    float ref_time_length[2] = {1.5f, 1.2f}; // seconds
    const int reference_act_ids[2] = {17190, 1015}; // {waking, bicycling}
    const int num_references = 2;
-   float time_inc  = 1.5; // seconds
+   float time_inc  = 1.5f; // seconds
 
    int num_ref_points = (int)((ref_time_length[0] + ref_time_length[1]) * sampling_freq);
 
-   float *references_x = malloc( num_ref_points * sizeof(*references_x) );
-   float *references_y = malloc( num_ref_points * sizeof(*references_y) );
-   float *references_z = malloc( num_ref_points * sizeof(*references_z) );
-   void  *workspace = malloc( 19865 ); // 26 * data_num_elements * sizeof(float)
+   float *references_x = malloc( num_references * data_num_elements * sizeof(*references_x) );
+   float *references_y = malloc( num_references * data_num_elements * sizeof(*references_y) );
+   float *references_z = malloc( num_references * data_num_elements * sizeof(*references_z) );
+   void  *workspace = malloc( 100 * 19865 ); // 26 * data_num_elements * sizeof(float)
+
+   for (k = 0; k < num_references * data_num_elements; k++) references_x[k] = 0.0f;
+   for (k = 0; k < num_references * data_num_elements; k++) references_y[k] = 0.0f;
+   for (k = 0; k < num_references * data_num_elements; k++) references_z[k] = 0.0f;
 
    sinwave(
        ax,
-       TWO_PI*4.0f, // omega
-       0.0f,        // phase
-       1.0f,        // amplitude
+       TWO_PI * 4.0f, // omega
+       0.0f,          // phase
+       1.0f,          // amplitude
        data_time_length,
        sampling_freq);
 
    sinwave(
        ay,
-       TWO_PI*4.0f,
+       TWO_PI * 4.0f,
        0.0f,
        1.0f,
        data_time_length,
@@ -65,7 +69,7 @@ int main()
 
    sinwave(
        az,
-       TWO_PI*4.0f,
+       TWO_PI * 4.0f,
        0.0f,
        0.0f,
        data_time_length,
@@ -73,7 +77,7 @@ int main()
 
    sinwave(
        references_x,
-       TWO_PI*4.0f,
+       TWO_PI * 4.0f,
        0.0f,
        1.0f,
        ref_time_length[0],
@@ -81,25 +85,41 @@ int main()
 
    sinwave(
        references_y,
-       TWO_PI*4.0f,
+       TWO_PI * 4.0f,
        0.0f,
-       0.0f,
+       1.0f,
        ref_time_length[0],
        sampling_freq);
 
    sinwave(
-       references_x + (int)(ref_time_length[0] * sampling_freq),
-       TWO_PI*4.0f,
+       references_z,
+       TWO_PI * 4.0f,
+       0.0f,
+       1.0f,
+       ref_time_length[0],
+       sampling_freq);
+
+   sinwave(
+       references_x + data_num_elements,
+       TWO_PI * 4.0f,
        0.0f,
        1.0f,
        ref_time_length[1],
        sampling_freq);
 
    sinwave(
-       references_y + (int)(ref_time_length[0] * sampling_freq),
-       TWO_PI*4.0f,
+       references_y + data_num_elements,
+       TWO_PI * 4.0f,
        0.0f,
        1.0f,
+       ref_time_length[1],
+       sampling_freq);
+
+   sinwave(
+       references_z + data_num_elements,
+       TWO_PI * 4.0f,
+       0.0f,
+       0.0f,
        ref_time_length[1],
        sampling_freq);
 
