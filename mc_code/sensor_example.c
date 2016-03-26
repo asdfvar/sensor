@@ -44,7 +44,8 @@ int main()
 
    float *references_x = malloc( num_ref_points * sizeof(*references_x) );
    float *references_y = malloc( num_ref_points * sizeof(*references_y) );
-   void *workspace = malloc( 19865 ); // 26 * data_num_elements * sizeof(float)
+   float *references_z = malloc( num_ref_points * sizeof(*references_z) );
+   void  *workspace = malloc( 19865 ); // 26 * data_num_elements * sizeof(float)
 
    sinwave(
        ax,
@@ -113,6 +114,15 @@ int main()
    }
    printf("\n");
 #endif
+
+   prep_ref(
+       references_x,
+       references_y,
+       references_z,
+       ref_time_length[0],
+       data_time_length,
+       sampling_freq,
+       workspace);
 
    sensor_main (
        sampling_freq,     /* Sampling frequency                        */

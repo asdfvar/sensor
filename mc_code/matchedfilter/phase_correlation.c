@@ -55,8 +55,34 @@
     }
     norm[N_data_reference] = tmp;
  
+    return;
  }
  
+/*
+** Function NAME: freq_norm_squared
+**
+**    Computes the normalizing factor of the reference data.
+**    The reference data is in frequency space so this makes
+**    use of Parceval's theorem.
+**
+*/
+ float freq_norm_squared_f (
+  /*[I ]*/   float *__restrict__ reference, /* reference data in frequency space */
+  /*[I ]*/   int                 N_data)
+ {
+
+    int k;
+    float norm = 0.0f;
+
+    for (k = 0; k < N_data; k++) norm += 2.0f * reference[k] * reference[k];
+
+    // nyquist
+    norm += reference[N_data] * reference[N_data];
+
+    norm /= (float)N_data;
+
+    return norm;
+ }
 /*
  * Function NAME: phase_correlation
  */
@@ -73,20 +99,14 @@
 
     float *buffer = workspace; workspace += N_data;
 
-    for (k = 0; k < N_data; k++) buffer[k] = ref[k];
-
-    local_fft_wrapper_r2c(buffer,
-                          ref,
-                          N_data,
-                          workspace);
- 
     local_fft_wrapper_r2c(signal,
                           buffer,
                           N_data,
                           workspace);
 
-    /* Conjugate multiply the reference (conjugate) */
- 
+    /*
+    ** Conjugate multiply the reference (conjugate)
+    */
     for (k = 0; k < N_data+2; k+=2) {
        tmp = ref[k]*buffer[k] + ref[k+1]*buffer[k+1];
        buffer[k+1] = ref[k]*buffer[k+1] - ref[k+1]*buffer[k];

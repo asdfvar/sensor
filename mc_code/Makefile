@@ -1,7 +1,7 @@
 BASE = .
 CC   = gcc
-OBJ  = sensor_main.o sensor_example.o \
-       training_main.o
+OBJ  = prep_ref.o sensor_main.o \
+       sensor_example.o training_main.o
 LIBS = -lpreproc -lmatflt -lutils -ltest -lfft -lfftw3f -lm
 
 MATCHEDFILTER = matchedfilter/
@@ -32,6 +32,9 @@ clean:
 	make -C $(PREPROCESSING) clean
 	make -C $(UNITTEST) clean
 	make -C $(FFT) clean
+
+prep_ref.o: prep_ref.c
+	$(CC) $^ -c $(INC)
 
 sensor_main.o: sensor_main.c
 	$(CC) $^ -c $(INC)

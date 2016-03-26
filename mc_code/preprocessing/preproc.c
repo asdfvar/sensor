@@ -38,8 +38,9 @@ void preproc(
    int i,j,k;
    float cov_mat[3][3]; // Covariance matrix
 
-   /* Demean the data */
-
+   /*
+   ** Demean the data
+   */
    float ave;
    for (k = 0, ave = 0.0; k < N; k++) ave += ax[k];
    ave /= (float) N;
@@ -53,19 +54,23 @@ void preproc(
    ave /= (float) N;
    for (k = 0; k < N; k++) az[k] -= ave;
 
-   /* Compute the power of the signal */
-
-   *power = 0.0;
-   for (k = 0; k < N; k++) {
-      *power += ax[k] * ax[k];
-      *power += ay[k] * ay[k];
-      *power += az[k] * az[k];
+   /*
+   ** Compute the power of the signal
+   */
+   if (power) {
+      *power = 0.0;
+      for (k = 0; k < N; k++) {
+         *power += ax[k] * ax[k];
+         *power += ay[k] * ay[k];
+         *power += az[k] * az[k];
+      }
+      *power *= dt;
+      *power /= time_window;
    }
-   *power *= dt;
-   *power /= time_window;
 
-   /* Build the covariance matrix */
-
+   /*
+   ** Build the covariance matrix
+   */
    for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
          cov_mat[i][j] = 0.0;
@@ -92,9 +97,10 @@ printf("eigVal = %f, %f, %f\n", eigVal[0], eigVal[1], eigVal[2]);
 
    float tmp;
 
-   /* Re-order the eigenvalues in descending order along
-    * with their associated eigenvectors */
-
+   /*
+   **Re-order the eigenvalues in descending order along
+   ** with their associated eigenvectors
+   */
    for (i = 0; i < 2; i++) {
       for (j = 0; j < 2; j++) {
          if (eigVal[j] < eigVal[j+1]) {
@@ -111,10 +117,10 @@ printf("eigVal = %f, %f, %f\n", eigVal[0], eigVal[1], eigVal[2]);
       }
    }
 
-   /* Re-orient the axes in the direction of motion.
-    * The z-direction will be assumed to be near zero.
-    */
-
+   /*
+   ** Re-orient the axes in the direction of motion.
+   ** The z-direction will be assumed to be near zero.
+   */
    float *eigVec_1 = &eigVec[0][0];
    float *eigVec_2 = &eigVec[1][0];
 

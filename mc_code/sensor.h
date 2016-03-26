@@ -1,6 +1,15 @@
 #ifndef SENSOR_MAIN_H
 #define SENSOR_MAIN_H
 
+void prep_ref(
+ /* [IO] */ float       *ref_ax,
+ /* [IO] */ float       *ref_ay,
+ /* [IO] */ float       *ref_az,
+ /* [I ] */ const float  ref_time_length,
+ /* [I ] */ const float  data_time_length,
+ /* [I ] */ const float  sampling_freq,
+ /* [**] */ void        *workspace);
+
 void sensor_main(
  /*[I ]*/ const float sampling_freq,     /* Sampling frequency                        */
  /*[I ]*/ const float data_time_length,  /* Data time length in seconds               */

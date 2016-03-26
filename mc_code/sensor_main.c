@@ -89,8 +89,8 @@ printf("correlation = %f\n", correlation);
          best_activity = activity[k];
       }
 
-      current_reference_x += N_window_ref;
-      current_reference_y += N_window_ref;
+      current_reference_x += N_window;
+      current_reference_y += N_window;
 
    }
 

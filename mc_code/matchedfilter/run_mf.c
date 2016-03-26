@@ -41,13 +41,8 @@ float run_mf ( float *primary_acceleration,
    /*
    ** Compute the norm squared of the reference
    */
-   float ref_norm_primary_squared   = 0.0f;
-   float ref_norm_secondary_squared = 0.0f;
-   for (k = 0; k < N_time_window_ref; k++)
-   {
-      ref_norm_primary_squared += reference_x[k] * reference_x[k];
-      ref_norm_secondary_squared += reference_y[k] * reference_y[k];
-   }
+   float ref_norm_primary_squared   = freq_norm_squared_f (reference_x, N_time_window);
+   float ref_norm_secondary_squared = freq_norm_squared_f (reference_y, N_time_window);
 
    // norm_primary_squared[i] = primary_acc[i] \dot primary_acc[i]
    norm_squared_f (primary_acceleration,
