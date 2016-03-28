@@ -96,7 +96,7 @@ int main()
        references_z,
        TWO_PI * 4.0f,
        0.0f,
-       1.0f,
+       0.0f,
        ref_time_length[0],
        sampling_freq);
 
@@ -174,6 +174,7 @@ int main()
    free(az);
    free(references_x);
    free(references_y);
+   free(references_z);
    free(workspace);
 
    return 0;
