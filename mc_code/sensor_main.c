@@ -1,11 +1,13 @@
 #include "sensor.h"
 #include "preproc.h"
 #include "run_mf.h"
+#include "down_sample.h"
 #include <stdio.h>
 
 void sensor_main(
- /*[I ]*/ const float sampling_freq,     /* Sampling frequency                        */
+ /*[I ]*/ float       sampling_freq,     /* Sampling frequency                        */
  /*[I ]*/ const float data_time_length,  /* data time length in seconds               */
+ /*[I ]*/ const int   downsamp_fact,     /* downsampling factor                       */
  /*[I ]*/ const float time_inc,          /* Time increment for next energy calculation*/
  /*[I ]*/ float      *ax,                /* Acceleration data in x                    */
  /*[I ]*/ float      *ay,                /* Acceleration data in x                    */
@@ -26,12 +28,34 @@ void sensor_main(
  /*[**]*/ void       *workspace)         /* pre-allocated buffer space. Size = TBD    */
 {
 
+   float *workspace_float = (float*)workspace;
+
    int k, p;
+
+   float output_samp_freq;
+
+   output_samp_freq = down_sample (ax,
+                                   sampling_freq,
+                                   data_time_length,
+                                   downsamp_fact,
+                                   workspace_float);
+
+   output_samp_freq = down_sample (ay,
+                                   sampling_freq,
+                                   data_time_length,
+                                   downsamp_fact,
+                                   workspace_float);
+
+   output_samp_freq = down_sample (az,
+                                   sampling_freq,
+                                   data_time_length,
+                                   downsamp_fact,
+                                   workspace_float);
+
+   sampling_freq = output_samp_freq;
 
    float dt = 1.0f / sampling_freq;
    const int   N_window = (int)(sampling_freq * data_time_length);
-
-   float *workspace_float = (float*)workspace;
 
    float *current_reference_x = references_x;
    float *current_reference_y = references_y;

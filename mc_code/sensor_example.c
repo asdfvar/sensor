@@ -21,8 +21,9 @@ int main()
    float power;                    /* output. Signal power                            */
    int   activity;                 /* output. Determined activity                     */
 
-   const float sampling_freq = 100.0f; // Hz
-   const float data_time_length = 4.0f; // seconds
+   const float sampling_freq    = 100.0f;  // Hz
+   const float data_time_length = 4.0f;    // seconds
+   const int   downsamp_fact    = 2;       // downsampling factor
 
    int data_num_elements = (int)(sampling_freq * data_time_length) + 2; // +2 for nyquist
 
@@ -142,11 +143,13 @@ int main()
        ref_time_length[0],
        data_time_length,
        sampling_freq,
+       downsamp_fact,     /* downsampling factor                       */
        workspace);
 
    sensor_main (
        sampling_freq,     /* Sampling frequency                        */
        data_time_length,  /* Data time length in seconds               */
+       downsamp_fact,     /* downsampling factor                       */
        time_inc,          /* Time increment for next energy calculation*/
        ax,                /* Acceleration data in x                    */
        ay,                /* Acceleration data in y                    */

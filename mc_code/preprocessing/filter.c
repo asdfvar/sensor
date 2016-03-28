@@ -44,7 +44,6 @@ void filter (float *data,
    /*
    ** Normalize the interior points of the resulting smoothed data
    */
-
    for (k = half; k < N - half; k++)
    {
       data[k] *= scale;
@@ -53,7 +52,6 @@ void filter (float *data,
    /*
    ** Normalize the end points of the resulting smoothed data
    */
-
    float norm;
    for (k = 0; k < half; k++)
    {

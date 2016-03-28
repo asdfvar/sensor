@@ -7,12 +7,14 @@ void prep_ref(
  /* [IO] */ float       *ref_az,
  /* [I ] */ const float  ref_time_length,
  /* [I ] */ const float  data_time_length,
- /* [I ] */ const float  sampling_freq,
+ /* [I ] */ float        sampling_freq,
+ /* [I ] */ const int    downsamp_fract,
  /* [**] */ void        *workspace);
 
 void sensor_main(
  /*[I ]*/ const float sampling_freq,     /* Sampling frequency                        */
  /*[I ]*/ const float data_time_length,  /* Data time length in seconds               */
+ /*[I ]*/ const int   downsamp_fact,     /* downsampling factor                       */
  /*[I ]*/ const float time_inc,          /* Time increment for next energy calculation*/
  /*[I ]*/ float      *ax,                /* Acceleration data in x                    */
  /*[I ]*/ float      *ay,                /* Acceleration data in x                    */

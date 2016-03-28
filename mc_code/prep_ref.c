@@ -1,6 +1,7 @@
 #include "preproc.h"
 #include "fft.h"
 #include "sensor.h"
+#include "down_sample.h"
 #include <stdlib.h>
 
 void prep_ref(
@@ -9,15 +10,39 @@ void prep_ref(
  /* [IO] */ float       *ref_az,
  /* [I ] */ const float  ref_time_length,
  /* [I ] */ const float  data_time_length,
- /* [I ] */ const float  sampling_freq,
+ /* [I ] */ float        sampling_freq,
+ /* [I ] */ const int    downsamp_fact,
  /* [**] */ void        *workspace)
 {
 
+   float *workspace_float = (float*)workspace;
+
    int k;
-   float dt = 1.0f / sampling_freq;
+   float output_samp_freq;
+
+   output_samp_freq = down_sample (ref_ax,
+                                   sampling_freq,
+                                   data_time_length,
+                                   downsamp_fact,
+                                   workspace_float);
+
+   output_samp_freq = down_sample (ref_ay,
+                                   sampling_freq,
+                                   data_time_length,
+                                   downsamp_fact,
+                                   workspace_float);
+
+   output_samp_freq = down_sample (ref_az,
+                                   sampling_freq,
+                                   data_time_length,
+                                   downsamp_fact,
+                                   workspace_float);
+
+   sampling_freq = output_samp_freq;
+
+   float dt               = 1.0f / sampling_freq;
    int   N_window         = sampling_freq * data_time_length;
    int   N_window_ref     = sampling_freq * ref_time_length;
-   float *workspace_float = (float*)workspace;
 
    /*
    ** PRE-PROCESSING
@@ -30,7 +55,7 @@ void prep_ref(
         dt,
         data_time_length,
         workspace_float,
-        N_window_ref);         /* Number of sample points         */
+        N_window_ref);     /* Number of sample points         */
 
    float *buffer = workspace_float; workspace_float += N_window;
 
