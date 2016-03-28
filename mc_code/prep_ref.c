@@ -22,19 +22,19 @@ void prep_ref(
 
    output_samp_freq = down_sample (ref_ax,
                                    sampling_freq,
-                                   data_time_length,
+                                   ref_time_length,
                                    downsamp_fact,
                                    workspace_float);
 
    output_samp_freq = down_sample (ref_ay,
                                    sampling_freq,
-                                   data_time_length,
+                                   ref_time_length,
                                    downsamp_fact,
                                    workspace_float);
 
    output_samp_freq = down_sample (ref_az,
                                    sampling_freq,
-                                   data_time_length,
+                                   ref_time_length,
                                    downsamp_fact,
                                    workspace_float);
 
@@ -43,6 +43,10 @@ void prep_ref(
    float dt               = 1.0f / sampling_freq;
    int   N_window         = sampling_freq * data_time_length;
    int   N_window_ref     = sampling_freq * ref_time_length;
+
+   for (k = N_window_ref; k < N_window; k++) ref_ax[k] = 0.0f;
+   for (k = N_window_ref; k < N_window; k++) ref_ay[k] = 0.0f;
+   for (k = N_window_ref; k < N_window; k++) ref_az[k] = 0.0f;
 
    /*
    ** PRE-PROCESSING

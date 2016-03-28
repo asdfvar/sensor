@@ -41,17 +41,18 @@ int main()
    const int num_references = 2;
    float time_inc  = 1.5f; // seconds
 
-   int num_ref_points = (int)((ref_time_length[0] + ref_time_length[1]) * sampling_freq);
-
    float *references_x = malloc( num_references * data_num_elements * sizeof(*references_x) );
    float *references_y = malloc( num_references * data_num_elements * sizeof(*references_y) );
    float *references_z = malloc( num_references * data_num_elements * sizeof(*references_z) );
-   void  *workspace = malloc( 100 * 19865 ); // 26 * data_num_elements * sizeof(float)
+   void  *workspace = malloc( 40000 ); // 26 * data_num_elements * sizeof(float)
 
    for (k = 0; k < num_references * data_num_elements; k++) references_x[k] = 0.0f;
    for (k = 0; k < num_references * data_num_elements; k++) references_y[k] = 0.0f;
    for (k = 0; k < num_references * data_num_elements; k++) references_z[k] = 0.0f;
 
+   /*
+   ** Example data set
+   */
    sinwave(
        ax,
        TWO_PI * 4.0f, // omega
@@ -76,6 +77,9 @@ int main()
        data_time_length,
        sampling_freq);
 
+   /*
+   ** Example first reference set
+   */
    sinwave(
        references_x,
        TWO_PI * 4.0f,
@@ -100,8 +104,22 @@ int main()
        ref_time_length[0],
        sampling_freq);
 
+   prep_ref(
+       references_x,
+       references_y,
+       references_z,
+       ref_time_length[0],
+       data_time_length,
+       sampling_freq,
+       downsamp_fact,     /* downsampling factor                       */
+       workspace);
+
+#if 0
+   /*
+   ** Example second reference set
+   */
    sinwave(
-       references_x + data_num_elements,
+       references_x + data_num_elements / downsamp_fact,
        TWO_PI * 4.0f,
        0.0f,
        1.0f,
@@ -109,7 +127,7 @@ int main()
        sampling_freq);
 
    sinwave(
-       references_y + data_num_elements,
+       references_y + data_num_elements / downsamp_fact,
        TWO_PI * 4.0f,
        0.0f,
        1.0f,
@@ -117,7 +135,7 @@ int main()
        sampling_freq);
 
    sinwave(
-       references_z + data_num_elements,
+       references_z + data_num_elements / downsamp_fact,
        TWO_PI * 4.0f,
        0.0f,
        0.0f,
@@ -137,14 +155,15 @@ int main()
 #endif
 
    prep_ref(
-       references_x,
-       references_y,
-       references_z,
-       ref_time_length[0],
+       references_x + data_num_elements / downsamp_fact,
+       references_y + data_num_elements / downsamp_fact,
+       references_z + data_num_elements / downsamp_fact,
+       ref_time_length[1],
        data_time_length,
        sampling_freq,
        downsamp_fact,     /* downsampling factor                       */
        workspace);
+#endif
 
    sensor_main (
        sampling_freq,     /* Sampling frequency                        */

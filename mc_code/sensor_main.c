@@ -30,7 +30,7 @@ void sensor_main(
 
    float *workspace_float = (float*)workspace;
 
-   int k, p;
+   int ref_ind, p;
 
    float output_samp_freq;
 
@@ -79,10 +79,8 @@ void sensor_main(
    float best_correlation = -1.0f;
    int   best_activity    =  0;
 
-   for (k = 0; k < num_references; k++)
+   for (ref_ind = 0; ref_ind < num_references; ref_ind++)
    {
-
-      int   N_window_ref = (int)(sampling_freq * ref_time_length[k]);
 
       for (p = 0; p < N_window; p++) ref_buffer_x[p] = 0.0f;
       for (p = 0; p < N_window; p++) ref_buffer_y[p] = 0.0f;
@@ -101,7 +99,7 @@ void sensor_main(
                         ref_buffer_y,
                         dt,
                         data_time_length,
-                        ref_time_length[k],
+                        ref_time_length[ref_ind],
                         sampling_freq,
                         workspace_float);
 
@@ -110,7 +108,7 @@ printf("correlation = %f\n", correlation);
       if (correlation > best_correlation)
       {
          best_correlation = correlation;
-         best_activity = activity[k];
+         best_activity = activity[ref_ind];
       }
 
       current_reference_x += N_window;

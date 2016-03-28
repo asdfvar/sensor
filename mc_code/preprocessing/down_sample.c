@@ -22,7 +22,7 @@ int down_sample (float *data,
    for (k = 0; k < window ; k++) weights[k] *= norm;
 
    float val;
-   for (ind = 0, new_ind = 0; ind < N - window + 1; ind += downsamp_fact, new_ind++)
+   for (new_ind = 0, ind = 0; new_ind < N; ind += downsamp_fact, new_ind++)
    {
       val = 0.0f;
       for (k = 0; k < window; k++) val += data[ind + k] * weights[k];
