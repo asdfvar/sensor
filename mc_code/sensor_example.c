@@ -44,7 +44,7 @@ int main()
    float *references_x = malloc( num_references * data_num_elements * sizeof(*references_x) );
    float *references_y = malloc( num_references * data_num_elements * sizeof(*references_y) );
    float *references_z = malloc( num_references * data_num_elements * sizeof(*references_z) );
-   void  *workspace = malloc( 40000 ); // 26 * data_num_elements * sizeof(float)
+   void  *workspace    = malloc( 40000 ); // 26 * data_num_elements * sizeof(float)
 
    for (k = 0; k < num_references * data_num_elements; k++) references_x[k] = 0.0f;
    for (k = 0; k < num_references * data_num_elements; k++) references_y[k] = 0.0f;
