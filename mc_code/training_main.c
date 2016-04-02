@@ -40,8 +40,6 @@ void training_main(
 
    int    N_data = (int)(data_time_length * sampling_freq);
 
-   float *power;
-
    int cand_ref, data_it;
 
    float best_ref_correlation = -1.0f;
@@ -53,30 +51,21 @@ void training_main(
    for (cand_ref = 0; cand_ref < num_samples; cand_ref++)
    {
 
-      int start_ref_index = total_data_time_length / num_samples * cand_ref;
+      int start_ref_index = (int)((total_data_time_length - data_time_length) / num_samples) * cand_ref;
 
-      for (k = 0; k < N_window; k++) ax_buffer[k] = ax[start_ref_index + k];
-      for (k = 0; k < N_window; k++) ay_buffer[k] = ay[start_ref_index + k];
-      for (k = 0; k < N_window; k++) az_buffer[k] = az[start_ref_index + k];
+      for (k = 0; k < N_window; k++) ref_buffer_x[k] = ax[start_ref_index + k];
+      for (k = 0; k < N_window; k++) ref_buffer_y[k] = ay[start_ref_index + k];
+      for (k = 0; k < N_window; k++) az_buffer[k]    = az[start_ref_index + k];
 
-      /*
-      ** PRE-PROCESSING
-      */
-      preproc (
-           ax_buffer,         /* Acceleration data in x               */
-           ay_buffer,         /* Acceleration data in y               */
-           az_buffer,         /* Acceleration data in z               */
-           power,             /* Resulting power of the signal        */
-           dt,
-           data_time_length,
-           workspace_float,
-           N_window);         /* Number of sample points              */
-
-      for (k = 0; k < N_window; k++) ref_buffer_x[k] = 0.0f;
-      for (k = 0; k < N_window; k++) ref_buffer_y[k] = 0.0f;
-
-      for (k = 0; k < N_window_ref; k++) ref_buffer_x[k] = ax_buffer[k];
-      for (k = 0; k < N_window_ref; k++) ref_buffer_y[k] = ay_buffer[k];
+      prep_ref(
+            ref_buffer_x,
+            ref_buffer_y,
+            az_buffer,
+            ref_time_length,
+            data_time_length,
+            sampling_freq,
+            1,
+            workspace);
 
       float sum_data_correlation = 0.0f;
       
@@ -99,7 +88,7 @@ void training_main(
               ax_buffer,         /* Acceleration data in x               */
               ay_buffer,         /* Acceleration data in y               */
               az_buffer,         /* Acceleration data in z               */
-              power,             /* Resulting power of the signal        */
+              NULL,              /* Resulting power of the signal        */
               dt,
               data_time_length,
               workspace_float,

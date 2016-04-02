@@ -4,6 +4,21 @@
 #include "down_sample.h"
 #include <stdlib.h>
 
+/*
+** Function name: prep_ref
+**
+** Prepares the reference data for matched-filter processing. The
+** motivation here is to prepare the reference data prior to writing
+** it to storage memory so that it can be called and used when needed.
+**
+**   Steps:
+**      1) Filter and downsample (filtering is combined with the downsample
+**         to make use of neighboring data before it is deleted)
+**      2) Pre-process the data. This step performs the dimensionality reduction
+**         along with additional smoothing.
+**      3) The FFT is applied to the now two dimensional reference data.
+*/
+
 void prep_ref(
  /* [IO] */ float       *ref_ax,
  /* [IO] */ float       *ref_ay,
