@@ -25,11 +25,15 @@ int main()
    const float data_time_length = 4.0f;    // seconds
    const int   downsamp_fact    = 2;       // downsampling factor
 
-   int data_num_elements = (int)(sampling_freq * data_time_length);
+   int data_num_elements               = (int)(sampling_freq * data_time_length);
+   int data_freq_num_elements          = data_num_elements + 2;
+   int data_downsamp_num_elements      = data_num_elements / downsamp_fact;
+   int data_freq_downsamp_num_elements = data_downsamp_num_elements + 2;
 
    float *ax = malloc( data_num_elements * sizeof(*ax) );
    float *ay = malloc( data_num_elements * sizeof(*ay) );
    float *az = malloc( data_num_elements * sizeof(*az) );
+
 
    int sex = MALE;
    int age = 30;
@@ -125,7 +129,7 @@ printf("\n");
    ** Example second reference set
    */
    sinwave(
-       references_x + (data_num_elements / downsamp_fact + 2),
+       references_x + data_freq_downsamp_num_elements,
        TWO_PI * 4.0f,
        0.0f,
        1.0f,
@@ -133,7 +137,7 @@ printf("\n");
        sampling_freq);
 
    sinwave(
-       references_y + (data_num_elements / downsamp_fact + 2),
+       references_y + data_freq_downsamp_num_elements,
        TWO_PI * 4.0f,
        0.0f,
        1.0f,
@@ -141,7 +145,7 @@ printf("\n");
        sampling_freq);
 
    sinwave(
-       references_z + (data_num_elements / downsamp_fact + 2),
+       references_z + data_freq_downsamp_num_elements,
        TWO_PI * 4.0f,
        0.0f,
        0.0f,
@@ -161,9 +165,9 @@ printf("\n");
 #endif
 
    prep_ref(
-       references_x + data_num_elements / downsamp_fact + 2,
-       references_y + data_num_elements / downsamp_fact + 2,
-       references_z + data_num_elements / downsamp_fact + 2,
+       references_x + data_freq_downsamp_num_elements,
+       references_y + data_freq_downsamp_num_elements,
+       references_z + data_freq_downsamp_num_elements,
        ref_time_length[1],
        data_time_length,
        sampling_freq,

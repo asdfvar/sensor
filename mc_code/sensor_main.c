@@ -55,13 +55,14 @@ void sensor_main(
    sampling_freq = output_samp_freq;
 
    float dt = 1.0f / sampling_freq;
-   const int   N_window = (int)(sampling_freq * data_time_length);
+   const int N_window = (int)(sampling_freq * data_time_length);
+   const int N_freq_window = N_window + 2;
 printf("%s:N_window = %d\n", __FILE__, N_window);
 
    float *current_reference_x = references_x;
    float *current_reference_y = references_y;
-   float *ref_buffer_x    = workspace_float; workspace_float += N_window + 2;
-   float *ref_buffer_y    = workspace_float; workspace_float += N_window + 2;
+   float *ref_buffer_x    = workspace_float; workspace_float += N_freq_window;
+   float *ref_buffer_y    = workspace_float; workspace_float += N_freq_window;
    int    N_data = (int)(data_time_length * sampling_freq);
 
    /*
@@ -83,16 +84,16 @@ printf("%s:N_window = %d\n", __FILE__, N_window);
    for (ref_ind = 0; ref_ind < num_references; ref_ind++)
    {
 
-      for (p = 0; p < N_window; p++) ref_buffer_x[p] = 0.0f;
-      for (p = 0; p < N_window; p++) ref_buffer_y[p] = 0.0f;
+      for (p = 0; p < N_freq_window; p++) ref_buffer_x[p] = 0.0f;
+      for (p = 0; p < N_freq_window; p++) ref_buffer_y[p] = 0.0f;
 
-      for (p = 0; p < N_window; p++) ref_buffer_x[p] = current_reference_x[p];
-      for (p = 0; p < N_window; p++) ref_buffer_y[p] = current_reference_y[p];
+      for (p = 0; p < N_freq_window; p++) ref_buffer_x[p] = current_reference_x[p];
+      for (p = 0; p < N_freq_window; p++) ref_buffer_y[p] = current_reference_y[p];
 
 #if 1
 printf("ref_x = \n");
 int k;
-for (k = 0; k < N_window; k++) printf("%f, ", ref_buffer_x[k]);
+for (k = 0; k < N_freq_window; k++) printf("%f, ", ref_buffer_x[k]);
 printf("\n");
 #endif
 
@@ -119,8 +120,8 @@ printf("correlation = %f\n", correlation);
          best_activity = activity[ref_ind];
       }
 
-      current_reference_x += N_window + 2;
-      current_reference_y += N_window + 2;
+      current_reference_x += N_freq_window;
+      current_reference_y += N_freq_window;
 
    }
 
