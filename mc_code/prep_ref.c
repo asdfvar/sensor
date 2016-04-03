@@ -76,7 +76,7 @@ void prep_ref(
         workspace_float,
         N_window_ref);     /* Number of sample points         */
 
-   float *buffer = workspace_float; workspace_float += N_window;
+   float *buffer = workspace_float; workspace_float += N_window + 2;
 
    for (k = 0; k < N_window; k++) buffer[k]     = 0.0f;
    for (k = 0; k < N_window_ref; k++) buffer[k] = ref_ax[k];

@@ -25,7 +25,7 @@ int main()
    const float data_time_length = 4.0f;    // seconds
    const int   downsamp_fact    = 2;       // downsampling factor
 
-   int data_num_elements = (int)(sampling_freq * data_time_length) + 2; // +2 for nyquist
+   int data_num_elements = (int)(sampling_freq * data_time_length);
 
    float *ax = malloc( data_num_elements * sizeof(*ax) );
    float *ay = malloc( data_num_elements * sizeof(*ay) );
@@ -36,7 +36,7 @@ int main()
    float weight = 68.0f; // kg
    float height = 175.0f; // cm
 
-   float ref_time_length[2] = {1.5f, 1.2f}; // seconds
+   float ref_time_length[2] = {1.5f, 1.5f}; // seconds
    const int reference_act_ids[2] = {17190, 1015}; // {waking, bicycling}
    const int num_references = 2;
    float time_inc  = 1.5f; // seconds
@@ -115,11 +115,17 @@ int main()
        workspace);
 
 #if 0
+printf("ref_x = \n");
+for (k = 0; k < sampling_freq * data_time_length / downsamp_fact; k++) printf("%f, ", references_x[k]);
+printf("\n");
+#endif
+
+#if 1
    /*
    ** Example second reference set
    */
    sinwave(
-       references_x + data_num_elements / downsamp_fact,
+       references_x + (data_num_elements / downsamp_fact + 2),
        TWO_PI * 4.0f,
        0.0f,
        1.0f,
@@ -127,7 +133,7 @@ int main()
        sampling_freq);
 
    sinwave(
-       references_y + data_num_elements / downsamp_fact,
+       references_y + (data_num_elements / downsamp_fact + 2),
        TWO_PI * 4.0f,
        0.0f,
        1.0f,
@@ -135,7 +141,7 @@ int main()
        sampling_freq);
 
    sinwave(
-       references_z + data_num_elements / downsamp_fact,
+       references_z + (data_num_elements / downsamp_fact + 2),
        TWO_PI * 4.0f,
        0.0f,
        0.0f,
@@ -145,7 +151,7 @@ int main()
 #if 0
    srand(0);
 
-   for (k = 0; k < (int)(data_time_length*sampling_freq); k++)
+   for (k = 0; k < (int)(data_time_length*sampling_freq + 2); k++)
    {
       ax[k] = (float)rand() / (float)RAND_MAX;
       ay[k] = (float)rand() / (float)RAND_MAX;
@@ -155,14 +161,22 @@ int main()
 #endif
 
    prep_ref(
-       references_x + data_num_elements / downsamp_fact,
-       references_y + data_num_elements / downsamp_fact,
-       references_z + data_num_elements / downsamp_fact,
+       references_x + data_num_elements / downsamp_fact + 2,
+       references_y + data_num_elements / downsamp_fact + 2,
+       references_z + data_num_elements / downsamp_fact + 2,
        ref_time_length[1],
        data_time_length,
        sampling_freq,
        downsamp_fact,     /* downsampling factor                       */
        workspace);
+
+#if 0
+printf("ref_x = \n");
+for (k = 0; k < sampling_freq * data_time_length / downsamp_fact + 2; k++) printf("%f, ", references_x[data_num_elements / downsamp_fact + 2 + k]);
+printf("\n");
+#endif
+printf("%s:N_window = %d\n", __FILE__, (int)(data_num_elements / downsamp_fact));
+
 #endif
 
    sensor_main (

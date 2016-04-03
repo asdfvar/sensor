@@ -56,6 +56,7 @@ void sensor_main(
 
    float dt = 1.0f / sampling_freq;
    const int   N_window = (int)(sampling_freq * data_time_length);
+printf("%s:N_window = %d\n", __FILE__, N_window);
 
    float *current_reference_x = references_x;
    float *current_reference_y = references_y;
@@ -88,6 +89,13 @@ void sensor_main(
       for (p = 0; p < N_window; p++) ref_buffer_x[p] = current_reference_x[p];
       for (p = 0; p < N_window; p++) ref_buffer_y[p] = current_reference_y[p];
 
+#if 1
+printf("ref_x = \n");
+int k;
+for (k = 0; k < N_window; k++) printf("%f, ", ref_buffer_x[k]);
+printf("\n");
+#endif
+
       /*
       ** MATCHED-FILTER
       */
@@ -111,8 +119,8 @@ printf("correlation = %f\n", correlation);
          best_activity = activity[ref_ind];
       }
 
-      current_reference_x += N_window;
-      current_reference_y += N_window;
+      current_reference_x += N_window + 2;
+      current_reference_y += N_window + 2;
 
    }
 
