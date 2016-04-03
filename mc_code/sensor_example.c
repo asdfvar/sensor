@@ -35,15 +35,15 @@ int main()
    float *az = malloc( data_num_elements * sizeof(*az) );
 
 
-   int sex = MALE;
-   int age = 30;
-   float weight = 68.0f; // kg
+   int   sex    = MALE;
+   int   age    = 30;
+   float weight = 68.0f;  // kg
    float height = 175.0f; // cm
 
-   float ref_time_length[2] = {1.5f, 1.5f}; // seconds
-   const int reference_act_ids[2] = {17190, 1015}; // {waking, bicycling}
-   const int num_references = 2;
-   float time_inc  = 1.5f; // seconds
+   float     ref_time_length[2]   = {1.5f, 1.5f}; // seconds
+   const int reference_act_ids[2] = {17190, 1015}; // {walking, bicycling}
+   const int num_references       = 2;
+   float     time_inc             = 1.5f; // seconds
 
    float *references_x = malloc( num_references * data_num_elements * sizeof(*references_x) );
    float *references_y = malloc( num_references * data_num_elements * sizeof(*references_y) );
@@ -118,12 +118,6 @@ int main()
        downsamp_fact,     /* downsampling factor                       */
        workspace);
 
-#if 0
-printf("ref_x = \n");
-for (k = 0; k < sampling_freq * data_time_length / downsamp_fact; k++) printf("%f, ", references_x[k]);
-printf("\n");
-#endif
-
 #if 1
    /*
    ** Example second reference set
@@ -132,7 +126,7 @@ printf("\n");
        references_x + data_freq_downsamp_num_elements,
        TWO_PI * 4.0f,
        0.0f,
-       1.0f,
+       0.0f,
        ref_time_length[1],
        sampling_freq);
 
@@ -148,7 +142,7 @@ printf("\n");
        references_z + data_freq_downsamp_num_elements,
        TWO_PI * 4.0f,
        0.0f,
-       0.0f,
+       1.0f,
        ref_time_length[1],
        sampling_freq);
 
@@ -161,7 +155,6 @@ printf("\n");
       ay[k] = (float)rand() / (float)RAND_MAX;
       az[k] = (float)rand() / (float)RAND_MAX;
    }
-   printf("\n");
 #endif
 
    prep_ref(
@@ -173,13 +166,6 @@ printf("\n");
        sampling_freq,
        downsamp_fact,     /* downsampling factor                       */
        workspace);
-
-#if 0
-printf("ref_x = \n");
-for (k = 0; k < sampling_freq * data_time_length / downsamp_fact + 2; k++) printf("%f, ", references_x[data_num_elements / downsamp_fact + 2 + k]);
-printf("\n");
-#endif
-printf("%s:N_window = %d\n", __FILE__, (int)(data_num_elements / downsamp_fact));
 
 #endif
 
