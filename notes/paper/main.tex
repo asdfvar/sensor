@@ -99,9 +99,7 @@
 %
 %\usepackage{cite}
 % cite.sty was written by Donald Arseneau
-% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
-% \cite{} output to follow that of IEEE. Loading the cite package will
-% result in citation numbers being automatically sorted and properly
+% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package % \cite{} output to follow that of IEEE. Loading the cite package will % result in citation numbers being automatically sorted and properly
 % "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using
 % cite.sty will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's
 % \cite will automatically add leading space, if needed. Use cite.sty's
@@ -463,7 +461,8 @@ GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}% <-this %
 
 \begin{abstract}
 %\boldmath
-\blindtext[1]
+% \blindtext[0]
+abstract text here
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
@@ -495,10 +494,10 @@ IEEEtran, journal, \LaTeX, paper, template.
 
 
 \section{Introduction}
-\blindtext
+Introduction here \cite{IEEEhowto:kopka}
 
 \subsection{Subsection Heading Here}
-\blindtext
+subsection text here
 
 % needed in second column of first page if using \IEEEpubid
 %\IEEEpubidadjcol
@@ -588,8 +587,7 @@ IEEEtran, journal, \LaTeX, paper, template.
 
 
 \section{Conclusion}
-\blindtext
-
+conclusion text here
 
 
 
@@ -670,7 +668,7 @@ H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
 % or if you just want to reserve a space for a photo:
 
 \begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{picture}}]{John Doe}
-\blindtext
+biography text here
 \end{IEEEbiography}
 
 % You can push biographies down or up by placing
