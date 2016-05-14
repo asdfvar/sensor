@@ -1,7 +1,8 @@
 TEX = pdflatex
 
 all:
-	$(TEX) main.tex
+	$(TEX) paper.tex
+	bibtex paper
 
 clean:
-	rm *.aux *.log main.pdf
+	rm *.aux *.log *.pdf *.blg *.bbl
