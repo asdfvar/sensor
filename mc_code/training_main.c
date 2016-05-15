@@ -10,7 +10,6 @@ void training_main(
  /*[I ]*/ const float  sampling_freq,          /* Sampling frequency                          */
  /*[I ]*/ const float  data_time_length,       /* data time length in seconds                 */
  /*[I ]*/ const float  total_data_time_length, /* total time length of the incoming data      */
- /*[I ]*/ const float  time_inc,               /* Time increment for next energy calculation  */
  /*[I ]*/ const float *ax,                     /* Acceleration data in x                      */
  /*[I ]*/ const float *ay,                     /* Acceleration data in x                      */
  /*[I ]*/ const float *az,                     /* Acceleration data in x                      */

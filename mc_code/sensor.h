@@ -34,4 +34,17 @@ void sensor_main(
  /*[ O]*/ int        *activity,          /* Determined activity                       */
  /*[ O]*/ void       *workspace);        /* pre-allocated buffer space. Size = TBD    */
 
+void training_main(
+ /*[I ]*/ const float  sampling_freq,          /* Sampling frequency                          */
+ /*[I ]*/ const float  data_time_length,       /* data time length in seconds                 */
+ /*[I ]*/ const float  total_data_time_length, /* total time length of the incoming data      */
+ /*[I ]*/ const float *ax,                     /* Acceleration data in x                      */
+ /*[I ]*/ const float *ay,                     /* Acceleration data in x                      */
+ /*[I ]*/ const float *az,                     /* Acceleration data in x                      */
+ /*[I ]*/ const float  ref_time_length,        /* Time length for the reference               */
+ /*[ O]*/ float       *reference_x,            /* Reference x                                 */
+ /*[ O]*/ float       *reference_y,            /* Reference y                                 */
+ /*[I ]*/ const int    num_samples,            /* Number of samples to test for reference     */
+ /*[**]*/ void        *workspace);
+
 #endif
