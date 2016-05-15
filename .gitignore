@@ -1,6 +1,7 @@
 # Pre-compiled object files
 *.o
 *.a
+*.swp
 
 # Specific directories and files
 code/output/
