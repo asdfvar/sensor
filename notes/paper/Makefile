@@ -5,4 +5,4 @@ all:
 	bibtex paper
 
 clean:
-	rm *.aux *.log *.pdf *.blg *.bbl
+	rm *.aux *.log *.pdf *.blg *.bbl *~
