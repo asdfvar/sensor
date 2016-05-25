@@ -6,7 +6,8 @@
 \usepackage{natbib}
 \usepackage{notoccite}
 \usepackage{amssymb}
-%%%% l;kj %%%
+\usepackage{textcomp}
+%
 \begin{document}
 %
 % paper title
@@ -53,13 +54,10 @@ The resulting eigen vectors of this matrix are orthogonal and point in the direc
 By projecting our data on the plain defined by the two most dominant eigen vectors, we've effectively reduced our representation of our data to two dimensions.
 %
 \section{Training the Module}
-Each person has a unique physical signature for each physical activity they perform.
-For our application, we develop a reference signature for our matched filter directly from the person’s motion signature.
+We are able to identify an individual\textquotesingle's activity by matching the signal to a reference template.
+For our application, we develop a reference signature for our matched filter directly from the person\textquotesingle’s motion signature.
 We do this by having the individual perform the specific activity over a specified amount of time and select the sub-interval of time that we find best represents the user's motion signature.
 For a given activity, we attempt to find the representative periodic signal s of our individual’s activity to be our template.
-We assume there is a close enough representative signal s’ = s + e’ to be taken over some pre-set finite length interval I present in our training set X.
-Because the activities we are interested in classifying are periodic and range closely around 1.0 seconds we choose an interval I near 1.0 seconds.
-We divide our training set X into N sub intervals ${s_1, s_2, …, s_N}$ and we test each one against all the other ones.
 %
 \section{System Hardware}
 The sensor used for this analysis is a three-axis accelerometer unit from Kinetisense.
