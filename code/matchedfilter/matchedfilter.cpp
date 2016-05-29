@@ -1,6 +1,7 @@
 #include "matchedfilter.h"
 #include "taper.h"
 #include "filter.h"
+#include "down_sample.h"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -49,6 +50,39 @@ static float norm_ref( float *reference,
 /******************************************************************************/
 
 /*
+** Function NAME: downsample
+*/
+void matchedfilter::downsample(int   downsample_factor,
+                               MEMORY mem_buffer)
+{
+
+   if (downsample_factor <= 1) return;
+
+   float l_sampling_freq;
+
+   float *workspace = mem_buffer.allocate_float( 2 * downsample_factor );
+
+   l_sampling_freq = down_sample (ref_ax,
+                                  samp_freq_ref,
+                                  time_window_ref,
+                                  downsample_factor,
+                                  workspace);
+
+   l_sampling_freq = down_sample (ref_ax,
+                                  samp_freq_ref,
+                                  time_window_ref,
+                                  downsample_factor,
+                                  workspace);
+
+   samp_freq_ref = l_sampling_freq;
+   N_window_ref /= downsample_factor;
+   dt_ref       *= downsample_factor;
+
+}
+
+/******************************************************************************/
+
+/*
  * Constructor NAME: matchedfilter
  */
 matchedfilter::matchedfilter (int N_data, int activity_ID_in)
@@ -84,12 +118,12 @@ void matchedfilter::load_ref (float *ax_in, float *ay_in,
    dt_ref          = dt_in;
    samp_freq_ref   = samp_freq_in;
 
-   for (int k=0; k<N_window_ref; k++) {
+   for (int k = 0; k < N_window_ref; k++) {
       ref_ax[k] = ax_in[k];
       ref_ay[k] = ay_in[k];
    }
 
-   for (int k=N_window_ref; k<N_data_ref; k++) {
+   for (int k = N_window_ref; k < N_data_ref; k++) {
       ref_ax[k] = 0.0;
       ref_ay[k] = 0.0;
    }

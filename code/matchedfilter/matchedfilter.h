@@ -18,28 +18,21 @@ class matchedfilter {
                      float time_window_in, int N_window_in, int N_data_in);
 
       float *access_ax (void);
-
       float *access_ay (void);
-
-      float get_norm_ax (void);
-
-      float get_norm_ay (void);
-
-      void set_correlation (float corr);
-
-      float get_correlation (void); // Return correlation in x
-
-      int get_N_window (void);
-
-      void set_ID(int);  // set the activity ID
-      int  get_ID(void); // get the activity ID
-
-      bool write(std::string); // write the data to file
-
-      void write_corr (std::string file,
-                       bool initial_write);
+      float  get_norm_ax (void);
+      float  get_norm_ay (void);
+      void   set_correlation (float corr);
+      float  get_correlation (void); // Return correlation in x
+      int    get_N_window (void);
+      void   set_ID(int);  // set the activity ID
+      int    get_ID(void); // get the activity ID
+      bool   write(std::string); // write the data to file
+      void   write_corr (std::string file,
+                         bool initial_write);
 
       void print_all (void);
+      void downsample(int   downsample_factor,
+                      MEMORY mem_buffer);
 
       void apply_taper (float *taper_buff,
                         float cutoff_freq,

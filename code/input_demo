@@ -3,6 +3,7 @@ sensor      = 2          # Sensor number to use (Kinetisense)
 samp_freq   = 128.0      # Sampling frequency of the sensor
 time_window = 4.0        # Window of time to analyze the data (seconds)
 threshold   = 0.90       # Threshold to determine when to classify the activity based on correlation
+downsample_factor = 1    # Downsample factor
 sex         = M          # M (male) or F (female)
 age         = 30         # in years
 weight      = 70.0       # in kgF

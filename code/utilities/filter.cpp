@@ -13,9 +13,9 @@ namespace util {
  */
 
 void filter (float *data,
-                   int    points,
-                   int    N,
-                   MEMORY mem_buffer)
+             int    points,
+             int    N,
+             MEMORY mem_buffer)
 {
 
    float *z    = mem_buffer.allocate_float( N );

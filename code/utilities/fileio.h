@@ -191,6 +191,7 @@ namespace fio {
       std::string get_ref_path (void);
       std::string get_activity_ID (void);
       int         get_sensor (void);
+      int         get_downsample_factor (void);
 
    private:
 
@@ -211,6 +212,7 @@ namespace fio {
       std::string ref_path;    bool b_ref_path;
       std::string activity_ID; bool b_activity_ID;
       int   select_sensor;     bool b_select_sensor;
+      int   downsample_factor; bool b_downsample_factor;
 
       float dt;
       bool  b_taper;

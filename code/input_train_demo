@@ -2,6 +2,7 @@ sensor      = 2      # Tag name specific to this run. will be appended to the en
 samp_freq   = 128.0  # Sampling frequency of the sensor
 time_window = 4.0    # Window of time to analyze the data (seconds)
 ref_time    = 1.0    # Time span for the reference (seconds)
+downsample_factor = 1   # Downsampling factor
 data_path   = ../data/Phase_2/csv_format/Craig/Craig_Walking_tredmil.csv # path to the data
 activity_ID = 17190  # ID number associated to the activity referenced from the compendium of physical activities
 ref_path    = output/ref_data    # path to put the reference file

@@ -71,6 +71,9 @@ int main(int argc, char *argv[]) {
       ref_path = InRefs.get_ref_path(i_ref);
       MF = new matchedfilter (ref_path.c_str(), N_window);
 
+      MF->downsample( PARAMETERS.get_downsample_factor(),
+                      mem_buffer);
+
       MF->filter (
           NUM_TENT_FILT_POINTS,
           mem_buffer);

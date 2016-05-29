@@ -7,7 +7,7 @@ LIB = libsens.a
 
 OBJ = fft.o read_kinetisense.o fileio.o gettime.o write_data.o \
       taper.o energy_expenditure.o filter.o memory_management.o \
-      string_utils.o
+      string_utils.o down_sample.o
 
 all: $(OBJ)
 	$(CL) $(LIB) $(OBJ)
@@ -43,4 +43,7 @@ memory_management.o: memory_management.cpp
 	$(CPPC) $^ -c $(FLAGS)
 
 string_utils.o: string_utils.cpp
+	$(CPPC) $^ -c $(FLAGS)
+
+down_sample.o: down_sample.cpp
 	$(CPPC) $^ -c $(FLAGS)

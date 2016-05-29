@@ -295,6 +295,7 @@ namespace fio {
     ref_path      = get_parameter_s   ("ref_path"   ); // used for training
     activity_ID   = get_parameter_s   ("activity_ID"); // used for training
     select_sensor = get_parameter_i   ("sensor"     ); // which sensor to use
+    downsample_factor = get_parameter_i ("downsample_factor");
 
     b_tag         = (tag         != "-1")  ? true : false;
     b_time_window = (time_window >= 0.0f)  ? true : false;
@@ -311,6 +312,7 @@ namespace fio {
     b_ref_path    = (ref_path    != "-1")  ? true : false;
     b_activity_ID = (activity_ID != "-1")  ? true : false;
     b_select_sensor = (select_sensor >= 0) ? true : false;
+    b_downsample_factor = (downsample_factor >= 0) ? true : false;
 
     input.close();
 
@@ -348,6 +350,7 @@ namespace fio {
     if (b_activity_ID) std::cout << "activity_ID = " << activity_ID << std::endl;
     if (b_samp_freq)   std::cout << "dt          = " << dt          << std::endl;
     if (b_taper)       std::cout << "applying data smoothing"       << std::endl;
+    if (b_downsample_factor) std::cout << "downsample factor = " << downsample_factor << std::endl;
                        std::cout << "Kinetisense sensor " << select_sensor << std::endl;
     std::cout << std::endl;
 
@@ -648,12 +651,24 @@ namespace fio {
     return sex;
  }
 
+/******************************************************************/
+
  /*
   * Function NAME: get_sensor
   */
  int parameters::get_sensor (void)
  {
     return select_sensor;
+ }
+
+/******************************************************************/
+
+ /*
+  * Function NAME: get_downsample_factor
+  */
+ int parameters::get_downsample_factor (void)
+ {
+    return downsample_factor;
  }
 
 /******************************************************************/
