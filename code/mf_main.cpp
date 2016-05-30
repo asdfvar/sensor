@@ -74,14 +74,8 @@ int main(int argc, char *argv[]) {
       ref_path = InRefs.get_ref_path(i_ref);
       MF = new matchedfilter (ref_path.c_str(), N_window);
 
-      std::cout << "before downsample:" << std::endl;
-      MF->print_reference_x();
-
       MF->downsample( PARAMETERS.get_downsample_factor(),
                       mem_buffer);
-
-      std::cout << "after downsample:" << std::endl;
-      MF->print_reference_x();
 
       MF->filter (
           NUM_TENT_FILT_POINTS,

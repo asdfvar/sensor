@@ -74,14 +74,10 @@ void matchedfilter::downsample(int   downsample_factor,
                                   downsample_factor,
                                   workspace);
 
-std::cout << "N_window_ref = " << N_window_ref << ", N_data_ref = " << N_data_ref << std::endl;
-
    samp_freq_ref = l_sampling_freq;
    N_window_ref /= downsample_factor;
    dt_ref       *= downsample_factor;
    N_data_ref   /= downsample_factor;
-
-std::cout << "N_window_ref = " << N_window_ref << ", N_data_ref = " << N_data_ref << std::endl;
 
    for (int k = N_window_ref; k < N_data_ref; k++) ref_ax[k] = 0.0f;
    for (int k = N_window_ref; k < N_data_ref; k++) ref_ay[k] = 0.0f;
