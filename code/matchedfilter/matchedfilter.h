@@ -31,6 +31,8 @@ class matchedfilter {
                          bool initial_write);
 
       void print_all (void);
+      void print_reference_x (void);
+      void print_reference_y (void);
       void downsample(int   downsample_factor,
                       MEMORY mem_buffer);
 

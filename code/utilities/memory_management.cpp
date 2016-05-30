@@ -25,12 +25,15 @@ float *MEMORY::allocate_float (size_t N)
    /*
    ** Check if there is enough allocated memory
    */
+   size_t memory_left = N_floats - (size_t)(float_ptr - float_ptr_base);
 
-   if ( N > N_floats - (size_t)(float_ptr - float_ptr_base) )
+   if ( N > memory_left )
    {
-      std::cout << "Error: Attempting to reserve more memory " <<
-                   "than what has been allocated."             <<
-                   std::endl;
+      std::cout << "Error: Attempting to reserve more memory (" << N << ")" <<
+                   "than what is left ( " << memory_left <<
+                   " floats) from the total (" << N_floats << " floats)."
+                   << std::endl;
+
       return NULL;
 
    } else {

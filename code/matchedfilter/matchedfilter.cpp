@@ -68,15 +68,23 @@ void matchedfilter::downsample(int   downsample_factor,
                                   downsample_factor,
                                   workspace);
 
-   l_sampling_freq = down_sample (ref_ax,
+   l_sampling_freq = down_sample (ref_ay,
                                   samp_freq_ref,
                                   time_window_ref,
                                   downsample_factor,
                                   workspace);
 
+std::cout << "N_window_ref = " << N_window_ref << ", N_data_ref = " << N_data_ref << std::endl;
+
    samp_freq_ref = l_sampling_freq;
    N_window_ref /= downsample_factor;
    dt_ref       *= downsample_factor;
+   N_data_ref   /= downsample_factor;
+
+std::cout << "N_window_ref = " << N_window_ref << ", N_data_ref = " << N_data_ref << std::endl;
+
+   for (int k = N_window_ref; k < N_data_ref; k++) ref_ax[k] = 0.0f;
+   for (int k = N_window_ref; k < N_data_ref; k++) ref_ay[k] = 0.0f;
 
 }
 
@@ -424,6 +432,40 @@ void matchedfilter::print_all (void)
    std::cout << "nor_ref_ax =      " << norm_ref_ax     << std::endl;
    std::cout << "norm_ref_ay =     " << norm_ref_ay     << std::endl;
    std::cout << "correlation =     " << correlation     << std::endl;
+}
+
+/******************************************************************************/
+
+/*
+** Function NAME: print_reference_x
+*/
+void matchedfilter::print_reference_x (void)
+{
+
+   std::cout << "reference_x = ";
+   for (int k = 0; k < N_data_ref; k++)
+   {
+      std::cout << ref_ax[k] << ", ";
+   }
+   std::cout << std::endl;
+
+}
+
+/******************************************************************************/
+
+/*
+** Function NAME: print_reference_y
+*/
+void matchedfilter::print_reference_y (void)
+{
+
+   std::cout << "reference_x = ";
+   for (int k = 0; k < N_data_ref; k++)
+   {
+      std::cout << ref_ay[k] << ", ";
+   }
+   std::cout << std::endl;
+
 }
 
 /******************************************************************************/

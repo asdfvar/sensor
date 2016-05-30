@@ -318,6 +318,7 @@ namespace fio {
 
     // defaults
     if ( !b_select_sensor ) select_sensor = 2;
+    if ( !b_downsample_factor ) downsample_factor = 1;
 
     if (b_samp_freq) dt = 1.0f / samp_freq; else dt = -1.0f; // seconds
     b_taper        = (b_cutoff_freq) ? true : false;

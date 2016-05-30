@@ -20,6 +20,7 @@ void run_mf (matchedfilter *MF,
              float          dt,
              float          samp_freq,
              int            N_data,
+             bool           debug,
              MEMORY         mem_buffer)
 {
 
@@ -63,14 +64,10 @@ void run_mf (matchedfilter *MF,
                              cross_correlation_primary,
                              N_data);
 
-
-
    phase::phase_correlation (MF->access_ay(),
                              secondary_acceleration,
                              cross_correlation_secondary,
                              N_data);
-
-
 
    for (int k = 0; k < N_data_reference; k++)
    {
@@ -90,7 +87,6 @@ void run_mf (matchedfilter *MF,
 
    float max       = cross_correlation[0];
 
-
    for (int index = 1; index < N_data_reference; index++)
    {
       if (cross_correlation[index] > max)
@@ -100,7 +96,6 @@ void run_mf (matchedfilter *MF,
 
       }
    }
-
 
    float correlation = sqrtf( max );
 

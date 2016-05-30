@@ -38,6 +38,9 @@ void preproc(
 
    float dt        = PARAMETERS->get_dt();
    float window    = PARAMETERS->get_time_window();
+   int   downsample_factor = PARAMETERS->get_downsample_factor();
+
+   dt *= downsample_factor;
 
    /* Demean the data */
 

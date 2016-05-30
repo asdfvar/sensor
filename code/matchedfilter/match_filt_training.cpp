@@ -162,6 +162,7 @@ void match_filt_training(
                dt,
                samp_freq,
                N_window,
+               false,
                mem_buffer);
 
        sum_corr += MF->get_correlation();

@@ -17,6 +17,7 @@
 #include "taper.h"
 #include "filter.h"
 #include "run_mf.h"
+#include "down_sample.h"
 #include "define_parameters.h"
 
 extern "C" {
@@ -40,6 +41,8 @@ int main(int argc, char *argv[]) {
    std::string data_path   = PARAMETERS.get_data_path();
    float start_time      = 0.0f;
    int   N_window        = PARAMETERS.get_N_window();
+   int   downsample_factor = PARAMETERS.get_downsample_factor();
+   int N_window_downsampled = N_window / downsample_factor;
    float *ax             = new float[N_window + 2];
    float *ay             = new float[N_window + 2];
    float *az             = new float[N_window + 2];
@@ -54,7 +57,7 @@ int main(int argc, char *argv[]) {
    int   select_sensor;
    matchedfilter *MF;
 
-   MEMORY mem_buffer(6 * (N_window + 2));
+   MEMORY mem_buffer((100 + 6) * (N_window + 2));
 
    /* Setup Kinetisense data */
 
@@ -71,14 +74,20 @@ int main(int argc, char *argv[]) {
       ref_path = InRefs.get_ref_path(i_ref);
       MF = new matchedfilter (ref_path.c_str(), N_window);
 
+      std::cout << "before downsample:" << std::endl;
+      MF->print_reference_x();
+
       MF->downsample( PARAMETERS.get_downsample_factor(),
                       mem_buffer);
+
+      std::cout << "after downsample:" << std::endl;
+      MF->print_reference_x();
 
       MF->filter (
           NUM_TENT_FILT_POINTS,
           mem_buffer);
 
-      MF->apply_fft(N_window);
+      MF->apply_fft(N_window_downsampled);
       MF_activities.append ( MF );
 
    }
@@ -87,6 +96,9 @@ int main(int argc, char *argv[]) {
 
    TIME preproc_time    ( -1 );
    TIME match_filt_time ( -1 );
+
+   // TODO: re-work down_sample function to properly handle the memory management object
+   float *float_workbuffer = mem_buffer.allocate_float( N_window );
 
    /* Iterate through the data */
 
@@ -102,8 +114,25 @@ int main(int argc, char *argv[]) {
       /*
        * PRE-PROCESSING
        */
-
       preproc_time.start();
+
+      down_sample(ax,
+                  PARAMETERS.get_samp_freq(),
+                  PARAMETERS.get_time_window(),
+                  PARAMETERS.get_downsample_factor(),
+                  float_workbuffer);
+
+      down_sample(ay,
+                  PARAMETERS.get_samp_freq(),
+                  PARAMETERS.get_time_window(),
+                  PARAMETERS.get_downsample_factor(),
+                  float_workbuffer);
+
+      down_sample(az,
+                  PARAMETERS.get_samp_freq(),
+                  PARAMETERS.get_time_window(),
+                  PARAMETERS.get_downsample_factor(),
+                  float_workbuffer);
 
       preproc(
           ax,            /* Acceleration data in x               */
@@ -111,18 +140,18 @@ int main(int argc, char *argv[]) {
           az,            /* Acceleration data in z               */
           &power,        /* Resulting power of the signal        */
           &PARAMETERS,   /* Sampling frequency of the data       */
-          N_window);     /* Number of sample points              */
+          N_window_downsampled);     /* Number of sample points              */
 
       util::filter (
           ax,
           NUM_TENT_FILT_POINTS,
-          N_window,
+          N_window_downsampled,
           mem_buffer);
 
       util::filter (
           ay,
           NUM_TENT_FILT_POINTS,
-          N_window,
+          N_window_downsampled,
           mem_buffer);
 
       preproc_time.end();
@@ -139,8 +168,8 @@ int main(int argc, char *argv[]) {
 
          MF = MF_activities.get_MF();
 
-         for (int p = 0; p < N_window+2; p++) primary[p]   = ax[p];
-         for (int p = 0; p < N_window+2; p++) secondary[p] = ay[p];
+         for (int p = 0; p < N_window_downsampled+2; p++) primary[p]   = ax[p];
+         for (int p = 0; p < N_window_downsampled+2; p++) secondary[p] = ay[p];
 
          match_filt_time.start();
 
@@ -149,7 +178,8 @@ int main(int argc, char *argv[]) {
                  secondary,
                  PARAMETERS.get_dt(),
                  PARAMETERS.get_samp_freq(),
-                 N_window,
+                 N_window_downsampled,
+                 true,
                  mem_buffer);
 
          match_filt_time.end();

@@ -9,6 +9,7 @@ void run_mf (matchedfilter *MF,
              float          dt,
              float          samp_freq,
              int            N_data,
+             bool           debug,
              MEMORY         mem_buffer);
 
 #endif
