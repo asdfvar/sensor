@@ -1,7 +1,3 @@
-/*
- * start_time    - seconds from start
- * N_window      - Number of data points of the signal
- */
 
 #include <iostream>
 #include <stdlib.h>

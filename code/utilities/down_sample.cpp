@@ -1,6 +1,7 @@
 #include "down_sample.h"
 #include <stdio.h>
 
+//TODO: Put this in its own namespace. Possibly util. And address the workspace
 int down_sample (float *data,
                  float  sampling_freq,
                  float  time_length,
