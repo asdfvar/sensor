@@ -93,8 +93,8 @@ int main(int argc, char *argv[]) {
    /* Iterate through the data */
 
    for (itt=0;
-           KIN.valid_start_end (start_time, PARAMETERS.get_time_window());
-              itt++, start_time += TIME_INC)
+        KIN.valid_start_end (start_time, PARAMETERS.get_time_window());
+        itt++, start_time += TIME_INC)
    {
 
       KIN.load_sens_ax (ax, start_time, PARAMETERS.get_sensor(), N_window);

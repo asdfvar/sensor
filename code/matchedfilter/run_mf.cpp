@@ -80,10 +80,17 @@ void run_mf (matchedfilter *MF,
       cross_correlation[k] *= cross_correlation[k];
    }
 
+   bool unstable = false;
    for (int k = 0; k < N_data_reference; k++)
    {
-      cross_correlation[k] /= norm_squared[k];
+      if (norm_squared[k] > 0.0001f) cross_correlation[k] /= norm_squared[k];
+      else
+      {
+         cross_correlation[k] = 0.0f;
+         unstable = true;
+      }
    }
+   if (unstable) std::cout << __FILE__ << ":Possible instability in normalization averted" << std::endl;
 
    float max       = cross_correlation[0];
 

@@ -80,12 +80,18 @@ float **kinIO::read_kinetisense(
    std::ifstream kin_data;
    kin_data.open (path);
 
+   if (!kin_data.is_open())
+   {
+      std::cout << "Error: Could not open file:" << std::endl;
+      std::cout << path << std::endl;
+      return NULL;
+   }
+
    kin_data.seekg(0);
 
    /*
    **  Read the header
    */
-
    std::getline (kin_data, header);
 
    std::cout << "parsing header:" << std::endl;
