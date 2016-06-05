@@ -74,9 +74,9 @@ This algorithm is the most demanding on computational resources and is rarely ra
 The purpose of the training module is to derive the reference signal to be used on the micro-controller for real-time processing.
 The training process uses the same algorithm kernels as the activity classification.
 %
-\section{Results}
+\section{Matched-Filter Performance}
 %
-ROC curves, timing results?, flop counts.
+To demonstrate how effective the matched-filter is for classification, walking, jogging, and bicycling data has been collected from a single individual. One instance of walking data has been used to train the classifier on and a seperate instance of walking data has been used for comparison. Figure \ref{ROC_walk_to_run_fig} shows the effectiveness of the classifier when comparing walking to jogging and figure \ref{ROC_walk_to_bike_fig} shows the comparison to bicycling. Because the bicycling motions are considerably different from walking relative to jogging, we would expect better performance from for bicycling.
 \begin{figure}[!tbp]
 \RawFloats
   \centering
