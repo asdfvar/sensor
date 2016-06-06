@@ -15,7 +15,7 @@
 % paper title
 \title{Real-Time Application of Activity Classification from Body-Worn Accelerometers}
 %
-\author{Craig~Euler, C.T. Lin, Melissa Flores, et al? (Ruben, Bryan, Sydney, Steve?)}
+\author{Craig~Euler, C.T. Lin, Melissa Flores, Bryan, Ruben, Sydney, Steve}
 %
 % make the title area
 \maketitle
@@ -46,25 +46,32 @@ Because the matched-filter method requires use of an existing reference template
 We will discuss how we develop our set of templates for use in our matched-filter.
 
 The matched filter is based on the cross correlation of the data $\vec{y} = \{y\}_{k=0}^{N-1}$ with the reference signal $\vec{x} = \{x\}_{k=0}^{M-1}$.
-% put this later when we refer to the convolution theorem
-If we define $\vec{x}'$ to be $\vec{x}$ that has been zero padded to the length of $\vec{y}$ with the added restriction that the length of $\vec{x}$ be no more than half the length of $\vec{y}$ for preventing corruption with circular indexing, then the cross correlation of $\vec{x}$ with $\vec{y}$ is defined as:
+The cross correlation of $\vec{x}$ with $\vec{y}$ is defined as:
 %
 \begin{equation} \label{cross_correlation_eq}
-(\vec{x} \star \vec{y}) = \{\sum_{i=0}^{M}(x_{i} y_{(i+k)\%N})\}_{k=0}^{N-M}
+(\vec{x} \star \vec{y}) = \left \{\sum_{i=0}^{M}(x_{i} y_{(i+k)\%N}) \right \}_{k=0}^{N-M}
 \end{equation}
 %
 which is simply a moving dot product. Here we use $(i+k)\%N$ to represent $i+k$ modulo $N$.
 We can then normalize \eqref{cross_correlation_eq} by the following:
 %
 \begin{equation} \label{norm_cross_correlation_eq}
-\widehat{(\vec{x} \star \vec{y})}_k = \frac{(\vec{x} \star \vec{y})_k}{\sqrt{||\vec{x}|| \sum_{p=0}^M y_{p+k}^2}}
+\widehat{(\vec{x} \star \vec{y})}_k = \frac{(\vec{x} \star \vec{y})_k}{||\vec{x}|| \ || \{y_p\}_{p=k}^{M+k} || }, \quad k = 0,1,...,N-M-1
 \end{equation}
 %
-where \eqref{norm_cross_correlation_eq} is now bound by $[-1,1]$ and has removed any biased toward high energy.
-We are most interested where our reference best matches our data. The resulting max correlation yeilds our matched-filter output:
+where $|| \cdot ||$ is the usual $L_2$ norm. \eqref{norm_cross_correlation_eq} is now bound by $[-1,1]$ and has any bias toward high energy removed.
+We can improve our computational efficiency by applying the convolution theorem to \eqref{cross_correlation_eq}:
+%
+\begin{equation} \label{conv_theorem}
+(\vec{x} \star \vec{y}) = FFT^{-1}(FFT(\vec{x}') FFT(\vec{y})^*)
+\end{equation}
+%
+Where $\vec{x}'$ is $\vec{x}$ that has been zero padded to the length of $\vec{y}$ with the added restriction that the length of $\vec{x}$ is no more than half the length of $\vec{y}$ to prevent corruption from circular indexing.
+We are most interested where our reference best matches our data.
+The resulting max correlation yeilds our matched-filter output:
 %
 \begin{equation} \label{matched_filter_eq}
-MF := \underset{k \in [0, M-N]}{max} \{\widehat{(\vec{x} \star \vec{y})}_k\}
+MF := \underset{k \in [0, M-N]}{max} \left \{\widehat{(\vec{x} \star \vec{y})}_k \right \}
 \end{equation}
 %
 \section{Dimensionality Reduction}
@@ -81,7 +88,15 @@ By projecting our data on the plain defined by the two most dominant eigen vecto
 We are able to identify an individual\textquotesingle's activity by matching the signal to a reference template.
 For our application, we develop a reference signature for our matched filter directly from the person\textquotesingle’s motion signature.
 We do this by having the individual perform the specific activity over a specified amount of time and select the sub-interval of time that we find best represents the user's motion signature.
-For a given activity, we attempt to find the representative periodic signal s of our individual’s activity to be our template.
+For a given activity, we attempt to find the representative periodic signal $x$ of our individual’s activity to be our template.
+
+If $\vec{t} = \{t_k\}_{k=0}^{N_t}$ is our training set over $N_t$ data points, we define a collection of subsets $X$ of $\vec{t}$:
+%
+\begin{equation} \label{subsets_of_training_eq}
+X := \left \{ \{t_k\}_{k=p}^{p+M-1} | p=nI \right \}
+\end{equation}
+%
+where $I$ is a positive, fixed integer and $n$ varies such that $0 \leq nI$ and $nI + M - 1 \leq N_t$
 %
 \section{System Hardware}
 The sensor used for this analysis is a three-axis accelerometer unit from Kinetisense.
