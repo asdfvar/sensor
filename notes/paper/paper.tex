@@ -49,10 +49,10 @@ The matched filter is based on the cross correlation of the data $\vec{y} = \{y\
 The cross correlation of $\vec{x}$ with $\vec{y}$ is defined as:
 %
 \begin{equation} \label{cross_correlation_eq}
-(\vec{x} \star \vec{y}) = \left \{\sum_{i=0}^{M}(x_{i} y_{(i+k)\%N}) \right \}_{k=0}^{N-M}
+(\vec{x} \star \vec{y}) = \left \{\sum_{i=0}^{M}(x_{i} y_{i+k}) \right \}_{k=0}^{N-M-1}
 \end{equation}
 %
-which is simply a moving dot product. Here we use $(i+k)\%N$ to represent $i+k$ modulo $N$.
+which is simply a moving dot product.
 We can then normalize \eqref{cross_correlation_eq} by the following:
 %
 \begin{equation} \label{norm_cross_correlation_eq}
@@ -81,7 +81,7 @@ By identifying the plane of motion, we then project the acceleration data onto t
 By this assumption, activities that are mostly confined to two dimensions will improve our signal identification.
 
 If we let $\{\vec{a}_i\}_{i=0}^{N}$ represent our demeaned acceleration data over some time window $T$ in $\mathbb{R}^3$ then the covariance matrix of our acceleration data is represented by the real-symmetric $3x3$ matrix $Q = \vec{a} \vec{a}^T$.
-The resulting eigen vectors of this matrix are orthogonal and point in the directions where the data varies most [cite from some text book here].
+The resulting eigen vectors of this matrix are orthogonal and point in the directions where the data varies most [cite from some textbook here].
 By projecting our data on the plain defined by the two most dominant eigen vectors, we effectively reduce our representation of our data to two dimensions.
 %
 \section{Training the Module}
