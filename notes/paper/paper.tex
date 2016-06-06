@@ -15,7 +15,7 @@
 % paper title
 \title{Real-Time Application of Activity Classification from Body-Worn Accelerometers}
 %
-\author{Craig~Euler, C.T. Lin, Melissa Flores, Bryan, Ruben, Sydney, Steve}
+\author{Craig~Euler, C.T. Lin, Melissa Flores, Bryan, Ruben, Sidney, Steve}
 %
 % make the title area
 \maketitle
@@ -32,10 +32,10 @@ An assessment of our computational costs are provided as processing flop counts 
 %
 \section{Introduction}
 Various methods for activity classification exist.
-Custom dicision tree, automatically generated decision tree, and artificial neural networks \cite{parkka_ermes_korpipaa_mantyjarvi_peltola_korhonen_2006} have been explored as well as other frequency based classification methods \cite{sharma_purwar_lee_lee_chung_2008}.
+Custom decision tree, automatically generated decision tree, and artificial neural networks \cite{parkka_ermes_korpipaa_mantyjarvi_peltola_korhonen_2006} have been explored as well as other frequency based classification methods \cite{sharma_purwar_lee_lee_chung_2008}.
 In this paper, we employ the use of a matched-filter method to identify an individual’s activity in real-time.
 The matched-filtering method with use of thresholding and comparing the correlations of various filters is a simple method to use and have been studied in the past \cite{giannakis_tsatsanis_1990}.
-Computational resources are limited on micro-processors so we've designed our algorithms to be as efficient as possible.
+Computational resources are limited on micro-processors so we\textquotesingle ve designed our algorithms to be as efficient as possible.
 Having an a priori knowledge of the activity the individual is performing is useful for many current fitness algorithms.
 These devices (Fit-Bit, Apple watch, Moov, Jawbone, etc.) usually have the individual input the activity they are performing.
 %
@@ -60,43 +60,55 @@ We can then normalize \eqref{cross_correlation_eq} by the following:
 \end{equation}
 %
 where $|| \cdot ||$ is the usual $L_2$ norm. \eqref{norm_cross_correlation_eq} is now bound by $[-1,1]$ and has any bias toward high energy removed.
-We can improve our computational efficiency by applying the convolution theorem to \eqref{cross_correlation_eq}:
+We improve our computational efficiency by applying the convolution theorem to \eqref{cross_correlation_eq} and replacing it with:
 %
 \begin{equation} \label{conv_theorem}
 (\vec{x} \star \vec{y}) = FFT^{-1}(FFT(\vec{x}') FFT(\vec{y})^*)
 \end{equation}
 %
-Where $\vec{x}'$ is $\vec{x}$ that has been zero padded to the length of $\vec{y}$ with the added restriction that the length of $\vec{x}$ is no more than half the length of $\vec{y}$ to prevent corruption from circular indexing.
+Where $\vec{x}'$ is $\vec{x}$ that has been zero padded to the length of $\vec{y}$ with the added restriction that the length of $\vec{x}$ is no more than the length of $\vec{y}$ to prevent corruption from circular indexing.
 We are most interested where our reference best matches our data.
-The resulting max correlation yeilds our matched-filter output:
+The resulting max correlation yields our matched-filter output:
 %
 \begin{equation} \label{matched_filter_eq}
-MF := \underset{k \in [0, M-N]}{max} \left \{\widehat{(\vec{x} \star \vec{y})}_k \right \}
+MF(\vec{x},\vec{y}) := \underset{k \in [0, M-N]}{max} \left \{\widehat{(\vec{x} \star \vec{y})}_k \right \}
 \end{equation}
 %
 \section{Dimensionality Reduction}
 We manage to reduce our computational resources and remove our dependence on sensor orientation at the same time through a process of dimensionality reduction.
-We assume that over a short period of time a user’s limb movement is constrained mostly to a two-dimensional plane.
+We assume that over a short period of time, a user\textquotesingle s limb movement is constrained mostly to a two-dimensional plane.
 By identifying the plane of motion, we then project the acceleration data onto this plane and re-define our $x$ and $y$ axis accordingly.
 By this assumption, activities that are mostly confined to two dimensions will improve our signal identification.
 
 If we let $\{\vec{a}_i\}_{i=0}^{N}$ represent our demeaned acceleration data over some time window $T$ in $\mathbb{R}^3$ then the covariance matrix of our acceleration data is represented by the real-symmetric $3x3$ matrix $Q = \vec{a} \vec{a}^T$.
 The resulting eigen vectors of this matrix are orthogonal and point in the directions where the data varies most [cite from some text book here].
-By projecting our data on the plain defined by the two most dominant eigen vectors, we've effectively reduced our representation of our data to two dimensions.
+By projecting our data on the plain defined by the two most dominant eigen vectors, we effectively reduce our representation of our data to two dimensions.
 %
 \section{Training the Module}
-We are able to identify an individual\textquotesingle's activity by matching the signal to a reference template.
-For our application, we develop a reference signature for our matched filter directly from the person\textquotesingle’s motion signature.
+We are able to identify an individual\textquotesingle s activity by matching the signal to a reference template.
+For our application, we develop a reference signature for our matched filter directly from the person\textquotesingle s motion signature.
 We do this by having the individual perform the specific activity over a specified amount of time and select the sub-interval of time that we find best represents the user's motion signature.
-For a given activity, we attempt to find the representative periodic signal $x$ of our individual’s activity to be our template.
+For a given activity, we attempt to find the representative periodic signal $s$ of our individual’s activity to be our template for our matched-filter.
 
 If $\vec{t} = \{t_k\}_{k=0}^{N_t}$ is our training set over $N_t$ data points, we define a collection of subsets $X$ of $\vec{t}$:
 %
-\begin{equation} \label{subsets_of_training_eq}
-X := \left \{ \{t_k\}_{k=p}^{p+M-1} | p=nI \right \}
+\begin{equation} \label{X_subsets_of_training_eq}
+X := \left \{ \{t_k\}_{k=p}^{p+M-1} | p=mI \right \}
 \end{equation}
 %
-where $I$ is a positive, fixed integer and $n$ varies such that $0 \leq nI$ and $nI + M - 1 \leq N_t$
+and $Y$ of $\vec{t}$:
+%
+\begin{equation} \label{Y_subsets_of_training_eq}
+Y := \left \{ \{t_k\}_{k=p}^{p+N-1} | p=nI \right \}
+\end{equation}
+%
+where $M \leq N$, $I$ is a positive, fixed integer, and $(n,m) \in \mathbb{Z}^2$ where $(m,n)$ vary such that $0 \leq (m,n)I$ and $(m,n)I + (M,N) - 1 \leq N_t$. Then we can determine the representative signal $\vec{s} \in X$ for our activity that satisfies the condition:
+%
+\begin{equation} \label{s_condition}
+\sum_{y \in Y}MF(\vec{s}, \vec{y}) \geq \sum_{y \in Y}MF(\vec{x},\vec{y}) \quad \forall \vec{x} \in X
+\end{equation}
+
+We chose this method for its simplicity and robustness against outliers in our training set. We anticipate that the user will have idle motion at the start and end of their training duration when they activate the training mode and with possible disruptions during the process.
 %
 \section{System Hardware}
 The sensor used for this analysis is a three-axis accelerometer unit from Kinetisense.
@@ -114,7 +126,7 @@ The training process uses the same algorithm kernels as the activity classificat
 %
 \section{Matched-Filter Performance}
 %
-To demonstrate how effective the matched-filter is for classification, walking, jogging, and bicycling data has been collected from a single individual. One instance of walking data has been used to train the classifier on and a seperate instance of walking data has been used for comparison. Figure \ref{ROC_walk_to_run_fig} shows the effectiveness of the classifier when comparing walking to jogging and figure \ref{ROC_walk_to_bike_fig} shows the comparison to bicycling. Because the bicycling motions are considerably different from walking relative to jogging, we would expect better performance from for bicycling.
+To demonstrate how effective the matched-filter is for classification, walking, jogging, and bicycling data has been collected from a single individual. One instance of walking data has been used to train the classifier on and a separate instance of walking data has been used for comparison. Figure \ref{ROC_walk_to_run_fig} shows the effectiveness of the classifier when comparing walking to jogging and figure \ref{ROC_walk_to_bike_fig} shows the comparison to bicycling. Because the bicycling motions are considerably different from walking relative to jogging, we would expect better performance from for bicycling.
 \begin{figure}[!tbp]
 \RawFloats
   \centering
