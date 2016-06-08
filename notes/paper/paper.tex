@@ -49,7 +49,7 @@ The matched filter is based on the cross correlation of the data $\vec{y} = \{y\
 The cross correlation of $\vec{x}$ with $\vec{y}$ is defined as:
 %
 \begin{equation} \label{cross_correlation_eq}
-(\vec{x} \star \vec{y}) = \left \{\sum_{i=0}^{M}(x_{i} y_{i+k}) \right \}_{k=0}^{N-M-1}
+(\vec{x} \star \vec{y}) = \left \{\sum_{i=0}^{M}x_{i} y_{i+k} \right \}_{k=0}^{N-M-1}
 \end{equation}
 %
 which is simply a moving dot product.
@@ -66,12 +66,12 @@ We improve our computational efficiency by applying the convolution theorem to \
 (\vec{x} \star \vec{y}) = FFT^{-1}(FFT(\vec{x}') FFT(\vec{y})^*)
 \end{equation}
 %
-Where $\vec{x}'$ is $\vec{x}$ that has been zero padded to the length of $\vec{y}$ with the added restriction that the length of $\vec{x}$ is no more than the length of $\vec{y}$ to prevent corruption from circular indexing.
-We are most interested where our reference best matches our data.
-The resulting max correlation yields our matched-filter output:
+Where $\vec{x}'$ is $\vec{x}$ that has been zero padded to the length of $\vec{y}$ with the added restriction that the length of $\vec{x}$ is no more than the length of $\vec{y}$.
+We are most interested where our reference $\vec{x}$ best matches our data $\vec{y}$.
+The resulting max correlation yields our matched-filter for our reference define as:
 %
 \begin{equation} \label{matched_filter_eq}
-MF(\vec{x},\vec{y}) := \underset{k \in [0, M-N]}{max} \left \{\widehat{(\vec{x} \star \vec{y})}_k \right \}
+MF_{\vec{x}}(\vec{y}) := \underset{k \in [0, M-N]}{max} \left \{\widehat{(\vec{x} \star \vec{y})}_k \right \}
 \end{equation}
 %
 \section{Dimensionality Reduction}
@@ -105,11 +105,12 @@ Y := \left \{ \{t_k\}_{k=p}^{p+N-1} | p=nI \right \}
 where $M \leq N$, $I$ is a positive, fixed integer, and $(n,m) \in \mathbb{Z}^2$ where $(m,n)$ vary such that $0 \leq (m,n)I$ and $(m,n)I + (M,N) - 1 \leq N_t$. Then we can determine the representative signal $\vec{s} \in X$ for our activity that satisfies the condition:
 %
 \begin{equation} \label{s_condition}
-\sum_{y \in Y}MF(\vec{s}, \vec{y}) \geq \sum_{y \in Y}MF(\vec{x},\vec{y}) \quad \forall \vec{x} \in X
+\sum_{y \in Y}MF_{\vec{s}}(\vec{y}) \geq \sum_{y \in Y}MF_{\vec{x}}(\vec{y}) \quad \forall \vec{x} \in X
 \end{equation}
 
 We chose this method for its simplicity and robustness against outliers in our training set. We anticipate that the user will have idle motion at the start and end of their training duration when they activate the training mode and with possible disruptions during the process.
 %
+% Decimation with a tent filter for throughput performance
 \section{System Hardware}
 The sensor used for this analysis is a three-axis accelerometer unit from Kinetisense.
 The unit’s acceleration range is -5g to +5g with a sampling rate of 128Hz.
