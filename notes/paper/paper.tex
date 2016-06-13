@@ -72,7 +72,7 @@ We can then normalize \eqref{cross_correlation_eq} by the following:
 \widehat{(\vec{x} \star \vec{y})}_k = \frac{(\vec{x} \star \vec{y})_k}{||\vec{x}|| \ || \{y_p\}_{p=k}^{M+k} || }, \quad k = 0,1,...,N-M-1
 \end{equation}
 %
-where $|| \cdot ||$ is the usual $L_2$ norm. \eqref{norm_cross_correlation_eq} is now bound by $[-1,1]$ and has any bias toward high energy removed.
+where $|| \cdot ||$ is the usual $\ell_2$ norm. \eqref{norm_cross_correlation_eq} is now bounded by $[-1,1]$ and has any bias toward high energy removed.
 We improve our computational efficiency by applying the convolution theorem to \eqref{cross_correlation_eq} and replacing it with:
 %
 \begin{equation} \label{conv_theorem}
@@ -186,7 +186,7 @@ Because the bicycling motions are considerably different from walking relative t
   \centering
   \quad
   \subfloat[\label{fig:roc_walking_bicycling}]{\includegraphics[width=.45\textwidth]{ROC_walk_to_bike.png}}
-  \caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced with a decimation factor of 8}
+  \caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced with decimation 8}
   \label{fig:MF_performance}
 \end{figure}
 %
