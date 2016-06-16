@@ -15,9 +15,9 @@
 \begin{document}
 %
 % paper title
-\title{Real-Time Activity Classification using a Match-Filter with Body-Worn Accelerometers}
+\title{Real-Time Activity Classification by Match Filtering using Body-Worn Accelerometers}
 %
-\author{Craig~Euler, C.T. Lin, Melissa~Flores, Bryan~Juarez}
+\author{Craig~Euler, C.T.~Lin, Bryan~Juarez}
 %
 % make the title area
 \maketitle
@@ -69,7 +69,7 @@ which is simply a moving dot product.
 We can then normalize \eqref{cross_correlation_eq} by the following:
 %
 \begin{equation} \label{norm_cross_correlation_eq}
-\widehat{(\vec{x} \star \vec{y})}_k = \frac{(\vec{x} \star \vec{y})_k}{||\vec{x}|| \ || \{y_p\}_{p=k}^{M+k} || }, \quad k = 0,1,...,N-M-1
+\widehat{(\vec{x} \star \vec{y})}_k = \frac{(\vec{x} \star \vec{y})_k}{||\vec{x}|| \ || \{y_p\}_{p=k}^{M+k-1} || }, \quad k = 0,1,...,N-M-1
 \end{equation}
 %
 where $|| \cdot ||$ is the usual $\ell_2$ norm. \eqref{norm_cross_correlation_eq} is now bounded by $[-1,1]$ and has any bias toward high energy removed.
@@ -81,10 +81,10 @@ We improve our computational efficiency by applying the convolution theorem to \
 %
 Where $\vec{x}'$ is $\vec{x}$ that has been zero padded to the length of $\vec{y}$ with the added restriction that the length of $\vec{x}$ is no more than the length of $\vec{y}$.
 We are most interested where our reference $\vec{x}$ best matches our data $\vec{y}$.
-The resulting max correlation yields our matched-filter for our reference define as:
+We use the resulting max correlation to define our metric for  our matched-filter output as:
 %
 \begin{equation} \label{matched_filter_eq}
-MF_{\vec{x}}(\vec{y}) := \underset{k \in [0, M-N]}{max} \left \{\widehat{(\vec{x} \star \vec{y})}_k \right \}
+MF_{\vec{x}}(\vec{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat{(\vec{x} \star \vec{y})}_k \right \}
 \end{equation}
 %
 \subsection{Dimensionality Reduction}
@@ -98,9 +98,10 @@ The resulting eigen vectors of this matrix are orthogonal and point in the direc
 By projecting our data on the plain defined by the two most dominant eigen vectors, we effectively reduce our representation of our data to two dimensions.
 %
 \subsection{Decimation}
+Decimation is the first step applied to our data before any additional processing takes place.
 Decimation is a process of reducing the sampling rate of a signal.
 The process consists of filtering to mitigate any possible aliasing distortion effects followed by a downsampling.
-There is a tradeoff between performance and throughput when we decimate our signal, therefore We use decimation solely for the purpose of improving our throughput.
+There is a tradeoff between performance and throughput when we decimate our signal, therefore, we use decimation solely for the purpose of improving our throughput.
 
 For our application, we use a triangle filter prior to downsampling. This is achieved by convolving our data with the following weights:
 %
