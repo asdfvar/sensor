@@ -96,23 +96,24 @@ We assume that over a short period of time, a user\textquotesingle s limb moveme
 By identifying the plane of motion, we then project the acceleration data onto this plane and re-define our new axis accordingly.
 By this assumption, activities that are mostly confined to two dimensions will improve our signal identification.
 
-If we let $\textbf{a} = \{a_i\}_{i=0}^{N}$ represent our demeaned acceleration data over a specified time window in three dimensions then the covariance matrix of our acceleration data is represented by the real-symmetric $3x3$ matrix $Q = \textbf{a} \textbf{a}^T$.
+If we let $\textbf{a} = \{a_i\}_{i=0}^{N}$ represent our demeaned acceleration data over a specified time window in three dimensions then the covariance matrix of our acceleration data is represented by the real-symmetric $3 \times 3$ matrix $Q = \textbf{a} \textbf{a}^T$.
 The resulting eigen vectors of this matrix are orthogonal and point in the directions where the data varies most [cite from some textbook here].
 By projecting our data on the plain defined by the two most dominant eigen vectors, we effectively reduce our representation of our data to two dimensions.
 
-To compute the matched-filter output for two dimensions, we generalize \eqref{matched_filter_eq} by the following:
+To compute the matched-filter output for two dimensions, we generalize \eqref{matched_filter_eq} by augmenting our reference and data with both dimensions appropriately for normalization and adding together the cross correlations as:
 %
 \begin{equation} \label{cross_correlation_eq_2}
 \widehat{(\textbf{x}^{1,2} \star \textbf{y}^{1,2})}_k^2 = \frac{(\textbf{x}^1 \star \textbf{y}^1)_k + (\textbf{x}^2 \star \textbf{y}^2)_k}{||[ \textbf{x}^1, \textbf{x}^2 ]|| \ || [ \widetilde{\textbf{y}}_k^1, \widetilde{\textbf{y}}_k^2 ] || },
 \end{equation}
 %
+for $ k = 0,1,...,N-M-1 $.\\
+%
 \begin{equation} \label{matched_filter_eq_2}
 MF_{\textbf{x}}^2(\textbf{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat{(\textbf{x} \star \textbf{y})}^2_k \right \}
 \end{equation}
 %
-for $ k = 0,1,...,N-M-1 $.\\
+This works because both dimensions are always in phase with each other for any given activity which means that the match will happen in sinc.
 %
-This works because both dimensions are always in phase with each other for a given activity
 \subsection{Decimation}
 Decimation is the first step applied to our data before any additional processing takes place.
 Decimation is a process of reducing the sampling rate of a signal.
@@ -157,7 +158,7 @@ Y := \left \{ \{t_k\}_{k=p}^{p+N-1} | p=nI \right \}
 where $M \leq N$, $I$ is a positive, fixed integer, and $(n,m) \in \mathbb{Z}^2$ where $(m,n)$ vary such that $0 \leq (m,n)I$ and $(m,n)I + (M,N) - 1 \leq N_t$. Then we can determine the representative signal $\textbf{s} \in X$ for our activity that satisfies the condition:
 %
 \begin{equation} \label{s_condition}
-\sum_{y \in Y}MF_{\textbf{s}}(\textbf{y}) \geq \sum_{y \in Y}MF_{\textbf{x}}(\textbf{y}) \quad \forall \textbf{x} \in X
+\sum_{y \in Y}MF^2_{\textbf{s}}(\textbf{y}) \geq \sum_{y \in Y}MF^2_{\textbf{x}}(\textbf{y}) \quad \forall \textbf{x} \in X
 \end{equation}
 
 We chose this method for its simplicity and robustness against outliers in our training set. We anticipate that the user will have idle motion at the start and end of their training duration when they activate the training mode and with possible disruptions during the process.
