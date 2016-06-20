@@ -12,7 +12,7 @@ time_4sec_dec_8_2ref = np.array([0.0826, 0.1591, 0.3534, 0.3132, 0.503, 0.4765, 
 plt.figure(figsize=(12,9))
 sec4_dec8_plot_1ref, = plt.plot(freq2, time_4sec_dec_8_1ref, lw=4, color='#000000', label="1 Reference")
 sec4_dec8_plot_2ref, = plt.plot(freq2, time_4sec_dec_8_2ref, lw=4, color='#888888', label="2 References")
-plt.title("Timing on MSP432 w/ Decimation 8", fontsize=26)
+plt.title("Timing on MSP432 at Decimation 8", fontsize=26)
 plt.xlabel("Sampling Frequency", fontsize=26)
 plt.ylabel("Execution Time (seconds)", fontsize=26)
 plt.yticks(fontsize=20)
