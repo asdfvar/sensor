@@ -2,7 +2,7 @@
 \usepackage{blindtext}
 \usepackage{graphicx}
 \usepackage{subfig}
-\usepackage{caption}
+%\usepackage{caption}
 \usepackage[english]{babel}
 \usepackage{pinyin}
 \usepackage{natbib}
@@ -24,10 +24,10 @@
 \begin{abstract}
 Body worn sensors have been used in the market for many years now.
 Many of which are used for activity monitoring or fitness.
-In this paper, we make use of a matched-filtering algorithm for real-time activity classification from data obtained with three-axis accelerometers worn by the user.
+In this paper, we make use of a matched-filtering algorithm for real-time activity classification with data obtained from three-axis accelerometers worn by the user.
 We achieve invariance to sensor orientation with dimensionality reduction.
 We make use of an instance-based learning algorithm to train the device to learn the individual's motion patterns and store that information as activity filters for our matched filter.
-We improve computational efficiency with dimensionality reduction, temporal decomposition, and pre-processing of our filters for later use.
+We improve computational efficiency with dimensionality reduction, decimation in time, and pre-processing of our references post training for use in the matched-filter.
 An assessment of our computational costs are provided with runtime experiments on the MSP432 micro-controller.
 \end{abstract}
 %
@@ -96,8 +96,8 @@ By identifying the plane of motion, we then project the acceleration data onto t
 By this assumption, activities that are mostly confined to two dimensions will improve our signal identification.
 
 If we let $\textbf{a} = \{a_i\}_{i=0}^{N}$ represent our demeaned acceleration data over a specified time window in three dimensions then the covariance matrix of our acceleration data is represented by the real-symmetric $3 \times 3$ matrix $Q = \textbf{a} \textbf{a}^T$.
-The resulting eigen vectors $V = (\textbf{v}^1,\textbf{v}^2,\textbf{v}^3)$ for the respective eigen values $\lambda^1 \geq \lambda^2 \geq \lambda^3$ of this matrix are orthogonal and point in the directions where the data varies most [cite from some textbook here].
-%
+The resulting unit length eigen vectors $V = (\textbf{v}^1,\textbf{v}^2,\textbf{v}^3)$ for the respective eigen values $\lambda^1 \geq \lambda^2 \geq \lambda^3$ of this matrix are orthonormal and point in the directions where the data varies most \cite{bishop_2006}.
+% \ref{bishop_2006}
 \begin{equation} \label{project_eq}
    \textbf{a}' = V^T \textbf{a}
 \end{equation}
@@ -109,7 +109,7 @@ We now represent our acceleration data as $\textbf{a}'$ after rotating our axis 
 \end{equation}
 $ \forall a \in \textbf{a}. $ \\
 %
-The margin of error in the approximation is not important since we are only interested in processing in two dimensions. Our goal is only to minimized the margin of error so that we are not, by chance, using an axis direction where the data varies least.
+Equality comes from the orthonormality of $V$. The margin of error in the approximation is not important since we are only interested in processing in two dimensions. Our goal is only to minimized the margin of error so that we are not, by chance, using an axis direction where the data varies least.
 By projecting our data onto the plain defined by the two most dominant eigen vectors, we effectively reduce our representation of our data to two dimensions.
 
 To compute the matched-filter output for two dimensions, we generalize \eqref{matched_filter_eq} by augmenting our reference and data with both dimensions appropriately for normalization and adding together the cross correlations as:
@@ -118,7 +118,7 @@ To compute the matched-filter output for two dimensions, we generalize \eqref{ma
 \widehat{(\textbf{x}^{1,2} \star \textbf{y}^{1,2})}_k = \frac{(\textbf{x}^1 \star \textbf{y}^1)_k + (\textbf{x}^2 \star \textbf{y}^2)_k}{||[ \textbf{x}^1, \textbf{x}^2 ]|| \ || [ \widetilde{\textbf{y}}_k^1, \widetilde{\textbf{y}}_k^2 ] || },
 \end{equation}
 %
-for $ k = 0,1,...,N-M-1 $.\\
+for $ k = 0,1,...,N-M-1 $. \\
 %
 \begin{equation} \label{matched_filter_eq_2}
 MF_{\textbf{x}}^2(\textbf{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat{(\textbf{x}^{1,2} \star \textbf{y}^{1,2})}_k \right \}
@@ -175,13 +175,11 @@ where $M \leq N$, $I$ is a positive, fixed integer, and $(n,m) \in \mathbb{Z}^2$
 
 We chose this method for its simplicity and robustness against outliers in our training set. We anticipate that the user will have idle motion at the start and end of their training duration when they activate the training mode and with possible disruptions during the process.
 %
-% Decimation with a tent filter for throughput performance
-%
 \section{Performance and Throughput}
 %
 The Kinetisense sensor was used for the performance analysis in this paper.
 This unit has a three-axis accelerometer with an acceleration range of -5g to +5g and a sampling rate of 128Hz.
-Samples of walking, jogging, and bicycling have been recorded with this unit for the purpose of analyzing the performance.
+Samples of walking, jogging, and bicycling have been recorded with this unit attached to the ankle of the user for the purpose of analyzing the performance.
 A separate instance of walking data has been used specifically for training the classifier.
 In figure \ref{fig:MF_performance}, \subref{fig:frac_walking_jogging} and \subref{fig:frac_walking_bicycling} show the fraction of the correlation results that exceed the given correlation threshold when comparing the walking data reference to the given activity.
 As we would expect, walking data matches better to walking data than the other activities.
@@ -222,6 +220,12 @@ Because the bicycling motions are considerably different from walking relative t
 %
 %\FloatBarrier
 reference to figure \ref{fig:MF_performance}
+%
+\begin{figure}[!ht]
+   \centering
+   \includegraphics[width=1.0\textwidth]{one_and_two_references.png} \label{fig:timing_refs}
+   \caption{Timing results with varying sampling frequencies on the MSP432 micro-controller processor comparing the timing between using one vs two references for classification purposes. The time window used for activity classification is 4.0 seconds}
+\end{figure}
 %
 \section{Conclusion}
 conclusion text.
