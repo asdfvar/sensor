@@ -227,6 +227,24 @@ reference to figure \ref{fig:MF_performance}
    \caption{Timing results with varying sampling frequencies on the MSP432 micro-controller processor comparing the timing between using one vs two references for classification with the matched-filter. The time window used for activity classification is 4.0 seconds}
 \end{figure}
 %
+MSP432 role
+The Texas Instrument - MSP432P401R is a low power plus performance microcontroller that is based on the ARM 32-Bit Cortex-M4F processor and is used to run the real-time activity classification algorithm.
+Some of the notable features of the MSP432P410R is having a clock frequency of 48 MHz, 64 kB SRAM, 256 kB Flash Memory, and has an IEEE 754 – compliant single – precision Floating – Point Unit (FPU).
+The FPU is important for running the real-time activity classification algorithm because it gives us the ability to represent small and large numbers.
+The alternative to an FPU would be a fixed-point, the problem with fixed-point is the dilemma between precision and range.
+For this application you need to have both and the FPU gives us that.
+The 64 kB of SRAM allows the microcontroller to have sufficient space to process the data acquired when executing the real-time activity classification algorithm.
+The 256 kB is more than enough of flash memory to store the program.
+Lastly, the clock frequency of 48 MHz allows the microcontroller to have a high performance by allowing a high number of instruction cycles that ultimately allows for faster code execution.
+%
+Execution speed process
+When testing the execution speed of the real-time activity classification algorithm on the MSP432P401R, one of the General-Purpose Input/Output (GPIO) pin was used that was connected to a simple (Light-emitted diode) LED.
+To turn on the LED that was connected to the GPIO, a 3.3 Volt is required to light up the LED.
+Therefore, before entering the algorithm that handles the real-time activity classification, the GPIO pin is initially set HIGH to 3.3 Volts which lights up the LED.
+When the real-time activity classification algorithm is finished, the GPIO is set LOW to 0 Volts immediately setting the LED off. The execution time is then recorded by using an oscilloscope to determine how long the GPIO was set HIGH to 3.3 Volts.
+The oscilloscope used was “Analog Discovery 100MSPS USB Oscilloscope and Logic Analyzer”.
+[I can show an example of this process, but i do not know of what data.
+In other words acquired the execution speed of what? If you plan on you using this piece let me know so I can get an image of the oscilliscope displaying the execution speed.]
 \section{Conclusion}
 conclusion text.
 %
