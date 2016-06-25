@@ -95,16 +95,16 @@ We assume that over a short period of time, a user\textquotesingle s limb moveme
 By identifying this plane of motion, we then project the acceleration data onto this plane and re-define our new axis accordingly.
 
 If we let $\textbf{a} = \{a_i\}_{i=0}^{N}$ represent our demeaned acceleration data over a specified time window in three dimensions then the covariance matrix of our acceleration data is represented by the real-symmetric $3 \times 3$ matrix $Q = \textbf{a} \textbf{a}^T$.
-The resulting unit length eigen vectors $V = (\textbf{v}^1,\textbf{v}^2,\textbf{v}^3)$ with their respective eigen values $\lambda^1 \geq \lambda^2 \geq \lambda^3$ of this matrix are orthonormal and point in the directions where the data varies most in descending order for each orthogonal direction.
+The resulting unit length column eigenvectors of $Q$ are $V = (\textbf{v}^1,\textbf{v}^2,\textbf{v}^3)$ with their respective eigenvalues $\lambda^1 \geq \lambda^2 \geq \lambda^3$ of this matrix are orthonormal and point in the directions where the data varies most in descending order for each orthogonal direction.
 % \ref{bishop_2006}
 \begin{equation} \label{project_eq}
    \textbf{a}' = V^T \textbf{a}
 \end{equation}
 %
-We now represent our acceleration data as $\textbf{a}'$ after projecting our acceleration data $\textbf{a}$ onto our rotated axis $V$ by \eqref{project_eq}. We make the assumption that our data is most dominate in two dimensions i.e. $\lambda^3 << \lambda^2$ so it is safe to assume that
+We now represent our acceleration data as $\textbf{a}'$ after projecting our acceleration data $\textbf{a}$ onto our rotated axis $V$ by \eqref{project_eq}. If the data is mostly dominate in the two primary dimensions, i.e. $\lambda^3 << \lambda^2$, then it is safe to assume that
 %
 \begin{equation} \label{magnitude_eq}
-||(a^1,a^2,a^3)|| = ||(a'^1,a'^2,a'^3)|| \sim = (a'^1)^2 + (a'^2)^2
+||(a^1,a^2,a^3)||^2 = ||(a'^1,a'^2,a'^3)||^2 \sim = (a'^1)^2 + (a'^2)^2
 \end{equation}
 $ \forall a \in \textbf{a}. $ \\
 %
@@ -135,20 +135,21 @@ There is a trade off between performance and throughput when we decimate our sig
 For our application, we use a triangle filter prior to downsampling. This is achieved by convolving our data with the following weights:
 %
 \begin{equation} \label{triangle_filter_weights}
-w_k^N =
+w_k^D =
 \begin{cases}
-  \frac{k+1}{N^2}, & \text{if}\ 0 \leq k < N \\
-  \frac{2N - (k + 1)}{N^2}, & \text{if} N \leq k < 2N - 1
+  \frac{k+1}{D^2}, & \text{if }\ 0 \leq k < D \\
+  \frac{2D - (k + 1)}{D^2}, & \text{if } D \leq k < 2D - 1 \\
+  0, & \text{otherwise}
 \end{cases}
 \end{equation}
 %
-For a decimation value of $N$. Then the data is downsampled by $N$. This results in:
+For a decimation value of $D$. Then the data is downsampled by $D$. This results in:
 %
 \begin{equation} \label{decimated_signal}
 s_k^1 = \sum_{p=0}^{2N-1} w_{p+N(1-k)}^N s_{kN - (p+1)}^0 ?
 \end{equation}
 %
-where $\{s_k^1\}_{k=0}^{M/N}$? is the decimated signal of $\{s_k^0\}_{k=0}^M$?.
+where $\{s_k^1\}_{k=0}^{M/D}$? is the decimated signal of $\{s_k^0\}_{k=0}^M$?.
 \subsection{Training the Module}
 We are able to identify an individual\textquotesingle s activity by matching the signal to a reference template.
 For our application, we develop a reference signature for our matched filter directly from the person\textquotesingle s motion signature.
@@ -179,15 +180,10 @@ We chose this method for its simplicity and robustness against outliers in our t
 %
 \subsection{Algorithm Performance}
 %
-The Kinetisense sensor was used for the performance analysis in this paper.
+The Kinetisense sensor was used for the algorithm performance analysis in this paper.
 This unit has a three-axis accelerometer with an acceleration range of -5g to +5g and a sampling rate of 128Hz.
-Samples of walking, jogging, and bicycling have been recorded with this unit attached to the ankle of the user for the purpose of analyzing the performance of the algorithms described in this paper.
+Samples of walking, jogging, and bicycling have been recorded with this unit attached to the ankle of the user.
 A separate instance of walking data has been used specifically for training the classifier.
-In figure \ref{fig:MF_performance}, \subref{fig:frac_walking_jogging} and \subref{fig:frac_walking_bicycling} show the fraction of the correlation results that exceed the given correlation threshold when comparing the walking data reference to the given activity.
-As we would expect, walking data matches better to walking data than the other activities.
-ROC curves were produced from these corresponding results in \subref{fig:roc_walking_jogging} and \subref{fig:roc_walking_bicycling} to illustrate the effectiveness of the matched-filter as a classifier.
-Figure \ref{fig:MF_performance} shows the comparison to bicycling.
-Because the bicycling motions are considerably different from walking relative to jogging, we would expect better performance from bicycling.
 %
 \begin{figure}[!ht]
   %\captionsetup[subfigure]{labelformat=empty}
@@ -201,21 +197,17 @@ Because the bicycling motions are considerably different from walking relative t
   \centering
   \quad
   \subfloat[\label{fig:roc_walking_bicycling}]{\includegraphics[width=.45\textwidth]{ROC_walk_to_bike.png}}
-  \caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced with decimation 8}
+  \caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced with decimation 8. Figures (c) and (d) are the corresponding ROC curves produced from (a) and (b) respectivley.}
   \label{fig:MF_performance}
 \end{figure}
 %
-%\FloatBarrier
-reference to figure \ref{fig:MF_performance}
+Figures \ref{fig:frac_walking_jogging} and \ref{fig:frac_walking_bicycling} show the fraction of the correlation results that exceed the given correlation threshold when comparing the walking data reference to the given activity.
+As we would expect, walking data matches better to walking data than the other activities.
+ROC curves were produced from these corresponding results in \subref{fig:roc_walking_jogging} and \subref{fig:roc_walking_bicycling} to illustrate the effectiveness of the matched-filter as a classifier.
+Figure \ref{fig:MF_performance} shows the comparison to bicycling.
+Because the bicycling motions are considerably different from walking relative to jogging, we would expect better performance from bicycling.
 %
-\begin{figure}[!ht]
-   \centering
-   \subfloat[\label{fig:multiple_comparison}]{\includegraphics[width=0.45\textwidth]{more_time_plots.png}}
-   \quad
-   \subfloat[\label{fig:timing_refs}]{\includegraphics[width=0.45\textwidth]{one_and_two_references.png}}
-   \caption{Timing results with varying sampling frequencies on the MSP432 micro-controller processor comparing the timing between using one vs two references for classification with the matched-filter. The time window used for activity classification is 4.0 seconds}
-   \label{fig:timing}
-\end{figure}
+%\FloatBarrier
 %
 \subsection{Throughput Performance}
 %
@@ -232,6 +224,16 @@ When testing the execution speed, one of the General-Purpose Input/Output (GPIO)
 This is activated immediately before the beginning of decimation (start of algorithm processing) and deactivated immediately at the end of the matched-fitlering (end of algorithm processing).
 The execution time is then recorded on the oscilloscope to determine how long the GPIO was set high.
 
+%
+\begin{figure}[!ht]
+   \centering
+   \subfloat[\label{fig:multiple_comparison}]{\includegraphics[width=0.45\textwidth]{more_time_plots.png}}
+   \quad
+   \subfloat[\label{fig:timing_refs}]{\includegraphics[width=0.45\textwidth]{one_and_two_references.png}}
+   \caption{Timing results with varying sampling frequencies, time-window lengths, and number of references used for the matched-filter on the MSP432 micro-controller processor. The time window used for (b) is 4.0 seconds.}
+   \label{fig:timing}
+\end{figure}
+%
 Randomized data was used for the purpose of analysing the throughput performance on the device while varying the parameters.
 Figure \ref{fig:multiple_comparison} shows execution time with varying time-window lengths and sampling frequencies while maintaining two references used in the matched-filter process while operating at decimation $2$.
 Because the FFT dominates the processing load, and was optimized for even powered factors, one can observe better throughput at radix 2 valued time-window lengths and sampling frequencies followed by other even valued time lengths and sampling frequencies. Both $62$Hz and $50$Hz have only one factor of $2$ hence the expectation that a sampling frequency of $62$Hz processing time is longer than the $50$Hz.

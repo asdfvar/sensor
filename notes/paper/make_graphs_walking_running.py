@@ -17,8 +17,8 @@ for k in range(len(jogging_prob)):
 jogging_prob /= len(jogging)
 
 plt.figure(figsize=(12,9))
-walking_plot, = plt.plot(threshold, walking_prob, lw=4, color='#000000', label="Walking data")
-jogging_plot, = plt.plot(threshold, jogging_prob, lw=4, color='#888888', label="Jogging data")
+walking_plot, = plt.plot(threshold, walking_prob, lw=4, color='#000000', linestyle='-', label="Walking data")
+jogging_plot, = plt.plot(threshold, jogging_prob, lw=4, color='#000000', linestyle='--', label="Jogging data")
 plt.title("Matched-Filter Correlation with Reference: Walking", fontsize=26)
 plt.xlabel("Correlation Threshold", fontsize=26)
 plt.ylabel("Fraction Exceeding Threshold", fontsize=26)
