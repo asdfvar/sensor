@@ -27,7 +27,7 @@ In this paper, we make use of a matched-filtering algorithm for real-time activi
 We achieve invariance to sensor orientation with dimensionality reduction.
 We make use of an instance-based learning algorithm to train the device to learn the individual's motion patterns and store that information as activity filters for our matched filter.
 We improve computational efficiency with dimensionality reduction, decimation in time, and pre-processing of our references post training for use in the matched-filter.
-An assessment of our processing time is provided with runtime experiments on the MSP432 micro-controller which shows feasibility of real-time processing capability.
+An assessment of our processing time is provided with runtime experiments on the MSP432 microcontroller which shows feasibility of real-time processing capability.
 \end{abstract}
 %
 \section{Introduction}
@@ -35,7 +35,7 @@ Various methods for activity classification using body-worn sensors exist.
 Custom decision tree, automatically generated decision tree, and artificial neural networks \cite{parkka_ermes_korpipaa_mantyjarvi_peltola_korhonen_2006} have been explored as well as other frequency based classification methods \cite{sharma_purwar_lee_lee_chung_2008}.
 In this paper, we make use of a matched-filter method to identify an individual\textquotesingle s activity in real-time.
 The matched-filter method with use of thresholding and comparing the correlations of various filters is a simple method to use and have been studied in the past \cite{giannakis_tsatsanis_1990}.
-Many of the algorithms and software structure were tailored to computational efficiency to accommodate the resource limitations on the MSP432 micro-processor.
+Many of the algorithms and software structure were tailored to computational efficiency to accommodate the resource limitations on the MSP432 microprocessor.
 Having an a priori knowledge of the activity the individual is performing is useful for many current fitness algorithms.
 Devices such as the Fit-Bit, Apple watch, Moov, Jawbone, etc. usually have the individual actively input the activity they are performing.
 
@@ -43,7 +43,7 @@ The algorithms described in this paper are broken into two main modules: Trainin
 
 The training module does not need to be performed in real time.
 This algorithm is the most demanding on computational resources and is only ran when training or re-training the unit to identify the user\textquotesingle s activity, so this can be performed on an external device such as a smart phone or tablet.
-The purpose of the training module is to create the reference signal to be used on the micro-controller for real-time processing.
+The purpose of the training module is to create the reference signal to be used on the microcontroller for real-time processing.
 
 The second module is the real-time activity classification on the unit.
 This module reads in the reference(s) stored on the unit to be used as templates that the matched-filter will use for determining the individual\textquotesingle s activity.
@@ -219,7 +219,7 @@ The 64 kB of SRAM provided sufficient space to process the results found in figu
 the 256 kB is more than enough flash memory to store the program and data references.
 The clock frequency operates at 48 MHz which allows the microcontroller to have a high performance by allowing a high number of instruction cycles that ultimately allows for faster code execution.
 
-The “Analog Discovery 100MSPS USB Oscilloscope and Logic Analyzer” oscilloscope was used for measuring the timing of the algorithms on the micro-controller.
+The “Analog Discovery 100MSPS USB Oscilloscope and Logic Analyzer” oscilloscope was used for measuring the timing of the algorithms on the microcontroller.
 When testing the execution speed, one of the General-Purpose Input/Output (GPIO) pins was connected to a Light-emitted diode (LED) that activates at 3.3 Volts (set high).
 This is activated immediately before the beginning of decimation (start of algorithm processing) and deactivated immediately at the end of the matched-fitlering (end of algorithm processing).
 The execution time is then recorded on the oscilloscope to determine how long the GPIO was set high.
@@ -230,7 +230,7 @@ The execution time is then recorded on the oscilloscope to determine how long th
    \subfloat[\label{fig:multiple_comparison}]{\includegraphics[width=0.45\textwidth]{more_time_plots.png}}
    \quad
    \subfloat[\label{fig:timing_refs}]{\includegraphics[width=0.45\textwidth]{one_and_two_references.png}}
-   \caption{Timing results with varying sampling frequencies, time-window lengths, and number of references used for the matched-filter on the MSP432 micro-controller processor. The time window used for (b) is 4.0 seconds.}
+   \caption{Timing results with varying sampling frequencies, time-window lengths, and number of references used for the matched-filter on the MSP432 microcontroller processor. The time window used for (b) is 4.0 seconds.}
    \label{fig:timing}
 \end{figure}
 %
