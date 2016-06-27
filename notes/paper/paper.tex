@@ -197,7 +197,7 @@ A separate instance of walking data has been used specifically for training the 
   \centering
   \quad
   \subfloat[\label{fig:roc_walking_bicycling}]{\includegraphics[width=.45\textwidth]{ROC_walk_to_bike.png}}
-  \caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced with decimation 8. Figures (c) and (d) are the corresponding ROC curves produced from (a) and (b) respectivley.}
+  \caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced at decimation 8. Figures (c) and (d) are the corresponding ROC curves produced from (a) and (b) respectivley.}
   \label{fig:MF_performance}
 \end{figure}
 %
@@ -212,24 +212,25 @@ Because the bicycling motions are considerably different from walking relative t
 \subsection{Throughput Performance}
 %
 To assess the real-time processing potential of the algorithms outlined in this paper, a throughput assessment was performed on the MSP432P401R microcontroller with varying parameters.
-The Texas Instrument - MSP432P401R is a low power plus performance microcontroller that is based on the ARM 32-Bit Cortex-M4F processor.
+The Texas Instruments - MSP432P401R is a low power plus performance microcontroller that is based on the ARM 32-Bit Cortex-M4F processor.
 Some of the notable features of the MSP432P410R is having a clock frequency of 48 MHz, 64 kB SRAM, 256 kB Flash Memory, and has an IEEE 754-compliant single-precision Floating-Point Unit (FPU) and Memory Protection Unit (MPU).
-The single-precision processing capability on this unit provides us with a sufficiently large dynamic range that fixed-point processing cannot provide.
-The 64 kB of SRAM provided sufficient space to process the results found in figure \ref{fig:timing} and
+The single-precision processing capability on this unit provides us with a sufficiently large dynamic range necessary to process the algorithms that fixed-point processing cannot provide.
+The 64 kB of SRAM provides sufficient space to process the results found in figure \ref{fig:timing} and
 the 256 kB is more than enough flash memory to store the program and data references.
-The clock frequency operates at 48 MHz which allows the microcontroller to have a high performance by allowing a high number of instruction cycles that ultimately allows for faster code execution.
+The clock frequency operates at 48 MHz which determines the execution speed.
 
 \begin{figure}[!ht]
    \centering
    \includegraphics[width=0.45\textwidth]{32Hz_4sec_8downsample_2Reference_Pulse.PNG}
-   \caption{Test setup}
+   \caption{Oscilloscope output used for measuring the processing time of the algorithms on the MSP432. This is a case setup of 32Hz sampling frequency over a 4 second time window with 2 references at decimation 8 showing the voltage output over time. Execution time is measured from the start to end of the ``high'' (3.3 Volts) time interval.}
    \label{fig:time_measure}
 \end{figure}
 %
-The “Analog Discovery 100MSPS USB Oscilloscope and Logic Analyzer” oscilloscope was used for measuring the timing of the algorithms on the microcontroller.
+The ``Analog Discovery 100MSPS USB Oscilloscope and Logic Analyzer'' oscilloscope was used for measuring the timing of the algorithms on the microcontroller.
 When testing the execution speed, one of the General-Purpose Input/Output (GPIO) pins was connected to a Light-emitted diode (LED) that activates at 3.3 Volts (set high).
-This is activated immediately before the beginning of decimation (start of algorithm processing) and deactivated immediately at the end of the matched-fitlering (end of algorithm processing).
+This is activated immediately before the beginning of decimation (start of algorithm processing) and deactivated immediately at the end of the matched-filtering (end of algorithm processing).
 The execution time is then recorded on the oscilloscope to determine how long the GPIO was set high.
+An example can be seen in Figure \ref{fig:time_measure}.
 
 \begin{figure}[!ht]
    \centering
@@ -241,9 +242,9 @@ The execution time is then recorded on the oscilloscope to determine how long th
 \end{figure}
 %
 Randomized data was used for the purpose of analysing the throughput performance on the device while varying the parameters.
-Figure \ref{fig:multiple_comparison} shows execution time with varying time-window lengths and sampling frequencies while maintaining two references used in the matched-filter process while operating at decimation $2$.
+Figure \ref{fig:multiple_comparison} shows the execution time with varying time-window lengths and sampling frequencies while maintaining two references used in the matched-filter process while operating at decimation $2$.
 Because the FFT dominates the processing load, and was optimized for even powered factors, one can observe better throughput at radix 2 valued time-window lengths and sampling frequencies followed by other even valued time lengths and sampling frequencies. Both $62$Hz and $50$Hz have only one factor of $2$ hence the expectation that a sampling frequency of $62$Hz processing time is longer than the $50$Hz.
-Figure \ref{fig:timing_refs} shows execution time over a $4.0$ second window at decimation $8$ while varying the sampling frequency and number of references. From this, it's observed that matched-filtering accounts for roughly $80$\% of the processing while pre-processing accounts for the other $20$\%.
+Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time window at decimation $8$ while varying the sampling frequency and number of references. Because the pre-processing execution time does not change with the number of references, it's observed that matched-filtering accounts for roughly $80$\% of the processing while pre-processing accounts for the other $20$\% when processing for a single reference.
 %
 \section{Conclusion}
 conclusion text.
