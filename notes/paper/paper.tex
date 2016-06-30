@@ -247,7 +247,15 @@ Because the FFT dominates the processing load, and was optimized for even powere
 Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time window at decimation $8$ while varying the sampling frequency and number of references. Because the pre-processing execution time does not change with the number of references, it's observed that matched-filtering accounts for roughly $80$\% of the processing while pre-processing accounts for the other $20$\% when processing for a single reference.
 %
 \section{Conclusion}
-conclusion text.
+Matched-filtering algorithms can be used for activity classification.
+They can also be performed in real-time on a microcontroller such as the MSP432.
+The algorithms consist of a training module in which the device is trained to identify the user’s activity along with a real-time activity classification module which uses the stored references that are produced by the training module in order to actively classify a user’s activity.
+Although the matched-filtering algorithms require significant processing power, the data undergoes dimensionality reduction and decimation in order to reduce the required computational resources prior to being analyzed.
+The algorithms were validated by using the Kinetisense accelerometer sensor to collect walking, jogging, and bicycling data.
+The training module was ran on the data to produce references of the activities.
+The data was compared to the walking reference and it was shown that the walking data matched well with the walking reference while the jogging and bicycling data did not match as well.
+The algorithms were also executed on the MSP432.
+Since FFT calculations dominate the processing time and work best with data that has radix 2 number of points, timing tests results demonstrate that radix 2 time-window lengths and frequency values result in faster processing times.
 %
 \appendices
 %
