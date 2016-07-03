@@ -24,7 +24,7 @@
 Having information of the user\textquotesingle s activity can provide great use in modern-day devices such as ones that track and monitor a user\textquotesingle s activity and fitness.
 In this paper, we demonstrate activity classification performance of the matched-filtering method with data obtained from a three-axis accelerometer worn by the user.
 We also show the real-time processing capability of our algorithms on the MSP432P401R microcontroller.
-Dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006} is a data compression technique we use to improve our processing throughput which, inherently, has the added benifit of making our data invarient to sensor orientation when applied.
+Dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006} is a data compression technique we use to improve our processing throughput which, inherently, has the added benefit of making our data invariant to sensor orientation when applied.
 Data decimation in time is an additional throughput enhancement that we apply early to our data.
 We make use of an instance-based learning algorithm to train the device to learn the individual\textquotesingle s motion patterns and store that information as activity templates for use in our matched-filter.
 \end{abstract}
@@ -42,7 +42,7 @@ The training module does not need to be performed in real time.
 This algorithm is the most demanding on computational resources and is only executed when training or re-training the unit to identify the user\textquotesingle s activity, which means that this can be performed on an external device such as a smart phone or tablet.
 The purpose of the training module is to create the reference signals to be used on the microcontroller for the real-time activity classification processing.
 
-The real-time activity classification module is intended to be performed on a microcontroler.
+The real-time activity classification module is intended to be performed on a microcontroller.
 This module reads in the references stored on the unit to be used as templates that the matched-filter will use for determining the individual\textquotesingle s activity.
 Both of these modules use the same principles and hence the same algorithm kernels.
 %
@@ -251,7 +251,7 @@ Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time w
 \section{Conclusion}
 We have demonstrated excellent activity classification capability of the matched-filter method using data obtained from a Kinetisense tri-axis accelerometer sensor.
 We have shown that real-time processing can be achieved with timing results obtained from the MSP432 microcontroller.
-Timing results have demonstrated that radix 2 time-window lengths and frequency values result in faster processing times as expected given that the FFT dominates the procesing time.
+Timing results have demonstrated that radix 2 time-window lengths and frequency values result in faster processing times as expected given that the FFT dominates the processing time.
 We increased our throughput with the use of data-compression techniques, namely decimation and dimensionality reduction, which reduced our computational requirements.
 The references used in the matched-filter are obtained from the training module where a training set is provided by the user through some specified activity and the best representative motion signature of the individual is extracted through the use of an instance-based learning algorithm.
 
