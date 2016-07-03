@@ -21,31 +21,29 @@
 \maketitle
 %
 \begin{abstract}
-Body worn sensors have been used in the market for many years now many of which are used for activity monitoring or fitness.
-In this paper, we make use of a matched-filtering algorithm for activity classification with data obtained from three-axis accelerometers worn by the user.
-We show real-time processing capability on the MSP432 microcontroller hardware.
-We achieve invariance to sensor orientation with dimensionality reduction.
-We make use of an instance-based learning algorithm to train the device to learn the individual's motion patterns and store that information as activity filters for our matched filter.
-We improve computational efficiency with dimensionality reduction, decimation in time, and pre-processing of our references post training for use in the matched-filter.
-An assessment of our processing time is provided with runtime experiments on the MSP432 microcontroller which shows feasibility of real-time processing capability.
+Having information of the user\textquotesingle s activity can provide great use in modern-day devices such as ones that track and monitor a user\textquotesingle s activity and fitness.
+In this paper, we demonstrate activity classification performance of the matched-filtering method with data obtained from a three-axis accelerometer worn by the user.
+We also show the real-time processing capability of our algorithms on the MSP432P401R microcontroller.
+Dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006} is a data compression technique we use to improve our processing throughput which, inherently, has the added benifit of making our data invarient to sensor orientation when applied.
+Data decimation in time is an additional throughput enhancement that we apply early to our data.
+We make use of an instance-based learning algorithm to train the device to learn the individual\textquotesingle s motion patterns and store that information as activity templates for use in our matched-filter.
 \end{abstract}
 %
 \section{Introduction}
 Various methods for activity classification using body-worn sensors exist.
 Custom Decision Tree, Automatically Generated Decision Tree, and Artificial Neural Networks \cite{parkka_ermes_korpipaa_mantyjarvi_peltola_korhonen_2006} have been explored as well as other frequency based classification methods \cite{sharma_purwar_lee_lee_chung_2008}.
-In this paper, we make use of a matched-filter method to identify an individual\textquotesingle s activity for the purpose of real-time processing.
-The matched-filter method with use of thresholding and comparing the correlations of various filters is a simple method to use and have been studied in the past \cite{giannakis_tsatsanis_1990}.
-Many of the algorithms and software structure were tailored to computational efficiency to accommodate the resource limitations on the MSP432 microprocessor.
-Having an understanding of what activity the individual is performing is useful for many current fitness algorithms.
+In this paper, we make use of the matched-filter method to identify an individual\textquotesingle s activity for the purpose of real-time processing.
+The matched-filter method with use of thresholding and comparing the correlations of various filters is a simple method to use and has been studied in the past \cite{giannakis_tsatsanis_1990}.
+The methods used for our algorithms are designed for computational efficiency to accommodate the resource limitations of a microcontroller (we use the MSP432 microcontroller).
 
-The algorithms described in this paper are broken into two main modules: Training the device to identify the user\textquotesingle s activity, and the real-time activity classification itself.
+The algorithms described in this paper are broken into two main modules: The real-time activity classification and training the device to identify the user\textquotesingle s activity.
 
 The training module does not need to be performed in real time.
-This algorithm is the most demanding on computational resources and is only executed when training or re-training the unit to identify the user\textquotesingle s activity, so this can be performed on an external device such as a smart phone or tablet.
-The purpose of the training module is to create the reference signal to be used on the microcontroller for real-time processing.
+This algorithm is the most demanding on computational resources and is only executed when training or re-training the unit to identify the user\textquotesingle s activity, which means that this can be performed on an external device such as a smart phone or tablet.
+The purpose of the training module is to create the reference signals to be used on the microcontroller for the real-time activity classification processing.
 
-The second module is the real-time activity classification on the unit.
-This module reads in the reference(s) stored on the unit to be used as templates that the matched-filter will use for determining the individual\textquotesingle s activity.
+The real-time activity classification module is intended to be performed on a microcontroler.
+This module reads in the references stored on the unit to be used as templates that the matched-filter will use for determining the individual\textquotesingle s activity.
 Both of these modules use the same principles and hence the same algorithm kernels.
 %
 \section{The Methodology}
@@ -54,20 +52,20 @@ Both of these modules use the same principles and hence the same algorithm kerne
 The matched-filter method is commonly used for extracting a signal out of noisy data.
 We use this method for identifying a user\textquotesingle s activity from data generated by body-worn accelerometers.
 Because the matched-filter method requires use of an existing reference template to identify the desired signal, we must develop our template from a training set.
-We will discuss how we develop our set of templates for use in our matched-filter.
+We will discuss how we develop our set of templates for use in our matched-filter in section \ref{sec:training}.
 
-The matched filter is based on the cross correlation of the data $\textbf{y} = \{y\}_{k=0}^{N-1}$ with the reference signal $\textbf{x} = \{x\}_{k=0}^{M-1}$.
+The matched-filter is based on the cross correlation of the data $\textbf{y} = \{y\}_{k=0}^{N-1}$ with the reference signal $\textbf{x} = \{x\}_{k=0}^{M-1}$.
 The cross correlation of $\textbf{x}$ with $\textbf{y}$ is defined as:
 %
 \begin{equation} \label{eq:cross_correlation}
-(\textbf{x} \star \textbf{y}) = \left \{\sum_{i=0}^{M-1}x_{i} y_{i+k} \right \}_{k=0}^{N-M-1}
+(\textbf{x} \star \textbf{y}) := \left \{\sum_{i=0}^{M-1}x_{i} y_{i+k} \right \}_{k=0}^{N-M-1}
 \end{equation}
 %
 which is simply a moving dot product.
 We can then normalize \eqref{eq:cross_correlation} by the following:
 %
 \begin{equation} \label{eq:norm_cross_correlation}
-\widehat{(\textbf{x} \star \textbf{y})}_k = \frac{(\textbf{x} \star \textbf{y})_k}{||\textbf{x}|| \ || \widetilde{\textbf{y}}_k || }, \quad k = 0,1,...,N-M-1
+\widehat{(\textbf{x} \star \textbf{y})}_k := \frac{(\textbf{x} \star \textbf{y})_k}{||\textbf{x}|| \ || \widetilde{\textbf{y}}_k || }, \quad k = 0,1,...,N-M-1
 \end{equation}
 %
 where $|| \cdot ||$ is the usual $\ell_2$ norm and $\widetilde{\textbf{y}}_k = \{y_p\}_{p=k}^{M+k-1}$.
@@ -75,7 +73,7 @@ where $|| \cdot ||$ is the usual $\ell_2$ norm and $\widetilde{\textbf{y}}_k = \
 We improve our computational efficiency by applying the convolution theorem to \eqref{eq:cross_correlation} and replacing it with:
 %
 \begin{equation} \label{eq:conv_theorem}
-(\textbf{x} \star \textbf{y}) = FFT^{-1}(FFT(\textbf{x}') FFT(\textbf{y})^*)
+(\textbf{x} \star \textbf{y}) := FFT^{-1}(FFT(\textbf{x}') FFT(\textbf{y})^*)
 \end{equation}
 %
 where $\textbf{x}'$ is $\textbf{x}$ that has been zero padded to the length of $\textbf{y}$ with the added restriction that the length of $\textbf{x}$ is no more than the length of $\textbf{y}$ and $FFT$ is the Fast Fourier Transform algorithm.
@@ -86,18 +84,18 @@ We use the resulting max correlation to define our metric for  our matched-filte
 MF_{\textbf{x}}(\textbf{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat{(\textbf{x} \star \textbf{y})}_k \right \}
 \end{equation}
 %
-If \eqref{eq:matched_filter} passes a set threshold, the corresponding signal is a match.
+If \eqref{eq:matched_filter} passes a set threshold, then the corresponding signal $\textbf{y}$ is classified as a match to the reference $\textbf{x}$.
 %
 \subsection{Dimensionality Reduction}
 We manage to reduce our computational resources and remove our dependence on sensor orientation at the same time through a process of dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006}.
 We assume that over a short period of time, a user\textquotesingle s limb movement is constrained mostly to a two-dimensional plane.
 By identifying this plane of motion, we then project the acceleration data onto this plane and re-define our new axis accordingly.
 
-If we let $\textbf{a} = \{a_i\}_{i=0}^{N}$ represent our demeaned acceleration data over a specified time window in three dimensions then the covariance matrix of our acceleration data is represented by the real-symmetric $3 \times 3$ matrix $Q = \textbf{a} \textbf{a}^T$.
+If we let $\textbf{a} = \{a_i\}_{i=0}^{N}$ represent our demeaned acceleration data (where each $a_i$ is represented as a column) over a specified time window in three dimensions, then the covariance matrix of our acceleration data is represented by the real-symmetric $3 \times 3$ matrix $Q = \textbf{a} \textbf{a}^T$.
 The resulting unit length column eigenvectors of $Q$ are $V = (\textbf{v}^1,\textbf{v}^2,\textbf{v}^3)$ with their respective eigenvalues $\lambda^1 \geq \lambda^2 \geq \lambda^3$ of this matrix are orthonormal and point in the directions where the data varies most in descending order for each orthogonal direction.
 % \ref{bishop_2006}
 \begin{equation} \label{eq:project}
-   \textbf{a}' = V^T \textbf{a}
+   \textbf{a}' := V^T \textbf{a}
 \end{equation}
 %
 We now represent our acceleration data as $\textbf{a}'$ after projecting our acceleration data $\textbf{a}$ onto our rotated axis $V$ by \eqref{eq:project}. If the data is mostly dominate in the two primary dimensions, i.e. $\lambda^3 << \lambda^2$, then it is safe to assume that
@@ -111,10 +109,10 @@ Equality comes from the orthonormality of $V$. The margin of error in the approx
 By now we have preserved as much information that is contained in our acceleration data as possible while also reducing our dimension from three to two.
 By projecting our data onto the plane defined by the two most dominant eigenvectors, we effectively reduce our representation of our data to two dimensions.
 
-To compute the matched-filter output for two dimensions, we generalize \eqref{eq:matched_filter} by augmenting our reference and data with both dimensions appropriately for normalization and adding together the cross correlations as:
+To compute the matched-filter output for two dimensions, we generalize \eqref{eq:matched_filter} by augmenting our reference and signal with both dimensions appropriately for normalization and adding together the cross correlations as:
 %
 \begin{equation} \label{eq:cross_correlation_2}
-\widehat{(\textbf{x}^{1,2} \star \textbf{y}^{1,2})}_k = \frac{(\textbf{x}^1 \star \textbf{y}^1)_k + (\textbf{x}^2 \star \textbf{y}^2)_k}{||[ \textbf{x}^1, \textbf{x}^2 ]|| \ || [ \widetilde{\textbf{y}}_k^1, \widetilde{\textbf{y}}_k^2 ] || },
+\widehat{(\textbf{x}^{1,2} \star \textbf{y}^{1,2})}_k := \frac{(\textbf{x}^1 \star \textbf{y}^1)_k + (\textbf{x}^2 \star \textbf{y}^2)_k}{||[ \textbf{x}^1, \textbf{x}^2 ]|| \ || [ \widetilde{\textbf{y}}_k^1, \widetilde{\textbf{y}}_k^2 ] || },
 \end{equation}
 %
 for $ k = 0,1,...,N-M-1 $. \\
@@ -123,18 +121,17 @@ for $ k = 0,1,...,N-M-1 $. \\
 MF_{\textbf{x}}^2(\textbf{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat{(\textbf{x}^{1,2} \star \textbf{y}^{1,2})}_k \right \}
 \end{equation}
 %
-This works because both dimensions are always in phase with each other for any given activity and therefore the match will happen in sync.
+This works because both dimensions are always in phase with each other for any given activity and therefore the match will happen in sync. Here, the superscripts $1$ and $2$ represent the primary and secondary principle components of our data respectively.
 %
 \subsection{Decimation}
 Decimation is the first step applied to our data before any additional processing takes place.
-Decimation is a process of reducing the sampling rate of a signal.
-The process consists of filtering to mitigate any possible aliasing distortion effects followed by a downsampling.
-There is a trade off between performance and throughput when we decimate our signal, therefore, we use decimation solely for the purpose of reducing our processing cost.
+Decimation is a process of reducing the sampling rate of the signal by filtering to mitigate any possible distortion effects due to aliasing followed by downsampling.
+Because real-time performance is important, we decimate our signal for the purpose of improving our throughput.
 
-For our application, we use a triangle filter prior to downsampling. This is achieved by applying the following weights:
+For a decimation value of $D$, we define our triangle filter with the following weights:
 %
 \begin{equation} \label{eq:triangle_filter_weights}
-w_k^D =
+w_k^D :=
 \begin{cases}
   \frac{D+k}{D^2}, & \text{if }\ -D < k \leq 0 \\
   \frac{D-k}{D^2}, & \text{if } D < k < D \\
@@ -145,22 +142,22 @@ w_k^D =
 and convolve it with our data to get
 %
 \begin{equation} \label{eq:convolve}
-s'_k = \sum_{i=0}^{N} s_i w_{k-i}
+s'_k := \sum_{i=0}^{N} s_i w_{k-i}
 \end{equation}
 %
 followed by a downsample
 %
 \begin{equation} \label{eq:downsample}
-s''_k = s'_{(k+1)D-1}, \quad k = 0, 1, 2, ..., N/D.
+s''_k := s'_{(k+1)D-1}, \quad k = 0, 1, 2, ..., N/D.
 \end{equation}
 %
-One can reduce the processing cost by combining \eqref{eq:convolve} and \eqref{eq:downsample} together in such a way that we only process the points that we keep.
+The processing cost is reduced by only processing points in \eqref{eq:convolve} that we keep in \eqref{eq:downsample}.
 %
-\subsection{Training the Module}
+\subsection{Training the Module} \label{sec:training}
 We are able to identify an individual\textquotesingle s activity by matching the signal to a reference template.
-For our application, we develop a reference signature for our matched filter directly from the person\textquotesingle s motion signature.
+For our application, we develop a reference template for our matched-filter directly from the person\textquotesingle s motion signature.
 We do this by having the individual perform the specific activity over a specified amount of time and select the sub-interval of time that we find best represents the user's motion signature.
-For a given activity, we attempt to find the representative periodic signal $s$ of our individual’s activity to be our template for our matched-filter.
+For a given activity, we attempt to find the representative periodic signal $\textbf{s}$ of our individual\textquotesingle s activity to be our template for our matched-filter.
 
 If $\textbf{t} = \{t_k\}_{k=0}^{N_t}$ is our training set over $N_t$ data points, we define a collection of subsets $X$ of $\textbf{t}$:
 %
@@ -177,7 +174,7 @@ Y := \left \{ \{t_k\}_{k=p}^{p+N-1} | p=nI \right \}
 where $M \leq N$, $I$ is a positive, fixed integer, and $(m,n) \in \mathbb{Z}^2$ where $(m,n)$ vary such that $0 \leq (m,n)I$ and $(m,n)I + (M,N) - 1 \leq N_t$. Then we can determine the representative signal $\textbf{s} \in X$ for our activity that satisfies the condition:
 %
 \begin{equation} \label{eq:s_condition}
-\sum_{y \in Y}MF^2_{\textbf{s}}(\textbf{y}) \geq \sum_{y \in Y}MF^2_{\textbf{x}}(\textbf{y}) \quad \forall \textbf{x} \in X
+\sum_{y \in Y}MF^2_{\textbf{s}}(\textbf{y}) \geq \sum_{y \in Y}MF^2_{\textbf{x}}(\textbf{y}), \quad \forall \textbf{x} \in X
 \end{equation}
 
 We chose this method for its simplicity and robustness against outliers in our training set. We anticipate that the user will have idle motion at the start and end of their training duration when they activate the training mode and with possible disruptions during the process.
@@ -188,7 +185,7 @@ We chose this method for its simplicity and robustness against outliers in our t
 %
 The Kinetisense sensor was used for the algorithm performance analysis in this paper.
 This unit has a three-axis accelerometer with an acceleration range of -5g to +5g and a sampling rate of 128Hz.
-Samples of walking, jogging, and bicycling have been recorded with this unit attached to the ankle of the user.
+Samples of walking, jogging, and bicycling have been recorded with this unit and was attached to the ankle of the user.
 A separate instance of walking data has been used specifically for training the classifier.
 %
 \begin{figure}[!ht]
@@ -208,10 +205,9 @@ A separate instance of walking data has been used specifically for training the 
 \end{figure}
 %
 Figures \ref{fig:frac_walking_jogging} and \ref{fig:frac_walking_bicycling} show the fraction of the correlation results that exceed the given correlation threshold when comparing the walking data reference to the given activity.
-As we would expect, walking data matches better to walking data than the other activities.
+As we would expect, the walking data reference matches better to walking data than to the other activities. The tail in figure \ref{fig:frac_walking_jogging} is attributed to brief moments of walking that was recorded during the jogging data collection.
 ROC curves were produced from these corresponding results in figures \ref{fig:roc_walking_jogging} and \ref{fig:roc_walking_bicycling} to illustrate the effectiveness of the matched-filter as a classifier.
-Figures \ref{fig:frac_walking_bicycling} and \ref{fig:roc_walking_bicycling} show the comparison to bicycling.
-Because the bicycling motions are considerably different from walking relative to jogging, we would expect better performance from bicycling.
+Because the bicycling motions are considerably different from walking relative to jogging, we would expect better performance from our classifier for bicycling.
 %
 %\FloatBarrier
 %
@@ -220,10 +216,10 @@ Because the bicycling motions are considerably different from walking relative t
 To assess the real-time processing potential of the algorithms outlined in this paper, a throughput assessment was performed on the MSP432P401R microcontroller with varying parameters.
 The Texas Instruments - MSP432P401R is a low power plus performance microcontroller that is based on the ARM 32-Bit Cortex-M4F processor.
 Some of the notable features of the MSP432P410R is having a clock frequency of 48 MHz, 64 kB SRAM, 256 kB Flash Memory, and has an IEEE 754-compliant single-precision Floating-Point Unit (FPU) and Memory Protection Unit (MPU).
-The single-precision processing capability on this unit provides us with dynamic range necessary to process the algorithms that fixed-point processing cannot provide.
+The single-precision processing capability on this unit provides us with the dynamic range necessary to process the algorithms that fixed-point processing cannot provide.
 The 64 kB of SRAM provides sufficient space to process the results found in figure \ref{fig:timing} and
 the 256 kB is more than enough flash memory to store the program and data references.
-The clock frequency operates at 48 MHz which determines the execution speed.
+The clock frequency operates at 48 MHz which drives the execution speed.
 
 \begin{figure}[!ht]
    \centering
@@ -247,7 +243,7 @@ An example can be seen in Figure \ref{fig:time_measure}.
    \label{fig:timing}
 \end{figure}
 %
-Randomized data was used for the purpose of analyzing the throughput performance on the device while varying the parameters.
+Because the accelerometer was not connected to the microcontroller at the time of writing this paper, randomized data was used for the purpose of analyzing the throughput performance on the device while varying the parameters which accurately models the processing load we would expect when we do have the accelerometer connected to the microcontroller.
 Figure \ref{fig:multiple_comparison} shows the execution time with varying time-window lengths and sampling frequencies while maintaining two references used in the matched-filter process and operating at decimation $2$.
 Because the FFT dominates the processing load, and was optimized for even-powered factors, one expects best throughput at radix 2 valued time-window lengths and sampling frequencies followed by other even-valued, non-radix 2, time-lengths and sampling frequencies. Both $62$Hz and $50$Hz have only one factor of $2$ hence the expectation that a sampling frequency of $62$Hz processing time is longer than that the $50$Hz.
 Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time window at decimation $8$ while varying the sampling frequency and number of references. Because the pre-processing execution time does not change with the number of references, it's observed that matched-filtering accounts for roughly $80$\% of the processing while pre-processing accounts for the other $20$\% when processing for a single reference.
@@ -256,9 +252,8 @@ Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time w
 We have demonstrated excellent activity classification capability of the matched-filter method using data obtained from a Kinetisense tri-axis accelerometer sensor.
 We have shown that real-time processing can be achieved with timing results obtained from the MSP432 microcontroller.
 Timing results have demonstrated that radix 2 time-window lengths and frequency values result in faster processing times as expected given that the FFT dominates the procesing time.
-We increase our throughput with the use of data-compression techniques, namely decimation and dimensionality reduction, to reduce our computational requirements.
-The references used in the matched-filter are obtained from the training module.
-A training set is provided by the user through some specified activity and the best representative motion signature of the individual is extracted through the use of an instance-based learning algorithm.
+We increased our throughput with the use of data-compression techniques, namely decimation and dimensionality reduction, which reduced our computational requirements.
+The references used in the matched-filter are obtained from the training module where a training set is provided by the user through some specified activity and the best representative motion signature of the individual is extracted through the use of an instance-based learning algorithm.
 
 %
 \appendices
