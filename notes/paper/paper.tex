@@ -92,7 +92,7 @@ We assume that over a short period of time, a user\textquotesingle s limb moveme
 By identifying this plane of motion, we then project the acceleration data onto this plane and re-define our new axis accordingly.
 
 If we let $\textbf{a} = \{a_i\}_{i=0}^{N}$ represent our demeaned acceleration data (where each $a_i$ is represented as a column) over a specified time window in three dimensions, then the covariance matrix of our acceleration data is represented by the real-symmetric $3 \times 3$ matrix $Q = \textbf{a} \textbf{a}^T$.
-The resulting unit length column eigenvectors of $Q$ are $V = (\textbf{v}^1,\textbf{v}^2,\textbf{v}^3)$ with their respective eigenvalues $\lambda^1 \geq \lambda^2 \geq \lambda^3$ of this matrix are orthonormal and point in the directions where the data varies most in descending order for each orthogonal direction.
+The resulting unit length column eigenvectors of $Q$ are $V = (\textbf{v}^1,\textbf{v}^2,\textbf{v}^3)$ with their respective eigenvalues $\lambda^1 \geq \lambda^2 \geq \lambda^3$ of this matrix are orthonormal and point in the directions where the data varies most in descending order for each orthogonal direction. Here, we use superscripts to identify the axis directions in ascending order to represent the primary, secondary, and tertiary principal axis directions respectively.
 % \ref{bishop_2006}
 \begin{equation} \label{eq:project}
    \textbf{a}' := V^T \textbf{a}
@@ -101,7 +101,7 @@ The resulting unit length column eigenvectors of $Q$ are $V = (\textbf{v}^1,\tex
 We now represent our acceleration data as $\textbf{a}'$ after projecting our acceleration data $\textbf{a}$ onto our rotated axis $V$ by \eqref{eq:project}. If the data is mostly dominate in the two primary dimensions, i.e. $\lambda^3 << \lambda^2$, then it is safe to assume that
 %
 \begin{equation} \label{eq:magnitude}
-||(a^1,a^2,a^3)||^2 = ||(a'^1,a'^2,a'^3)||^2 \sim = (a'^1)^2 + (a'^2)^2
+||(a_x,a_y,a_z)||^2 = ||(a'^1,a'^2,a'^3)||^2 \sim = (a'^1)^2 + (a'^2)^2
 \end{equation}
 $ \forall a \in \textbf{a}. $ \\
 %
@@ -121,7 +121,7 @@ for $ k = 0,1,...,N-M-1 $. \\
 MF_{\textbf{x}}^2(\textbf{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat{(\textbf{x}^{1,2} \star \textbf{y}^{1,2})}_k \right \}
 \end{equation}
 %
-This works because both dimensions are always in phase with each other for any given activity and therefore the match will happen in sync. Here, the superscripts $1$ and $2$ represent the primary and secondary principle components of our data respectively.
+This works because both dimensions are always in phase with each other for any given activity and therefore the match will happen in sync. Here, the superscripts $1$ and $2$ represent the primary and secondary principal components of our data respectively.
 %
 \subsection{Decimation}
 Decimation is the first step applied to our data before any additional processing takes place.
