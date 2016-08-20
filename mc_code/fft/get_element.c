@@ -6,7 +6,7 @@
 /* Function NAME: ref_element
 **
 */
-inline float *ref_element(
+extern inline float *ref_element(
                       float *x,       /* The  array                       */
                       int    start,   /* starting location on the array   */
                       int    stride,  /* elements to stride by from start */

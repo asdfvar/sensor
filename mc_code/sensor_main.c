@@ -2,6 +2,7 @@
 #include "preproc.h"
 #include "run_mf.h"
 #include "down_sample.h"
+#include "energy_expenditure.h"
 #include <stdio.h>
 
 void sensor_main(

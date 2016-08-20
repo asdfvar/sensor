@@ -70,7 +70,7 @@ float get_element_conj_sym(
                       int    element, /* the select element from start    */
                       int    part);   /* real part = 1, imag part = 2     */
 
-inline float *ref_element(
+float *ref_element(
                       float *x,       /* The  array                       */
                       int    start,   /* starting location on the array   */
                       int    stride,  /* elements to stride by from start */
