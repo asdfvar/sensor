@@ -5,12 +5,12 @@
  * Function NAME: energy_expenditure
  */
 float energy_expenditure (
-        float    weight,
-        float    height,
-        float    age,
-        int      sex,
-        int      act,
-        float    power)
+ /*[I ]*/       float    weight,
+ /*[I ]*/       float    height,
+ /*[I ]*/       float    age,
+ /*[I ]*/       int      sex,
+ /*[I ]*/       int      act,
+ /*[I ]*/       float    power)
 {
 
    float RMR, MET;

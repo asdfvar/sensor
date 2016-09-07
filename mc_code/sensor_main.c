@@ -78,8 +78,9 @@ void sensor_main(
         workspace_float,
         N_window);     /* Number of sample points              */
 
+   // Initialize variables to starting values. All correlations >= -1
    float best_correlation = -1.0f;
-   int   best_activity    =  0;
+   *activity              = 0;
 
    for (ref_ind = 0; ref_ind < num_references; ref_ind++)
    {
@@ -110,20 +111,20 @@ printf("correlation = %f\n", correlation);
       if (correlation > best_correlation)
       {
          best_correlation = correlation;
-         best_activity = activity[ref_ind];
+         *activity        = reference_act_ids[ref_ind];
       }
 
       current_reference_x += N_freq_window;
       current_reference_y += N_freq_window;
 
-   }
+   } // for (ref_ind = 0; ref_ind < num_references; ref_ind++)
 
    float energy_rate = energy_expenditure(
                          weight,
                          height,
                          age,
                          sex,
-                         best_activity,
+                        *activity,
                         *power);
 
    *energy = energy_rate * time_inc;
