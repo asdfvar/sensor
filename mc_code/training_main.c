@@ -124,7 +124,7 @@ void training_main(
    */
    for (k = 0; k < N_window_ref; k++) reference_x[k] = ax[best_ref_index + k];
    for (k = 0; k < N_window_ref; k++) reference_y[k] = ay[best_ref_index + k];
-   for (k = 0; k < N_window_ref; k++) reference_z[k] = ay[best_ref_index + k];
+   for (k = 0; k < N_window_ref; k++) reference_z[k] = az[best_ref_index + k];
 
    return;
 }
