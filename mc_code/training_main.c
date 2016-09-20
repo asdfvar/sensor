@@ -16,6 +16,7 @@ void training_main(
  /*[I ]*/ const float  ref_time_length,        /* Time length for the reference               */
  /*[ O]*/ float       *reference_x,            /* Reference x                                 */
  /*[ O]*/ float       *reference_y,            /* Reference y                                 */
+ /*[ O]*/ float       *reference_z,            /* Reference z                                 */
  /*[I ]*/ const int    num_samples,            /* Number of samples to test for reference     */
  /*[**]*/ void        *workspace)              /* pre-allocated buffer space. Size = TBD      */
 {
@@ -123,6 +124,7 @@ void training_main(
    */
    for (k = 0; k < N_window_ref; k++) reference_x[k] = ax[best_ref_index + k];
    for (k = 0; k < N_window_ref; k++) reference_y[k] = ay[best_ref_index + k];
+   for (k = 0; k < N_window_ref; k++) reference_z[k] = ay[best_ref_index + k];
 
    return;
 }

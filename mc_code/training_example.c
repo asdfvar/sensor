@@ -17,6 +17,7 @@ int main()
    const float ref_time_length = 1.5f;
    float *reference_x = (float*)malloc( 600 );
    float *reference_y = (float*)malloc( 600 );
+   float *reference_z = (float*)malloc( 600 );
    const int num_samples = 4;
    void  *workspace = malloc( 200000 );
 
@@ -57,6 +58,7 @@ int main()
          ref_time_length,        /* Time length for the reference               */
          reference_x,            /* Reference x                                 */
          reference_y,            /* Reference y                                 */
+         reference_z,            /* Reference z                                 */
          num_samples,            /* Number of samples to test for reference     */
          workspace);
 
@@ -65,6 +67,7 @@ int main()
    free( az );
    free( reference_x );
    free( reference_y );
+   free( reference_z );
    free( workspace );
 
    return 0;

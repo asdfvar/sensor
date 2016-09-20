@@ -4,7 +4,7 @@ PREP_OBJ = prep_ref.o
 SENSOR_OBJ = sensor_main.o sensor_example.o
 TRAINING_OBJ = training_main.o training_example.o
 
-LIBS = -lpreproc -lmatflt -lutils -ltest -lfft -lfftw3f -lm
+LIBS = -lpreproc -lmatflt -lutils -ltest -lm -lfft #-lfftw3f
 
 MATCHEDFILTER = matchedfilter/
 UTILITIES = utilities/

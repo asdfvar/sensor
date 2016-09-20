@@ -44,6 +44,7 @@ void training_main(
  /*[I ]*/ const float  ref_time_length,        /* Time length for the reference               */
  /*[ O]*/ float       *reference_x,            /* Reference x                                 */
  /*[ O]*/ float       *reference_y,            /* Reference y                                 */
+ /*[ O]*/ float       *reference_z,            /* Reference z                                 */
  /*[I ]*/ const int    num_samples,            /* Number of samples to test for reference     */
  /*[**]*/ void        *workspace);
 
