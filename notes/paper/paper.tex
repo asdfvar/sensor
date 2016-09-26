@@ -24,7 +24,7 @@
 Having information of a user\textquotesingle s activity can provide great use in modern-day devices such as ones that track and monitor the user\textquotesingle s activity and fitness.
 In this paper, we demonstrate activity classification performance of the matched-filtering method with data obtained from a three-axis accelerometer worn by the user.
 We also show the real-time processing capability of our algorithms on the MSP432P401R microcontroller.
-Dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006} is a data compression technique we use to improve our processing throughput which, inherently, has the added benefit of making our data invariant to sensor orientation when applied.
+Dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006} is a data compression technique we use to improve our processing throughput which, inherently, has the added benefit of making our data invariant to sensor orientation.
 Data decimation in time is an additional throughput enhancement that we apply early to our data.
 We make use of an instance-based learning algorithm to train the device to learn the individual\textquotesingle s motion patterns and store that information as activity templates for use in our matched-filter.
 \end{abstract}
@@ -253,7 +253,7 @@ Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time w
 \begin{figure}[!ht]
    \centering
    \includegraphics[width=0.6\textwidth]{flops_graph.png}
-   \caption{An estimate of the flops used to accomplish the main processing tasks was made. This was accomplished by tallying all the low level operations with in addition to using the $2.5 N log_2 N$ mflops estimate for real-FFTs from FFTW \cite{FFTW}. Although the FFT used on the MSP432 was custom, off-line implementations of the algorithms made use of FFTW}
+   \caption{An estimate of the flops used to accomplish the main processing tasks. This was accomplished by tallying each of the low level operations in addition to using the $2.5 N log_2 N$ mflops estimate for real-FFTs from FFTW documentation \cite{FFTW}. Although the FFT used on the MSP432 was custom, off-line implementations of the algorithms made use of FFTW}
    \label{fig:flops_count}
 \end{figure}
 %
