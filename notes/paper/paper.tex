@@ -109,7 +109,8 @@ Equality comes from the orthonormality of $V$. The margin of error in the approx
 By now we have preserved as much information that is contained in our acceleration data as possible while also reducing our dimension from three to two.
 By projecting our data onto the plane defined by the two most dominant eigenvectors, we effectively reduce our representation of our data to two dimensions.
 
-To compute the matched-filter output for two dimensions, we generalize \eqref{eq:matched_filter} by augmenting our reference and signal with both dimensions appropriately for normalization and adding together the cross correlations as:
+Classification methods that are achieved from multi-dimensional feature spaces have been explored \cite{survey_multi_view_machine_learning}.
+In this paper, we compute the matched-filter output for two dimensions by generalizing \eqref{eq:matched_filter} by augmenting our reference and signal with both dimensions appropriately for normalization and adding together the cross correlations as:
 %
 \begin{equation} \label{eq:cross_correlation_2}
 \widehat{(\textbf{x}^{1,2} \star \textbf{y}^{1,2})}_k := \frac{(\textbf{x}^1 \star \textbf{y}^1)_k + (\textbf{x}^2 \star \textbf{y}^2)_k}{||[ \textbf{x}^1, \textbf{x}^2 ]|| \ || [ \widetilde{\textbf{y}}_k^1, \widetilde{\textbf{y}}_k^2 ] || },
@@ -224,7 +225,7 @@ The clock frequency operates at 48 MHz which drives the execution speed.
 
 \begin{figure}[!ht]
    \centering
-   \includegraphics[width=0.45\textwidth]{32Hz_4sec_8downsample_2Reference_Pulse.PNG}
+   \includegraphics[width=0.45\textwidth]{reference_pulse_32Hz_4sec_8downsample_2.png}
    \caption{Oscilloscope output used for measuring the processing time of the algorithms on the MSP432. This is a case setup of 32Hz sampling frequency over a 4 second time window with 2 references at decimation 8 showing the voltage output over time. Execution time is measured from the start to end of the ``high'' (3.3 Volts) time interval.}
    \label{fig:time_measure}
 \end{figure}
@@ -246,8 +247,15 @@ An example can be seen in Figure \ref{fig:time_measure}.
 %
 Because the accelerometer was not connected to the microcontroller at the time of writing this paper, randomized data was used for the purpose of analyzing the throughput performance on the device while varying the parameters which accurately models the processing load we would expect when we do have the accelerometer connected to the microcontroller.
 Figure \ref{fig:multiple_comparison} shows the execution time with varying time-window lengths and sampling frequencies while maintaining two references used in the matched-filter process and operating at decimation $2$.
-Because the FFT dominates the processing load, and was optimized for even-powered factors, one expects best throughput at radix 2 valued time-window lengths and sampling frequencies followed by other even-valued, non-radix 2, time-lengths and sampling frequencies. Both $62$Hz and $50$Hz have only one factor of $2$ hence the expectation that a sampling frequency of $62$Hz processing time is longer than that the $50$Hz.
+Because the FFT dominates the processing load, and a custom FFT was written specifically for this unit and optimized for even-powered factors, one expects best throughput at radix 2 valued time-window lengths and sampling frequencies followed by other even-valued, non-radix 2, time-lengths and sampling frequencies. Both $62$Hz and $50$Hz have only one factor of $2$ hence the expectation that a sampling frequency of $62$Hz processing time is longer than that of the $50$Hz.
 Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time window at decimation $8$ while varying the sampling frequency and number of references. Because the pre-processing execution time does not change with the number of references, it's observed that matched-filtering accounts for roughly $80$\% of the processing while pre-processing accounts for the other $20$\% when processing for a single reference.
+%
+\begin{figure}[!ht]
+   \centering
+   \includegraphics[width=0.6\textwidth]{flops_graph.png}
+   \caption{An estimate of the flops used to accomplish the main processing tasks was made. This was accomplished by tallying all the low level operations with in addition to using the $2.5 N log_2 N$ mflops estimate for real-FFTs from FFTW \cite{FFTW}. Although the FFT used on the MSP432 was custom, off-line implementations of the algorithms made use of FFTW}
+   \label{fig:flops_count}
+\end{figure}
 %
 \section{Conclusion}
 We have demonstrated excellent activity classification capability of the matched-filter method using data obtained from a Kinetisense tri-axis accelerometer sensor.

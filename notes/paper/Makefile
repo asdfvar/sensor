@@ -2,6 +2,7 @@ TEX = pdflatex
 
 FIGS = one_and_two_references.png                  \
        more_time_plots.png                         \
+       flops_graph.png                             \
        fraction_threshold_walking_to_bicycling.png \
        fraction_threshold_walking_to_jogging.png   \
        ROC_walk_to_bike.png                        \
@@ -16,6 +17,9 @@ clean:
 
 one_and_two_references.png: make_timing_plots.py
 	./make_timing_plots.py
+
+flops_graph.png: make_flop_bar_graph.py
+	./make_flop_bar_graph.py
 
 more_time_plots.png: make_timing_plots.py
 	./make_timing_plots.py
