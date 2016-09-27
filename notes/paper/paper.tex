@@ -252,10 +252,16 @@ Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time w
 %
 \begin{figure}[!ht]
    \centering
-   \includegraphics[width=0.6\textwidth]{flops_graph.png}
-   \caption{An estimate of the flops used to accomplish the main processing tasks. This was accomplished by tallying each of the low level operations in addition to using the $2.5 N log_2 N$ mflops estimate for real-FFTs from FFTW documentation \cite{FFTW}. Although the FFT used on the MSP432 was custom, off-line implementations of the algorithms made use of FFTW}
+   \includegraphics[width=0.95\textwidth]{flops_graph.png}
+   \caption{An estimate of the processing distribution based on flop counts. This estimate was obtained from the source code that was used for the performance assessment. The cost of the FFT is based on the $2.5 N log_2 N$ mflops estimate for FFTW \cite{FFTW} which was used for this performance assessment for real-FFTs. A sampling rate of $128$ Hz with the matched-filter applied over a $4$ second time window and $1.5$ seconds of reference data was used (usual standard for testing)}
    \label{fig:flops_count}
 \end{figure}
+
+An assessment of the processing costs associated with each algorithm in the process was made as seen in figure \ref{fig:flops_count}.
+In addition, timing tests were done for comparison on an Intel i7-4500U 1.80 GHz processor.
+Processing time came out to $12.0$ micro-seconds for dimensionality reduction processing and $114.0$ micro-seconds for matched-filter processing on the remaining two dimensions.
+This proportion shows relative consistency with figure \ref{fig:flops_count} as we would expect.
+FFT calls account for the bulk of the processing distribution and are part of the main processing kernel for the matched-filtering process.
 %
 \section{Conclusion}
 We have demonstrated excellent activity classification capability of the matched-filter method using data obtained from a Kinetisense tri-axis accelerometer sensor.
