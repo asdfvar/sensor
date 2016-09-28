@@ -65,7 +65,7 @@ void training_main(
             data_time_length,
             sampling_freq,
             1,
-            workspace);
+            (void*)workspace_float);
 
       float sum_data_correlation = 0.0f;
       
