@@ -32,17 +32,16 @@ We make use of an instance-based learning algorithm to train the device to learn
 \section{Introduction}
 Various methods for activity classification using body-worn sensors exist.
 Custom Decision Tree, Automatically Generated Decision Tree, and Artificial Neural Networks \cite{parkka_ermes_korpipaa_mantyjarvi_peltola_korhonen_2006} have been explored as well as other frequency based classification methods \cite{sharma_purwar_lee_lee_chung_2008}.
-In this paper, we make use of the matched-filter method to identify an individual\textquotesingle s activity for the purpose of real-time processing.
-The matched-filter method with use of thresholding and comparing the correlations of various filters is a simple method to use and has been studied in the past \cite{giannakis_tsatsanis_1990}.
-The methods used for our algorithms are designed for computational efficiency to accommodate the resource limitations of a microcontroller (we use the MSP432 microcontroller).
+The use of the matched-filter method for classification has been studied in the past \cite{giannakis_tsatsanis_1990} and we seek to adopt this method for our use to identify an individual\textquotesingle s activity for the purpose of real-time processing on a low-powered micro-controller.
+The methods used for our algorithms are designed for computational efficiency to accommodate the resource limitations of a microcontroller. In this paper, we use the MSP432 microcontroller for our timing results.
 
-The algorithms described in this paper are broken into two main modules: The real-time activity classification and training the device to identify the user\textquotesingle s activity.
+The algorithms described in this paper are used in two main modules: The activity classification module for real-time processing and the training module to train the device to identify the user\textquotesingle s activity.
 
 The training module does not need to be performed in real time.
 This algorithm is the most demanding on computational resources and is only executed when training or re-training the unit to identify the user\textquotesingle s activity, which means that this can be performed on an external device such as a smart phone or tablet.
 The purpose of the training module is to create the reference signals to be used on the microcontroller for the real-time activity classification processing.
 
-The real-time activity classification module is intended to be performed on a microcontroller.
+The real-time activity classification module is intended to be performed on a low-powered microcontroller.
 This module reads in the references stored on the unit to be used as templates that the matched-filter will use for determining the individual\textquotesingle s activity.
 Both of these modules use the same principles and hence the same algorithm kernels.
 %
@@ -85,8 +84,12 @@ MF_{\textbf{x}}(\textbf{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat{(
 \end{equation}
 %
 If \eqref{eq:matched_filter} passes a set threshold, then the corresponding signal $\textbf{y}$ is classified as a match to the reference $\textbf{x}$.
+
+Applying the convolution theorem to $\eqref{eq:conv_theorem}$ changes the computational complexity or the cross correlation from $\mathcal{O}(n^2)$ to $\mathcal{O}(n log_2n)$.
+Despite this reduction in processing cost, the FFTs are still an expensive algorithm for real-time processing on such limiting hardware resources. Sections \ref{sec:dim_red} and \ref{sec:decimation} will go into methods that will help reduce the computational burden of the matched-filter.
 %
-\subsection{Dimensionality Reduction}
+\subsection{Dimensionality Reduction} \label{sec:dim_red}
+Classification methods that make use of multi-dimensional feature spaces have increased in popularity and many methods exist \cite{survey_multi_view_machine_learning}.
 We manage to reduce our computational resources and remove our dependence on sensor orientation at the same time through a process of dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006}.
 Similar to other methods that apply subspace projections \cite{low_rank_subspace}, we seek to analyze our data in a lower dimensional subspace by a projection onto the two-dimension plane that best represents our data.
 We assume that over a short period of time, a user\textquotesingle s limb movement is constrained mostly to a two-dimensional plane.
@@ -106,11 +109,9 @@ We now represent our acceleration data as $\textbf{a}'$ after projecting our acc
 \end{equation}
 $ \forall a \in \textbf{a}. $ \\
 %
-Equality comes from the orthonormality of $V$. The margin of error in the approximation is not important since we are only interested in processing in the two dimensions.
-By now we have preserved as much information that is contained in our acceleration data as possible while also reducing our dimension from three to two.
-By projecting our data onto the plane defined by the two most dominant eigenvectors, we effectively reduce our representation of our data to two dimensions.
+Where equality comes from the orthonormality of $V$.
+By now, we have preserved as much information that is contained in our acceleration data as possible in the process of reducing our dimensions from three to two.
 
-Classification methods that make use of multi-dimensional feature spaces have been explored \cite{survey_multi_view_machine_learning}.
 In this paper, we compute the matched-filter output for two dimensions by generalizing \eqref{eq:matched_filter} by augmenting our reference and signal with both dimensions appropriately for normalization and adding together the cross correlations as:
 %
 \begin{equation} \label{eq:cross_correlation_2}
@@ -125,7 +126,7 @@ MF_{\textbf{x}}^2(\textbf{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat
 %
 This works because both dimensions are always in phase with each other for any given activity and therefore the match will happen in sync. Here, the superscripts $1$ and $2$ represent the primary and secondary principal components of our data respectively.
 %
-\subsection{Decimation}
+\subsection{Decimation} \label{sec:decimation}
 Decimation is the first step applied to our data before any additional processing takes place.
 Decimation is a process of reducing the sampling rate of the signal by filtering to mitigate any possible distortion effects due to aliasing followed by downsampling.
 Because real-time performance is important, we decimate our signal for the purpose of improving our throughput.
@@ -188,7 +189,7 @@ We chose this method for its simplicity and robustness against outliers in our t
 The Kinetisense sensor was used for the algorithm performance analysis in this paper.
 This unit has a three-axis accelerometer with an acceleration range of -5g to +5g and a sampling rate of 128Hz.
 Samples of walking, jogging, and bicycling have been recorded with this unit and was attached to the ankle of the user.
-A separate instance of walking data has been used specifically for training the classifier.
+A separate instance of walking data was used specifically for training the classifier.
 %
 \begin{figure}[!ht]
   %\captionsetup[subfigure]{labelformat=empty}
@@ -206,7 +207,7 @@ A separate instance of walking data has been used specifically for training the 
   \caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced at decimation 8. Figures (c) and (d) are the corresponding ROC curves produced from (a) and (b) respectively.}
   \label{fig:MF_performance}
 \end{figure}
-%
+
 Figures \ref{fig:frac_walking_jogging} and \ref{fig:frac_walking_bicycling} show the fraction of the correlation results that exceed the given correlation threshold when comparing the walking data reference to the given activity.
 As we would expect, the walking data reference matches better to walking data than to the other activities. The tail in figure \ref{fig:frac_walking_jogging} is attributed to brief moments of walking that was recorded during the jogging data collection.
 ROC curves were produced from these corresponding results in figures \ref{fig:roc_walking_jogging} and \ref{fig:roc_walking_bicycling} to illustrate the effectiveness of the matched-filter as a classifier.
@@ -227,7 +228,7 @@ The clock frequency operates at 48 MHz which drives the execution speed.
 \begin{figure}[!ht]
    \centering
    \includegraphics[width=0.45\textwidth]{reference_pulse_32Hz_4sec_8downsample_2.png}
-   \caption{Oscilloscope output used for measuring the processing time of the algorithms on the MSP432. This is a case setup of 32Hz sampling frequency over a 4 second time window with 2 references at decimation 8 showing the voltage output over time. Execution time is measured from the start to end of the ``high'' (3.3 Volts) time interval.}
+   \caption{Oscilloscope output used for measuring the processing time of the algorithms on the MSP432. This is a case setup of 32Hz sampling frequency over a 4 second time window with 2 references at decimation 8 showing the voltage output over time. Execution time is measured from start to end of the ``high'' (3.3 Volts) time interval.}
    \label{fig:time_measure}
 \end{figure}
 %
