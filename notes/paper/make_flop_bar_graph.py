@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 flops = ( 3.02, 3.00, 8.95, 4.76, 7.46, 2.61, 22.38, 3.00, 22.38, 22.45)
-names = ("Data demeaning", "Signal power", "Covariance Matrix", "Eigen-vectors/values", "Projection onto axis", "Signal norm", "FFT", "Conjugate multiply", "Inverse FFT", "Normalization & add. proc.")
+names = ("Data demeaning", "Signal power", "Covariance Matrix", "Eigen-vectors/values", "Projection onto axis", "Signal norm", "FFT", "Conjugate multiply", "Inverse FFT", "Normalization")
 
 fig, ax = plt.subplots()
 index = np.arange(len(flops))

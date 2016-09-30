@@ -86,7 +86,8 @@ MF_{\textbf{x}}(\textbf{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat{(
 If \eqref{eq:matched_filter} passes a set threshold, then the corresponding signal $\textbf{y}$ is classified as a match to the reference $\textbf{x}$.
 
 Applying the convolution theorem to $\eqref{eq:conv_theorem}$ changes the computational complexity or the cross correlation from $\mathcal{O}(n^2)$ to $\mathcal{O}(n log_2n)$.
-Despite this reduction in processing cost, the FFTs are still an expensive algorithm for real-time processing on such limiting hardware resources. Sections \ref{sec:dim_red} and \ref{sec:decimation} will go into methods that will help reduce the computational burden of the matched-filter.
+Despite this reduction in processing cost, the FFTs are still an expensive algorithm for real-time processing on limited hardware resources.
+Sections \ref{sec:dim_red} and \ref{sec:decimation} will go into methods that will help reduce the computational burden of the matched-filter.
 %
 \subsection{Dimensionality Reduction} \label{sec:dim_red}
 Classification methods that make use of multi-dimensional feature spaces have increased in popularity and many methods exist \cite{survey_multi_view_machine_learning}.
@@ -137,7 +138,7 @@ For a decimation value of $D$, we define our triangle filter with the following 
 w_k^D :=
 \begin{cases}
   \frac{D+k}{D^2}, & \text{if }\ -D < k \leq 0 \\
-  \frac{D-k}{D^2}, & \text{if } D < k < D \\
+  \frac{D-k}{D^2}, & \text{if } 0 < k < D \\
   0, & \text{otherwise}
 \end{cases}
 \end{equation}
@@ -188,7 +189,7 @@ We chose this method for its simplicity and robustness against outliers in our t
 %
 The Kinetisense sensor was used for the algorithm performance analysis in this paper.
 This unit has a three-axis accelerometer with an acceleration range of -5g to +5g and a sampling rate of 128Hz.
-Samples of walking, jogging, and bicycling have been recorded with this unit and was attached to the ankle of the user.
+Samples of walking, jogging, and bicycling have been recorded with this unit attached to the ankle of the user.
 A separate instance of walking data was used specifically for training the classifier.
 %
 \begin{figure}[!ht]
@@ -219,7 +220,7 @@ Because the bicycling motions are considerably different from walking relative t
 %
 To assess the real-time processing potential of the algorithms outlined in this paper, a throughput assessment was performed on the MSP432P401R microcontroller with varying parameters.
 The Texas Instruments - MSP432P401R is a low power plus performance microcontroller that is based on the ARM 32-Bit Cortex-M4F processor.
-Some of the notable features of the MSP432P410R is having a clock frequency of 48 MHz, 64 kB SRAM, 256 kB Flash Memory, and has an IEEE 754-compliant single-precision Floating-Point Unit (FPU) and Memory Protection Unit (MPU).
+Some of the notable features of the MSP432P410R is having a clock frequency of 48 MHz, 64 kB SRAM, 256 kB Flash Memory, an IEEE 754-compliant single-precision Floating-Point Unit (FPU), and Memory Protection Unit (MPU).
 The single-precision processing capability on this unit provides us with the dynamic range necessary to process the algorithms that fixed-point processing cannot provide.
 The 64 kB of SRAM provides sufficient space to process the results found in figure \ref{fig:timing} and
 the 256 kB is more than enough flash memory to store the program and data references.
@@ -228,7 +229,8 @@ The clock frequency operates at 48 MHz which drives the execution speed.
 \begin{figure}[!ht]
    \centering
    \includegraphics[width=0.45\textwidth]{reference_pulse_32Hz_4sec_8downsample_2.png}
-   \caption{Oscilloscope output used for measuring the processing time of the algorithms on the MSP432. This is a case setup of 32Hz sampling frequency over a 4 second time window with 2 references at decimation 8 showing the voltage output over time. Execution time is measured from start to end of the ``high'' (3.3 Volts) time interval.}
+   \caption{Oscilloscope output used for measuring the processing time of the algorithms on the MSP432. This is a case setup of 32Hz sampling frequency over a 4 second time window with 2 references at decimation 8 showing the voltage output over time.
+Execution time is measured from start to end of the ``high'' (3.3 Volts) time interval.}
    \label{fig:time_measure}
 \end{figure}
 %
@@ -247,15 +249,18 @@ An example can be seen in Figure \ref{fig:time_measure}.
    \label{fig:timing}
 \end{figure}
 %
-Because the accelerometer was not connected to the microcontroller at the time of writing this paper, randomized data was used for the purpose of analyzing the throughput performance on the device while varying the parameters which accurately models the processing load we would expect when we do have the accelerometer connected to the microcontroller.
-Figure \ref{fig:multiple_comparison} shows the execution time with varying time-window lengths and sampling frequencies while maintaining two references used in the matched-filter process and operating at decimation $2$.
+The throughput performance was assessed on the MSP432 with varying parameters and randomized data.
+This can be accomplished because the processing time is not affected by the data and this also simplifies this aspect of testing.
+Figure \ref{fig:multiple_comparison} shows the execution time with varying time-window lengths and sampling frequencies while maintaining two references used in the matched-filter process while operating at decimation $2$.
 Because the FFT dominates the processing load, and a custom FFT was written specifically for this unit and optimized for even-powered factors, one expects best throughput at radix 2 valued time-window lengths and sampling frequencies followed by other even-valued, non-radix 2, time-lengths and sampling frequencies. Both $62$Hz and $50$Hz have only one factor of $2$ hence the expectation that a sampling frequency of $62$Hz processing time is longer than that of the $50$Hz.
-Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time window at decimation $8$ while varying the sampling frequency and number of references. Because the pre-processing execution time does not change with the number of references, it's observed that matched-filtering accounts for roughly $80$\% of the processing while pre-processing accounts for the other $20$\% when processing for a single reference.
+Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time window at decimation $8$ while varying the sampling frequency and number of references.
+The processing that happens on the data before matched-filtering doesn't change the execution time with the number of references.
+Therefore, one can observe that matched-filtering accounts for roughly $80$\% of the processing time.
 %
 \begin{figure}[!ht]
    \centering
    \includegraphics[width=0.99\textwidth]{flops_graph.png}
-   \caption{An estimate of the processing distribution based on flop counts. This estimate was obtained from the source code that was used for the performance assessment. The cost of the FFT is based on the $2.5 N log_2 N$ mflops estimate for real-FFTs from FFTW \cite{FFTW} which was used for this performance assessment. A sampling rate of $128$ Hz with the matched-filter applied over a $4$ second time window and $1.5$ seconds of reference data was used (usual standard for our testing).}
+   \caption{An estimate of the processing distribution based on flop counts. This estimate was obtained from analyzing the source code that was used for the performance assessment. The cost of the FFT is based on the $2.5 N log_2 N$ mflops estimate for real-FFTs for FFTW \cite{FFTW} execution which was used for this performance assessment. A sampling rate of $128$ Hz with the matched-filter applied over a $4$ second time window and $1.5$ seconds of reference data was used.}
    \label{fig:flops_count}
 \end{figure}
 
@@ -268,7 +273,7 @@ FFT calls account for the bulk of the processing distribution and are part of th
 \section{Conclusion}
 We have demonstrated excellent activity classification capability of the matched-filter method using data obtained from a Kinetisense tri-axis accelerometer sensor.
 We have shown that real-time processing on a low-powered micro-controller can be achieved with timing results obtained from the MSP432 microcontroller.
-Timing results have demonstrated that radix 2 time-window lengths and frequency values result in faster processing times as expected given that the FFT dominates the processing time.
+Timing results have demonstrated that radix 2 time-window lengths and frequency values result in faster processing times as expected given that the FFTs account for a significant amount of the processing time.
 We increased our throughput with the use of data-compression techniques, namely decimation and dimensionality reduction, which reduced our computational requirements.
 The references used in the matched-filter are obtained from the training module where a training set is provided by the user through some specified activity and the best representative motion signature of the individual is extracted through the use of an instance-based learning algorithm.
 
