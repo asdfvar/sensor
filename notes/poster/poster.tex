@@ -14,38 +14,40 @@
 \newcommand{\pphantom}{\textcolor{ta3aluminium}} % phantom introduces a vertical space in p formatted table columns??!!
 \newcommand{\vectornorm}[1]{\left|\left|#1\right|\right|}
 
-\title{\normalsize{Efficient Techniques for Simulations of Kinetic Equations of Gas Dynamics}}
-\author{\small{Craig Euler, \hspace{5mm} College of Science and Mathematics ,\hspace{5mm} California State University Northridge}}
+% Poster size can be: 36" wide by 44" tall
+
+\title{\normalsize{Real-Time Activity Classification by Matched Filtering using Body-Worn Accelerometers}}
+\author{\small{Craig~Euler craig.euler@gmail.com, C.T.~Lin ct.lin@csun.edu,\\Bryan~Juarez bryan.juarez.974@my.csun.edu, Melissa~Flores melissa.flores.455@my.csun.edu\\College of Engineering and Computer Science\\California State University, Northridge}}
+
 \footer{}
 \date{}
-% \includegraphics[scale=.2]{CSUN_seal.png}}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 \begin{document}
 \tiny{}
 \begin{frame}{} 
-	
-	
 
-
-	\begin{textblock}{19.5}(1,4)
+\begin{textblock}{19.5}(1, 7)
 
 \begin{block}{\small{Introduction}}
-Numerical simulations of gas flows over sharp leading edges of air vehicles are challenging because they require the solution of model kinetic equations. These equations lead to stiff problems in regimes transitional from continuum to free molecular flow. The main difficulties in solving model kinetic equations include the loss of the conservation of mass, momentum, and energy, and low order convergence of solutions. Flows that are near continuum are well described by the Boltzmann equation with the BGK collision model:
+
+
+
+Various methods for activity classification using body-worn sensors exist.
+Custom Decision Tree, Automatically Generated Decision Tree, and Artificial Neural Networks \cite{parkka_ermes_korpipaa_mantyjarvi_peltola_korhonen_2006} have been explored as well as other frequency based classification methods \cite{sharma_purwar_lee_lee_chung_2008}.
+%The use of the matched-filter method for classification has been studied in the past \cite{giannakis_tsatsanis_1990} and we seek to adopt this method for our use to identify an individual\textquotesingle s activity for the purpose of real-time processing on a low-powered micro-controller.
+The methods used for our algorithms are designed for computational efficiency to accommodate the resource limitations of a microcontroller. In this paper, we use the MSP432 microcontroller for our timing results.
+
+%The algorithms described in this paper are used in two main modules: The activity classification module for real-time processing and the training module to train the device to identify the user\textquotesingle s activity.
+
+The training module does not need to be performed in real time.
+%This algorithm is the most demanding on computational resources and is only executed when training or re-training the unit to identify the user\textquotesingle s activity, which means that this can be performed on an external device such as a smart phone or tablet.
+The purpose of the training module is to create the reference signals to be used on the microcontroller for the real-time activity classification processing.
+
+The real-time activity classification module is intended to be performed on a low-powered microcontroller.
+%This module reads in the references stored on the unit to be used as templates that the matched-filter will use for determining the individual\textquotesingle s activity.
+Both of these modules use the same principles and hence the same algorithm kernels.
+
+
 
 % Boltzmann equation
 \begin{equation*}
@@ -67,24 +69,6 @@ f_{0} = f_{M} = \frac{\rho(t, \vec{x})}{\sqrt{(2 \pi RT(t, \vec{x}))^{3}}} \exp 
 
 \begin{block}{\small{Reduction to One Dimension}}
 We assume that there is no mass transfer in the $y$ and $z$ directions (examples: gas between two parallel plates or in an infinitely wide pipe). In this case, the BGK equation reduces to
-
-%A one dimensional reduction is performed on \eqref{ES-BGK} by assuming that no mass transfer occurs in two of the three directions in space, in this case $v_{2}$ and $v_{3}$. By considering the fallowing substitutions:
-
-% f1
-%\begin{equation*}
-%\label{f1}
-%f^{1} (t,x,v_{1}) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f(t, \vec{x}, \vec{v}) dv_{2} dv_{3}
-%\end{equation*}
-% use \ref{f1} or \eqref{f1} to get the reference for this equation
-
-% f2
-%\begin{equation*}
-%\label{f2}
-%f^{2} (t,x,v_{1}) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} v_{2}^2 f(t, \vec{x}, \vec{v}) dv_{2} dv_{3}
-%\end{equation*}
-% use \ref{f2} or \eqref{f2} to get the reference for this equation
-
-%then by integrating \eqref{ES-BGK} over all velocity space we are left with the following reduction with $j=1,2$:
 
 % First PDE evolution equation for f1 and f2
 \begin{equation*}
@@ -146,9 +130,9 @@ Our basis functions $\varphi_{p,i}(v)$ are
 \end{equation*}
 \end{block}
 
-	\end{textblock}
+\end{textblock}
 
-	\begin{textblock}{18}(21.8,4)
+\begin{textblock}{18}(21.8,4)
 
  \begin{block}{\small{}}
 Notice that basis functions satisfy the orthogonality properties
@@ -193,14 +177,14 @@ Our first experiment is to study the relative error in the total mass. The numbe
 We observed by varying the number of velocity cells we can reduce the error to a factor of $10^{-10}$. It is observed that varying the number of cells in the spatial variable $x$ has little effect on the conservation of mass as seen in the table below.
 
 \end{block}
-	\end{textblock}
+\end{textblock}
 
-	\begin{textblock}{17.3}(41,4)
+\begin{textblock}{17.3}(41,4)
 
 \begin{block}{\small{}}
 
 \begin{center}
-	\begin{tabular}{ cc || c | c | c | c | c | c | c | c | c | r |}
+\begin{tabular}{ cc || c | c | c | c | c | c | c | c | c | r |}
 
 & & \multicolumn{4}{| c |}{Number of velocity cells}\\
 & & 6 & 8 & 12 & 16\\ \hline \hline
@@ -217,13 +201,13 @@ We observed by varying the number of velocity cells we can reduce the error to a
 & 100 & 5.33E-07 & 2.54E-09 &  5.10E-10 & 1.14E-10\\ \hline
 
 \hline
-	\end{tabular}
+\end{tabular}
 \end{center}
 
 The convergence of the L2 norm of the error in macroparameters with respect to the resolution in the spatial variable can be seen in the table below. The solutions are compared to solutions on 1000 cells. The velocity discretization is by a scheme of order 10 on 10 velocity cells.
 
 \begin{center}
-	\begin{tabular}{ lc || c | c | c | c |}
+\begin{tabular}{ lc || c | c | c | c |}
 
 & & \multicolumn{4}{| c |}{Number of spatial cells}\\
 & & 50 & 100 & 150 & 200\\ \hline \hline
@@ -232,7 +216,7 @@ The convergence of the L2 norm of the error in macroparameters with respect to t
 & Temperature & 0.03967 & 0.02408 & 0.01652 & 0.01062\\ \hline
 
 \hline
-	\end{tabular}
+\end{tabular}
 \end{center}
 
 
@@ -246,11 +230,12 @@ The convergence of the L2 norm of the error in macroparameters with respect to t
 \end{block}
 
 \begin{block}{\small{References}}
-% http://depts.washington.edu/clawpack/users-4.6/about.html#authors
-[1] R. J. LeVeque, M. J. Berger, et. al., Clawpack Software 4.5.1, www.clawpack.org, June 2011
+\bibliographystyle{plain}
+\bibliography{reference}
+
 \end{block}
 
-	\end{textblock}
+\end{textblock}
 
 \end{frame}
 \end{document}
