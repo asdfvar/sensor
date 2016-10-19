@@ -31,6 +31,15 @@
 %%
 \begin{textblock}{19.5}(1, 7)
 
+\begin{block}{\small{Abstract}}
+Having information of a user's activity can provide great use in modern-day devices such as ones that track and monitor the user's activity and fitness.
+In this paper, we demonstrate activity classification performance of the matched-filtering method with data obtained from a three-axis accelerometer worn by the user.
+We also show the real-time processing capability of our algorithms on the MSP432P401R low-powered microcontroller.
+Dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006} is a data compression technique we use to improve our processing throughput which, inherently, has the added benefit of making     our data invariant to sensor orientation.
+Data decimation in time is an additional throughput enhancement that we apply early to our data.
+We make use of an instance-based learning algorithm to train the device to learn the individual's motion patterns and store that information as activity templates for use in our matched-filter.
+\end{block}
+
 \begin{block}{\small{Introduction}}
 Various methods for activity classification using body-worn sensors exist.
 Custom Decision Tree, Automatically Generated Decision Tree, and Artificial Neural Networks \cite{parkka_ermes_korpipaa_mantyjarvi_peltola_korhonen_2006} have been explored as well as other frequency based classification methods \cite{sharma_purwar_lee_lee_chung_2008}.
