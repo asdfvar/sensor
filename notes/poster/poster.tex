@@ -33,7 +33,7 @@
 
 \begin{block}{\small{Abstract}}
 Having information of a user's activity can provide great use in modern-day devices such as ones that track and monitor the user's activity and fitness.
-In this paper, we demonstrate activity classification performance of the matched-filtering method with data obtained from a three-axis accelerometer worn by the user.
+We demonstrate activity classification performance of the matched-filtering method with data obtained from a three-axis accelerometer worn by the user.
 We also show the real-time processing capability of our algorithms on the MSP432P401R low-powered microcontroller.
 Dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006} is a data compression technique we use to improve our processing throughput which, inherently, has the added benefit of making     our data invariant to sensor orientation.
 Data decimation in time is an additional throughput enhancement that we apply early to our data.
@@ -41,20 +41,14 @@ We make use of an instance-based learning algorithm to train the device to learn
 \end{block}
 
 \begin{block}{\small{Introduction}}
-Various methods for activity classification using body-worn sensors exist.
-Custom Decision Tree, Automatically Generated Decision Tree, and Artificial Neural Networks \cite{parkka_ermes_korpipaa_mantyjarvi_peltola_korhonen_2006} have been explored as well as other frequency based classification methods \cite{sharma_purwar_lee_lee_chung_2008}.
-The use of the matched-filter method for classification has been studied in the past \cite{giannakis_tsatsanis_1990} and we seek to adopt this method for our use to identify an individual's activity for the purpose of real-time processing on a low-powered micro-controller.
-The methods used for our algorithms are designed for computational efficiency to accommodate the resource limitations of a microcontroller. In this paper, we use the MSP432 microcontroller for our timing results.
+We adopt the matched-filter method for classification to identify an individual's activity in real-time processing on a low-powered micro-controller.
+Our algorithms are designed for computational efficiency to accommodate the resource limitations of a microcontroller.
+Timing tests were performed on the MSP432 microcontroller.
 
-The algorithms described in this paper are used in two main modules: The activity classification module for real-time processing and the training module to train the device to identify the user's activity.
+Two main algorithms are described here: The activity classification module for real-time processing and the training module to train the device to identify the user's activity for the purpose of real-time activity classification.
 
-The training module does not need to be performed in real time.
-This algorithm is the most demanding on computational resources and is only executed when training or re-training the unit to identify the user's activity, which means that this can be performed on an external device such as a smart phone or tablet.
-The purpose of the training module is to create the reference signals to be used on the microcontroller for the real-time activity classification processing.
-
-The real-time activity classification module is intended to be performed on a low-powered microcontroller.
-This module reads in the references stored on the unit to be used as templates that the matched-filter will use for determining the individual's activity.
-Both of these modules use the same principles and hence the same algorithm kernels.
+Because training module does not need to be performed in real time, this can be performed on an external device such as a smart phone or tablet where processing resources are in greater abundance.
+Training the module creates the reference signals to be used on the microcontroller for the real-time activity classification processing.
 \end{block}
 
 %%
