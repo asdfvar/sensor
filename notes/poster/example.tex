@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{multicol}
+\usepackage{subfig}
 \usepackage{graphicx,url}
 \usepackage[english]{babel}   
 \usepackage[utf8]{inputenc}
@@ -183,10 +184,6 @@ where $M \leq N$, $I$ is a positive, fixed integer, and $(m,n) \in \mathbb{Z}^2$
 
 We chose this method for its simplicity and robustness against outliers in our training set. We anticipate that the user will have idle motion at the start and end of their training duration when they activate the training mode and with possible disruptions during the process.
 
-\begin{center}
- \includegraphics[scale=.75]{reference_pulse_32Hz_4sec_8downsample_2.png}
-\end{center}
-
 %%%%%%%%%%%%%%%
 % Performance %
 %%%%%%%%%%%%%%%
@@ -195,23 +192,16 @@ The Kinetisense sensor was used for the algorithm performance analysis in this p
 This unit has a three-axis accelerometer with an acceleration range of -5g to +5g and a sampling rate of 128Hz.
 Samples of walking, jogging, and bicycling have been recorded with this unit attached to the ankle of the user.
 A separate instance of walking data was used specifically for training the classifier.
-%
-%\begin{figure}[!ht]
-%  %\captionsetup[subfigure]{labelformat=empty}
-%  \centering
-%  \subfloat[\label{fig:frac_walking_jogging}]{\includegraphics[width=0.45\textwidth]{fraction_threshold_walking_to_jogging.png}}
-%  \quad
-%  \centering
-%  \subfloat[\label{fig:frac_walking_bicycling}]{\includegraphics[width=0.45\textwidth]{fraction_threshold_walking_to_bicycling.png}}
-%  \centering
-%  \quad
-%  \subfloat[\label{fig:roc_walking_jogging}]{\includegraphics[width=0.45\textwidth]{ROC_walk_to_run.png}}
-%  \centering
-%  \quad
-%  \subfloat[\label{fig:roc_walking_bicycling}]{\includegraphics[width=0.45\textwidth]{ROC_walk_to_bike.png}}
-%  \caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced at decimation 8. Figures (c) and (d) are the corresponding ROC curves produced from (a) and (b) respectively.}
-%  \label{fig:MF_performance}
-%\end{figure}
+
+\begin{figure}[!ht]
+
+\centering
+\subfigure[Jogging]{\includegraphics[width=0.35\textwidth]{fraction_threshold_walking_to_jogging.png}}
+\subfigure[Bicycling]{\includegraphics[width=0.35\textwidth]{fraction_threshold_walking_to_bicycling.png}}
+
+\caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced at decimation 8. Figures (c) and (d) are the corresponding ROC curves produced from (a) and (b) respectively.}
+  \label{fig:MF_performance}
+\end{figure}
 
 Figures \ref{fig:frac_walking_jogging} and \ref{fig:frac_walking_bicycling} show the fraction of the correlation results that exceed the given correlation threshold when comparing the walking data reference to the given activity.
 As we would expect, the walking data reference matches better to walking data than to the other activities. The tail in figure \ref{fig:frac_walking_jogging} is attributed to brief moments of walking that was recorded during the jogging data collection.
