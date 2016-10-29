@@ -5,362 +5,286 @@
 \usepackage{amssymb}
 \usepackage{multicol}
 \usepackage{graphicx,url}
-\usepackage[portuges, brazil]{babel}   
+\usepackage[english]{babel}   
 \usepackage[utf8]{inputenc}
 %\usepackage{fancybullets}
 \newtheorem{Def}{Definition}
 
 
-\title{Projeto Integrador II\\ Título provisório}
-%Título do projeto
+\title{Real-Time Activity Classification by Matched Filtering using Body-Worn Accelerometers}
 
-\author{Alexandre S. Bencz, Ezequiel F. Santos, Gabriel Fontenelle, Tales Pádua}
-%nome dos autores
+\author{Craig~Euler, C.T.~Lin, Bryan~Juarez, Melissa~Flores}
 
 \institute 
-{Bacharelado em Ciência da Computação\\
-Centro Universitário SENAC - Campus Santo Amaro
-  (SENAC-SP)\\
-  Av. Engenheiro Eusébio Stevaux, 823 -- Santo Amaro, São Paulo -- CEP 04696-000 -- SP -- Brasil}
-%Nome e endereço da Instituição
+{College of Engineering and Computer Science\\
+California State University Northridge}
 
-\email{{alebencz,ezefranca.br,colecionador.gabriel,talescpadua},{(@gmail.com})}
-% Onde você coloca os emails dos integrantes
-
-
-%\date is unused by the current \maketitle
-
-%\rightlogo[1]{Senac-logo}
-%\leftlogo[1]{Ecomp-logo}
-% Exibe os logos (direita e esquerda) 
-% Procure usar arquivos png ou jpg, e de preferencia mantenha na mesma pasta do .tex
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Begin of Document
-
-
+\email{craig.euler@gmail.com}
 
 \begin{document}
-%define conference poster is presented at (appears as footer)
-
-\conference{{\bf E-COMP 2013}, 5º Encontro da Computação - Senac, 27 de Novembro de 2013, São Paulo, Brasil}
-
-%\LEFTSIDEfootlogo  
-% Uncomment to put footer logo on left side, and 
-% conference name on right side of footer
-
-% Some examples of caption control (remove % to check result)
-
-%\renewcommand{\algorithmname}{Algoritme} % for Dutch
-
-%\renewcommand{\mastercapstartstyle}[1]{\textit{\textbf{#1}}}
-%\renewcommand{\algcapstartstyle}[1]{\textsc{\textbf{#1}}}
-%\renewcommand{\algcapbodystyle}{\bfseries}
-%\renewcommand{\thealgorithm}{\Roman{algorithm}}
+\conference{{\bf IEEE 2016}, Anaheim CA December 19}
 
 \maketitle
 
 %%% Begin of Multicols-Enviroment
 \begin{multicols}{3}
 
-%%% Abstract
+%%%%%%%%%%%%
+% Abstract %
+%%%%%%%%%%%%
 \begin{abstract}
-No modelo que a Danielle postou não tinha resumo, então confirmem para saber se precisa ou não.
-Morphological pattern spectra computed from granulometries are frequently used
-to classify the size classes of details in textures and images. An extension 
-of this technique, which retains information on the spatial 
-distribution of the details in each size class is developed. Algorithms for
-computation of these spatial pattern spectra for a large number of 
-granulometries on binary images are presented. 
+Having information of a user's activity can provide great use in modern-day devices such as ones that track and monitor the user's activity and fitness.
+We demonstrate activity classification performance of the matched-filtering method with data obtained from a three-axis accelerometer worn by the user.
+We also show the real-time processing capability of our algorithms on the MSP432P401R low-powered microcontroller.
+Dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006} is a data compression technique we use to improve our processing throughput which, inherently, has the added benefit of making     our data invariant to sensor orientation.
+Data decimation in time is an additional throughput enhancement that we apply early to our data.
+We make use of an instance-based learning algorithm to train the device to learn the individual's motion patterns and store that information as activity templates for use in our matched-filter.
 \end{abstract}
 
-%%% Introduction
-\section{Introducão}
-A importância do assunto deve ser destacada resumidamente.
+%%%%%%%%%%%%%%%%
+% Introduction %
+%%%%%%%%%%%%%%%%
+\section{Introduction}
+We adopt the matched-filter method for classification to identify an individual's activity in real-time processing on a low-powered micro-controller.
+Our algorithms are designed for computational efficiency to accommodate the resource limitations of a microcontroller.
+Timing tests were performed on the MSP432 microcontroller.
 
-\PARstart{G}{ranulometries} are ordered sets of morphological openings or closings, each of
-which removes image details below a certain size. These can be used for texture
-analysis
-through the use of \emph{pattern spectra}, which show how the number of 
-foreground pixels in the image changes as a function of the size parameter 
-\cite{maragos89:_patter}.
-A drawback of the classical definition of pattern spectra is that spatial 
-information is not included in a pattern spectrum as shown below.
- In this paper, \emph{spatial pattern spectra} are developed which retain information on the distribution of these details at different scales.
- 
+Two main algorithms are described here: The activity classification module for real-time processing and the training module to train the device to identify the user's activity for the purpose of real-time activity classification.
 
-\newcommand{\imsize}{0.45\columnwidth}
-\begin{figure}
-\begin{center}
-\begin{tabular}{c c}
+Because training module does not need to be performed in real time, this can be performed on an external device such as a smart phone or tablet where processing resources are in greater abundance.
+Training the module creates the reference signals to be used on the microcontroller for the real-time activity classification processing.
 
-\end{tabular}
-\end{center}
-\caption{ Parts (a) through (c) show three images consisting of squares of
-different sizes;
-(d) shows the pattern spectra, denoting the number of foreground pixels 
- removed by openings by reconstruction by $\lambda \times \lambda$ squares. No 
-granulometry is capable of separating the patterns, because the only 
-differences between the images lie in the distributions of the 
-connected components. }\label{fig:blocks}
-\end{figure}
-
-
-
-
-\section{Objetivos}
-Dar uma ideia compacta da metodologia ou forma de abordagem da pesquisa, bem como o projeto foi desenvolvido.\\
-
-Let binary images $X$ and $Y$ be defined as a subset of the image domain 
-${\mathbf M}\subset {\mathbb Z}^n$ or ${\mathbb R}^n$ (usually $n=2$). 
-\begin{Def}
-A binary 
-granulometry is a set of operators $\{\alpha_r\}$ with $r$ from some ordered 
-set $\Lambda$ (usually $\Lambda \subset {\mathbb R}$ or ${\mathbb Z}$), with 
-the following three properties
-\begin{align}
-   \alpha_r(X) & \subset  X \label{eq:antiext} \\
-   X \subset Y & \Rightarrow \alpha_r(X) \subset \alpha_r(Y) 
-   \label{eq:increasing} \\
-   \alpha_r(\alpha_s(X)) & =  \alpha_{\max(r,s)}(X) \label{eq:idempot},
-\end{align}   
-for all $r,s \in \Lambda$.
-\end{Def}
-
-\begin{Def}
-The pattern spectrum $s_{\alpha}(X)$ obtained by applying 
-granulometry $\{\alpha_r\}$ to a binary image $X$ is defined as
-\begin{equation}
-    (s_{\alpha}(X))(u) = 
-    - \frac{\partial A(\alpha_r(X))}{\partial r}\bigg{\vert}_{r=u}
+%%%%%%%%%%%%%%%
+% Methodology %
+%%%%%%%%%%%%%%%
+\section{Methodology}
+We use the matched-filter method for identifying a user's activity from data generated by body-worn accelerometers.
+The matched-filter is based on the cross correlation of the data $\textbf{y} = \{y\}_{k=0}^{N-1}$ with the reference signal $\textbf{x} = \{x\}_{k=0}^{M-1}$.
+The cross correlation of $\textbf{x}$ with $\textbf{y}$ is defined as:
+%
+\begin{equation} \label{eq:cross_correlation}
+(\textbf{x} \star \textbf{y}) := \left \{\sum_{i=0}^{M-1}x_{i} y_{i+k} \right \}_{k=0}^{N-M-1}
 \end{equation}
-in which $A(X)$ is a function denoting the Lebesgue measure in 
-${\mathbb R}^n$.
-\end{Def} 
-In the case of discrete images, and with $r \in \Lambda \subset {\mathbb Z}$, 
-this differentiation reduces to
-\begin{align}
-    (s_{\alpha}(X))(r)  & = \#(\alpha_{r}(X) \setminus \alpha_{r^+}(X)) \\ 
-                        & = \#(\alpha_{r}(X)) - \#(\alpha_{r^+}(X)), 
-\end{align}
-with $r^+ = \min\{ r' \in \Lambda \vert r' > r \}$, and $\#(X)$ the 
-numnber of elements of $X$.
+%
+We can then normalize \eqref{eq:cross_correlation} by the following:
+%
+\begin{equation} \label{eq:norm_cross_correlation}
+\widehat{(\textbf{x} \star \textbf{y})}_k := \frac{(\textbf{x} \star \textbf{y})_k}{||\textbf{x}|| \ || \widetilde{\textbf{y}}_k || }, \quad k = 0,1,...,N-M-1
+\end{equation}
+%
+where $|| \cdot ||$ is the usual $\ell_2$ norm and $\widetilde{\textbf{y}}_k = \{y_p\}_{p=k}^{M+k-1}$.
+\eqref{eq:norm_cross_correlation} is now bounded by $[-1,1]$.
+We improve our computational efficiency by applying the convolution theorem to \eqref{eq:cross_correlation} and replacing it with:
+%
+\begin{equation} \label{eq:conv_theorem}
+(\textbf{x} \star \textbf{y}) := FFT^{-1}(FFT(\textbf{x}') FFT(\textbf{y})^*)
+\end{equation}
+%
+where $\textbf{x}'$ is $\textbf{x}$ that has been zero padded to the length of $\textbf{y}$ with the added restriction that the length of $\textbf{x}$ is no more than the length of $\textbf{y}$ and $FFT$ is the Fast Fourier Transform algorithm.
+We are most interested where our reference $\textbf{x}$ best matches our data $\textbf{y}$.
+We use the resulting max correlation as our metric for determining our matched-filter output as:
+%
+\begin{equation} \label{eq:matched_filter}
+MF_{\textbf{x}}(\textbf{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat{(\textbf{x} \star \textbf{y})}_k \right \}
+\end{equation}
+%
+If \eqref{eq:matched_filter} passes a set threshold, then the corresponding signal $\textbf{y}$ is classified as a match to the reference $\textbf{x}$.
 
-The opening transform \cite{Nacken:thesis} $\Omega_X$ of a binary image $X$ 
-for a granulometry ${\alpha_r}$ is
-\begin{equation}
-  \Omega_X(x) = \max\{ r \in \Lambda \vert x \in \alpha_r(X) \}
+Applying the convolution theorem to $\eqref{eq:conv_theorem}$ changes the computational complexity or the cross correlation from $\mathcal{O}(n^2)$ to $\mathcal{O}(n log_2n)$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dimensionality Reduction %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Dimensionality Reduction}
+We manage to reduce our computational resources and remove our dependence on sensor orientation at the same time through a process of dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006}.
+We assume that over a short period of time, the user's limb movement is constrained mostly to a two-dimensional plane.
+We project the acceleration data onto this plane and re-define our new axis accordingly.
+If we let $\textbf{a} = \{a_i\}_{i=0}^{N}$ represent our demeaned acceleration data (where each $a_i$ is represented as a column) over a specified time window in three dimensions, then the covariance matrix of our acceleration data is represented by the real-symmetric $3 \times 3$ matrix $Q = \textbf{a} \textbf{a}^T$.
+The resulting unit length column eigenvectors of $Q$ are $V = (\textbf{v}^1,\textbf{v}^2,\textbf{v}^3)$ with their respective eigenvalues $\lambda^1 \geq \lambda^2 \geq \lambda^3$ of this matrix are orthonormal and point in the directions where the data varies most in descending order for each orthogonal direction.
+Here, we use superscripts to identify the axis directions in ascending order to represent the primary, secondary, and tertiary principal axis directions respectively.
+%
+\begin{equation} \label{eq:project}
+   \textbf{a}' := V^T \textbf{a}
+\end{equation}
+%
+We now represent our acceleration data as $\textbf{a}'$ after projecting our acceleration data $\textbf{a}$ onto our rotated axis $V$ by \eqref{eq:project}.
+We compute the matched-filter output for two dimensions by generalizing \eqref{eq:matched_filter}.
+We augment our reference and signal with both dimensions appropriately for normalization and adding together the cross correlations as:
+%
+\begin{equation} \label{eq:cross_correlation_2}
+\widehat{(\textbf{x}^{1,2} \star \textbf{y}^{1,2})}_k := \frac{(\textbf{x}^1 \star \textbf{y}^1)_k + (\textbf{x}^2 \star \textbf{y}^2)_k}{||[ \textbf{x}^1, \textbf{x}^2 ]|| \ || [ \widetilde{\textbf{y}}_k^1, \widetilde{\textbf{y}}_k^2 ] || },
+\end{equation}
+%
+for $ k = 0,1,...,N-M-1 $. \\
+%
+\begin{equation} \label{eq:matched_filter_2}
+MF_{\textbf{x}}^2(\textbf{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat{(\textbf{x}^{1,2} \star \textbf{y}^{1,2})}_k \right \}
+\end{equation}
+%
+Here, the superscripts $1$ and $2$ represent the primary and secondary principal components of our data respectively.
+
+%%%%%%%%%%%%%%
+% Decimation %
+%%%%%%%%%%%%%%
+\section{Decimation}
+Decimation is the first step applied to our data before any additional processing takes place.
+Decimation is a process of reducing the sampling rate of the signal by filtering to mitigate any possible distortion effects due to aliasing followed by downsampling.
+Decimation helps improve processing throughput.
+
+For a decimation value of $D$, we define our triangle filter with the following weights:
+%
+\begin{equation} \label{eq:triangle_filter_weights}
+w_k^D :=
+\begin{cases}
+  \frac{D+k}{D^2}, & \text{if }\ -D < k \leq 0 \\
+  \frac{D-k}{D^2}, & \text{if } 0 < k < D \\
+  0, & \text{otherwise}
+\end{cases}
+\end{equation}
+%
+and convolve it with our data to get
+%
+\begin{equation} \label{eq:convolve}
+s'_k := \sum_{i=0}^{N} s_i w_{k-i}
+\end{equation}
+%
+followed by a downsample
+%
+\begin{equation} \label{eq:downsample}
+s''_k := s'_{(k+1)D-1}, \quad k = 0, 1, 2, ..., N/D.
 \end{equation}
 
-The pattern spectrum of a binary image $X$ using granulometry 
-$\{\alpha_r\}$ is the histogram of $\Omega_X$ obtained with the same 
-size distribution \cite{Nacken:thesis}, disregarding the bin for grey level 0.
+%%%%%%%%%%%%%%%%%%%%%
+% Activity Training %
+%%%%%%%%%%%%%%%%%%%%%
+\section{Activity Training}
+We are able to identify an individual's activity by matching the signal to a reference template.
+We develop a reference template for our matched-filter directly from a subset of the person's motion signature.
+The individual performs a specified activity over a specified amount of time and select the sub-interval of time that we find best represents the user's motion signature.
+For a given activity, we attempt to find the representative signal $\textbf{s}$ of our individual's activity to be our template for our matched-filter.
 
+If $\textbf{t} = \{t_k\}_{k=0}^{N_t}$ is our training set over $N_t$ data points, we define a collection of subsets $X$ of $\textbf{t}$:
+%
+\begin{equation} \label{eq:X_subsets_of_training_eq}
+X := \left \{ \{t_k\}_{k=p}^{p+M-1} | p=mI \right \}
+\end{equation}
+%
+and $Y$ of $\textbf{t}$:
+%
+\begin{equation} \label{eq:Y_subsets_of_training_eq}
+Y := \left \{ \{t_k\}_{k=p}^{p+N-1} | p=nI \right \}
+\end{equation}
+%
+where $M \leq N$, $I$ is a positive, fixed integer, and $(m,n) \in \mathbb{Z}^2$ where $(m,n)$ vary such that $0 \leq (m,n)I$ and $(m,n)I + (M,N) - 1 \leq N_t$. Then we can determine the representative signal $\textbf{s} \in X$ for our activity that satisfies the condition:
+%
+\begin{equation} \label{eq:s_condition}
+\sum_{y \in Y}MF^2_{\textbf{s}}(\textbf{y}) \geq \sum_{y \in Y}MF^2_{\textbf{x}}(\textbf{y}), \quad \forall \textbf{x} \in X
+\end{equation}
 
-\begin{figure}
+We chose this method for its simplicity and robustness against outliers in our training set. We anticipate that the user will have idle motion at the start and end of their training duration when they activate the training mode and with possible disruptions during the process.
+
 \begin{center}
+ \includegraphics[scale=.75]{reference_pulse_32Hz_4sec_8downsample_2.png}
 \end{center}
-\caption{ \label{fig:opentransf} Opening transform with $\{\alpha_r\}$ as in 
- Fig. \ref{fig:blocks}: (left) original image; (right) opening transform
-(contrast stretched for clarity). 
-}
+
+%%%%%%%%%%%%%%%
+% Performance %
+%%%%%%%%%%%%%%%
+\section{Performance}
+The Kinetisense sensor was used for the algorithm performance analysis in this paper.
+This unit has a three-axis accelerometer with an acceleration range of -5g to +5g and a sampling rate of 128Hz.
+Samples of walking, jogging, and bicycling have been recorded with this unit attached to the ankle of the user.
+A separate instance of walking data was used specifically for training the classifier.
+%
+%\begin{figure}[!ht]
+%  %\captionsetup[subfigure]{labelformat=empty}
+%  \centering
+%  \subfloat[\label{fig:frac_walking_jogging}]{\includegraphics[width=0.45\textwidth]{fraction_threshold_walking_to_jogging.png}}
+%  \quad
+%  \centering
+%  \subfloat[\label{fig:frac_walking_bicycling}]{\includegraphics[width=0.45\textwidth]{fraction_threshold_walking_to_bicycling.png}}
+%  \centering
+%  \quad
+%  \subfloat[\label{fig:roc_walking_jogging}]{\includegraphics[width=0.45\textwidth]{ROC_walk_to_run.png}}
+%  \centering
+%  \quad
+%  \subfloat[\label{fig:roc_walking_bicycling}]{\includegraphics[width=0.45\textwidth]{ROC_walk_to_bike.png}}
+%  \caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced at decimation 8. Figures (c) and (d) are the corresponding ROC curves produced from (a) and (b) respectively.}
+%  \label{fig:MF_performance}
+%\end{figure}
+
+Figures \ref{fig:frac_walking_jogging} and \ref{fig:frac_walking_bicycling} show the fraction of the correlation results that exceed the given correlation threshold when comparing the walking data reference to the given activity.
+As we would expect, the walking data reference matches better to walking data than to the other activities. The tail in figure \ref{fig:frac_walking_jogging} is attributed to brief moments of walking that was recorded during the jogging data collection.
+ROC curves were produced from these corresponding results in figures \ref{fig:roc_walking_jogging} and \ref{fig:roc_walking_bicycling} to illustrate the effectiveness of the matched-filter as a classifier.
+Because the bicycling motions are considerably different from walking relative to jogging, we would expect better performance from our classifier for bicycling.
+
+To assess the real-time processing potential of the algorithms outlined in this paper, a throughput assessment was performed on the MSP432P401R microcontroller with varying parameters.
+The Texas Instruments - MSP432P401R is a low power plus performance microcontroller that is based on the ARM 32-Bit Cortex-M4F processor.
+Some of the notable features of the MSP432P410R is having a clock frequency of 48 MHz, 64 kB SRAM, 256 kB Flash Memory, an IEEE 754-compliant single-precision Floating-Point Unit (FPU), and Memory Protection Unit (MPU).
+The single-precision processing capability on this unit provides us with the dynamic range necessary to process the algorithms that fixed-point processing cannot provide.
+The 64 kB of SRAM provides sufficient space to process the results found in figure \ref{fig:timing} and
+the 256 kB is more than enough flash memory to store the program and data references.
+The clock frequency operates at 48 MHz which drives the execution speed.
+
+\begin{figure}[!ht]
+   \centering
+   \includegraphics[width=0.45\textwidth]{reference_pulse_32Hz_4sec_8downsample_2.png}
+   \caption{Oscilloscope output used for measuring the processing time of the algorithms on the MSP432. This is a case setup of 32Hz sampling frequency over a 4 second time window with 2 references at decimation 8 showing the voltage output over time.
+Execution time is measured from start to end of the ``high'' (3.3 Volts) time interval.}
+   \label{fig:time_measure}
+\end{figure}
+%
+The ``Analog Discovery 100MSPS USB Oscilloscope and Logic Analyzer'' oscilloscope was used for measuring the timing of the algorithms on the microcontroller.
+When testing the execution speed, one of the General-Purpose Input/Output (GPIO) pins was connected to a Light-emitted diode (LED) that activates at 3.3 Volts (set high).
+This is activated immediately before the beginning of decimation (start of algorithm processing) and deactivated immediately at the end of the matched-filtering (end of algorithm processing).
+The execution time is then recorded on the oscilloscope to determine how long the GPIO was set high.
+An example can be seen in Figure \ref{fig:time_measure}.
+
+%\begin{figure}[!ht]
+%   \centering
+%   \subfloat[\label{fig:multiple_comparison}]{\includegraphics[width=0.45\textwidth]{more_time_plots.png}}
+%   \quad
+%   \subfloat[\label{fig:timing_refs}]{\includegraphics[width=0.45\textwidth]{one_and_two_references.png}}
+%   \caption{Timing results with varying sampling frequencies, time-window lengths, and number of references used for the matched-filter on the MSP432 microcontroller processor. The time window used for (b) is 4.0 seconds with timings measured at sampling frequencies of $16, 32, 62, 64, 75, 100,$ and $128$ Hz.}
+%   \label{fig:timing}
+%\end{figure}
+%
+The throughput performance was assessed on the MSP432 with varying parameters and randomized data.
+This can be accomplished because the processing time is not affected by the data and this also simplifies this aspect of testing.
+Figure \ref{fig:multiple_comparison} shows the execution time with varying time-window lengths and sampling frequencies while maintaining two references used in the matched-filter process while operating at decimation $2$.
+Because the FFT dominates the processing load, and a custom FFT was written specifically for this unit and optimized for even-powered factors, one expects best throughput at radix 2 valued time-window lengths and sampling frequencies followed by other even-valued, non-radix 2, time-lengths and sampling frequencies. Both $62$Hz and $50$Hz have only one factor of $2$ hence the expectation that a sampling frequency of $62$Hz processing time is longer than that of the $50$Hz.
+Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time window at decimation $8$ while varying the sampling frequency and number of references.
+The processing that happens on the data before matched-filtering doesn't change the execution time with the number of references.
+Therefore, one can observe that matched-filtering accounts for roughly $80$\% of the processing time.
+%
+\begin{figure}[!ht]
+   \centering
+   \includegraphics[width=0.99\textwidth]{flops_graph.png}
+   \caption{An estimate of the processing distribution based on flop counts. This estimate was obtained from analyzing the source code that was used for the performance assessment. The cost of the FFT is based on the $2.5 N log_2 N$ mflops estimate for real-FFTs for FFTW \cite{FFTW} execution which was used for this performance assessment. A sampling rate of $128$ Hz with the matched-filter applied over a $4$ second time window and $1.5$ seconds of reference data was used.}
+   \label{fig:flops_count}
 \end{figure}
 
+An assessment of the processing costs associated with each algorithm in the process was made as seen in figure \ref{fig:flops_count}.
+In addition, timing tests were done for comparison on an Intel i7-4500U 1.80 GHz processor.
+Processing time came out to $12.0$ micro-seconds for dimensionality reduction processing and $114.0$ micro-seconds for matched-filter processing on the remaining two dimensions.
+This proportion shows relative consistency with figure \ref{fig:flops_count} as we would expect.
+FFT calls account for the bulk of the processing distribution and are part of the main processing kernel for the matched-filtering process.
 
-\section{Metodologia}
-Dar uma ideia compacta da metodologia ou forma de abordagem da pesquisa, bem como o projeto foi desenvolvido.
-\\
-Pattern spectra only retain the amount of detail present at  scale $r$.
-This can be amended by computing some parameterization of the spatial 
-distribution in an image $\alpha_r(X) \setminus \alpha_{r+}(X)$ as a function of $r$. 
+%%%%%%%%%%%%%%
+% Conclusion %
+%%%%%%%%%%%%%%
+\section{Conclusion}
+We have demonstrated excellent activity classification capability of the matched-filter method using data obtained from a Kinetisense tri-axis accelerometer sensor.
+We have shown that real-time processing on a low-powered micro-controller can be achieved with timing results obtained from the MSP432 microcontroller.
+Timing results have demonstrated that radix 2 time-window lengths and frequency values result in faster processing times as expected given that the FFTs account for a significant amount of the processing time.
+We increased our throughput with the use of data-compression techniques, namely decimation and dimensionality reduction, which reduced our computational requirements.
+The references used in the matched-filter are obtained from the training module where a training set is provided by the user through some specified activity and the best representative motion signature of the individual is extracted through the use of an instance-based learning algorithm.
 
-\begin{Def}
-Let ${M}(X)$ be some parameterization of the spatial distribution of detail
-in the image $X$. The spatial pattern spectrum ${S}_{{M},\alpha}$ is
-then defined as
-\begin{equation}
-  ({S}_{{M},\alpha}(X))(r) = {M}(\alpha_r(X) \setminus \alpha_{r+}(X)).
-\end{equation}  
-\end{Def}
-
-An obvious parameterization of the spatial distribution is through 
-the use of moments. Focusing on the case of 2-D binary images, the 
-moment $m_{ij}$ of order $ij$ of an image $X$ is given by
-\begin{equation}
-  m_{ij}(X) = \sum_{(x,y) \in \mathbf X} x^i y^j.
-\end{equation}  
-The spatial moment spectrum $S_{m_{ij},\alpha}$ of order $ij$ is
-\begin{equation}
-  (S_{m_{ij},\alpha}(X))(r) = m_{i,j}(\alpha_r(X) \setminus \alpha_{r^+}(X)).
-\end{equation}  
-For $i=0$ and $j=0$ we obtain the standard pattern spectrum. 
-For each $r$, $(S_{m_{ij},\alpha}(X))(r)$ is just the moment of an image, 
-therefore, derived parameters such as coordinates of the centre of mass, 
-(co-)variances, skewness and kurtosis of the distribution of details at each
-scale can be computed easily. We can then define pattern mean
-spectra, pattern (co-)variance spectra, pattern kurtosis spectra, etc. The 
-pattern mean-$x$ and variance-$x$ spectra 
-($S_{\bar x,\alpha}$ and $S_{\sigma(x),\alpha}$) are defined as: 
-\begin{align}
-  S_{\bar x,\alpha} & = \frac{S_{m_{10},\alpha}} {S_{m_{00},\alpha}} \\
-\intertext{and}
-   S_{\sigma(x),\alpha} & = \sqrt{\frac{S_{m_{20},\alpha}}
-                                 {S_{m_{00},\alpha}} 
-                                 - S_{\bar x, \alpha}}.  
- \end{align}
-These two are shown in Figures \ref{fig:tauspect} and \ref{fig:binspect}. Note that 
-these definitions hold only where $(S_{m_{00},\alpha}(f))(r) \neq 0$. For all 
-other values of $r$ they will be defined as zero. Further post-processing can
-be done to compute central moments and moment invariant from pattern moment 
-spectra \cite{Flusser:Suk:93,Hu:62}. 
-
-\section{Resultados e Discussão}
-
-Verificar os principais resultados obtidos de acordo com os objetivos propostos.\\
-
-Nacken \cite{Nacken:thesis} derived an algorithm for computation
-of pattern spectra for granulometries based on openings by discs of increasing
-radius for various metrics, using the opening transform. After the
-opening transform has been computed, it is straightforward to compute the 
-pattern spectrum:
-\begin{itemize}
-\item Set all elements of array {\tt S} to zero
-\item For all $x \in X$ increment {\tt S}[$\Omega_X(x)$] by one. 
-\end{itemize}
-
-To compute the pattern \emph{moment} spectrum, the only thing that needs to be
-changed is the way {\tt S}[$\Omega_X(x)$] is incremented. As shown in Algorithm
-\ref{alg:spect}.
-
-\begin{algorithm}
-\begin{itemize}
-\item Set all elements of array {\tt S} to zero
-\item For all $(x,y) \in X$ increment {\tt S}[$\Omega_X(x,y)$] by 
-$x^iy^j$. 
-\end{itemize}
-\caption{ Algorithm for computation of pattern moment
-spectrum of order $ij$. \label{alg:spect}}
-\end{algorithm}
-
-This algorithm can 
-readily be adapted to other granulometries, simply by computing the 
-appropriate opening transform.
-
-\begin{figure}
-\begin{center}
-\begin{tabular}{c c}
-
-\end{tabular}
-\end{center}
-\caption{ \label{fig:tauspect} 
-The opening transform using city-block metric: (a) opening transform of
-Fig. 1(c); (b) pattern spectrum; (c) pattern variance-$x$; 
-(d) variance-$y$ spectra.}
-\end{figure}
-
-
-\renewcommand{\imsize}{0.3\columnwidth}
-\begin{figure}
-\begin{center}
-\end{center}
-\caption{ \label{fig:binspect} Pattern mean-$x$ (top) and variance-$x$ 
-(bottom) spectra: the three collumns show spectra for Fig. 1(a), (b) and (c) 
-from left to right respectively.  Unlike the standard pattern spectra, 
-these spatial pattern spectra can distinguish the three images.}
-\end{figure}
-
-\section{Conclusão}
-
-Sitting on a corner all alone,
-staring from the bottom of his soul,
-watching the night come in from the window
-\\
-It'll all collapse tonight, the fullmoon is here again
-In sickness and in health, understanding so demanding
-It has no name, there's one for every season
-Makes him insane to know
-\\
-Running away from it all
-"I'll be safe in the cornfields", he thinks
-Hunted by his own,
-again he feels the moon rising on the sky
-\\
-Find a barn which to sleep in, but can he hide anymore
-Someone's at the door, understanding too demanding
-Can this be wrong, it's love that is not ending
-Makes him insane to know
-\\
-She should not lock the open door
-(Run away, run away, run away)
-Fullmoon is on the sky and He's not a man anymore
-sees the change in him but can't
-(Run away, run away, run away)
-See what became out of her man
-Fullmoon
-\\
-Swimming across the bay,
-the night is gray, so calm today
-She doesn't wanna wait.
-"We've gotta make the love complete tonight..."
-\\
-In the mist of the morning he cannot fight anymore
-Hundred moons or more, he's been howling
-Knock on the door, and scream that is soon ending
-Mess on the floor again
-\\
-She should not lock the open door
-(Run away, run away, run away)
-Fullmoon is on the sky and he's not a man anymore
-She sees the changes in him but can't
-(Run away, run away, run away)
-See what became out of her man
-\\
-She should not lock the open door
-(Run away, run away, run away)
-Fullmoon is on the sky and he's not a man anymore
-sees the changes in him but can't
-(Run away, run away, run away)
-See what became out of her darling man
-\\
-She should not lock the open door
-(Run away, run away, run away)
-Fullmoon is on the sky and he's not a man anymore
-See what became out of her man
- 
-%%% References
-
-%% Note: use of BibTeX als works!!
-
+%%%%%%%%%%%%%%
+% References %
+%%%%%%%%%%%%%%
 \bibliographystyle{plain}
-\begin{thebibliography}{1}
-
-\bibitem{Flusser:Suk:93}
-J.~Flusser and T.~Suk.
-\newblock Pattern recognition by affine moment invariants.
-\newblock {\em Pattern Recognition}, 26:167--174, 1993.
-
-\bibitem{Hu:62}
-M.~K. Hu.
-\newblock Visual pattern recognition by moment invariants.
-\newblock {\em IRE Transactions on Information Theory}, IT-8:179--187, 1962.
-
-\bibitem{maragos89:_patter}
-P.~Maragos.
-\newblock Pattern spectrum and multiscale shape representation.
-\newblock {\em IEEE Trans. Patt. Anal. Mach. Intell.}, 11:701--715, 1989.
-
-\bibitem{Meijster:Wilkinson:PAMI}
-A.~Meijster and M.~H.~F. Wilkinson.
-\newblock A comparison of algorithms for connected set openings and closings.
-\newblock {\em IEEE Trans. Patt. Anal. Mach. Intell.}, 24(4):484--494, 2002.
-
-\bibitem{Nacken:thesis}
-P.~F.~M. Nacken.
-\newblock {\em Image Analysis Methods Based on Hierarchies of Graphs and
-  Multi-Scale Mathematical Morphology}.
-\newblock PhD thesis, University of Amsterdam, Amsterdam, The Netherlands,
-  1994.
-
-\end{thebibliography}
+\bibliography{reference}
 
 \end{multicols}
 

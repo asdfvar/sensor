@@ -7,12 +7,12 @@ Images = one_and_two_references.png                  \
          ROC_walk_to_run.png
 
 all: $(Images)
-	pdflatex poster.tex
-	bibtex poster
+	pdflatex example.tex
+	bibtex example
 
 clean:
-	rm -v poster.pdf poster.log poster.out poster.snm      \
-        poster.toc poster.aux poster.nav poster.bbl poster.blg \
+	rm -v example.pdf example.log example.out example.snm      \
+        example.toc example.aux example.nav example.bbl example.blg \
         $(Images)
 
 one_and_two_references.png: make_timing_plots.py
