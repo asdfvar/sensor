@@ -188,23 +188,20 @@ We chose this method for its simplicity and robustness against outliers in our t
 % Performance %
 %%%%%%%%%%%%%%%
 \section{Performance}
-The Kinetisense sensor was used for the algorithm performance analysis in this paper.
+The Kinetisense sensor was used for the algorithm performance analysis.
 This unit has a three-axis accelerometer with an acceleration range of -5g to +5g and a sampling rate of 128Hz.
 Samples of walking, jogging, and bicycling have been recorded with this unit attached to the ankle of the user.
 A separate instance of walking data was used specifically for training the classifier.
 
 \begin{figure}[!ht]
 \centering
-\subfigure[Jogging]{\includegraphics[width=0.45\textwidth]{fraction_threshold_walking_to_jogging.png}}
-\subfigure[Bicycling]{\includegraphics[width=0.45\textwidth]{fraction_threshold_walking_to_bicycling.png}}
-\caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced at decimation 8. Figures (c) and (d) are the corresponding ROC curves produced from (a) and (b) respectively.}
+\subfigure[\label{fig:frac_walking_jogging} Jogging]{\includegraphics[width=0.45\textwidth]{fraction_threshold_walking_to_jogging.png}}
+\subfigure[\label{fig:frac_walking_bicycling} Bicycling]{\includegraphics[width=0.45\textwidth]{fraction_threshold_walking_to_bicycling.png}}
+\caption{Matched-filter performance comparing jogging and bicycling data against a reference for walking. Results produced at decimation 8.}
   \label{fig:MF_performance}
 \end{figure}
 
 Figures \ref{fig:frac_walking_jogging} and \ref{fig:frac_walking_bicycling} show the fraction of the correlation results that exceed the given correlation threshold when comparing the walking data reference to the given activity.
-As we would expect, the walking data reference matches better to walking data than to the other activities. The tail in figure \ref{fig:frac_walking_jogging} is attributed to brief moments of walking that was recorded during the jogging data collection.
-ROC curves were produced from these corresponding results in figures \ref{fig:roc_walking_jogging} and \ref{fig:roc_walking_bicycling} to illustrate the effectiveness of the matched-filter as a classifier.
-Because the bicycling motions are considerably different from walking relative to jogging, we would expect better performance from our classifier for bicycling.
 
 To assess the real-time processing potential of the algorithms outlined in this paper, a throughput assessment was performed on the MSP432P401R microcontroller with varying parameters.
 The Texas Instruments - MSP432P401R is a low power plus performance microcontroller that is based on the ARM 32-Bit Cortex-M4F processor.
