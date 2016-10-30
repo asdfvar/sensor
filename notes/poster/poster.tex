@@ -12,7 +12,7 @@
 \newtheorem{Def}{Definition}
 
 
-\title{Real-Time Activity Classification by Matched Filtering using Body-Worn Accelerometers}
+\title{{\fontsize{100}{120}\selectfont Real-Time Activity Classification by Matched Filtering Using Body-Worn Accelerometers}}
 
 \author{Craig~Euler, C.T.~Lin, Bryan~Juarez, Melissa~Flores}
 
@@ -211,12 +211,6 @@ The 64 kB of SRAM provides sufficient space to process the results found in figu
 the 256 kB is more than enough flash memory to store the program and data references.
 The clock frequency operates at 48 MHz which drives the execution speed.
 
-The ``Analog Discovery 100MSPS USB Oscilloscope and Logic Analyzer'' oscilloscope was used for measuring the timing of the algorithms on the microcontroller.
-When testing the execution speed, one of the General-Purpose Input/Output (GPIO) pins was connected to a Light-emitted diode (LED) that activates at 3.3 Volts (set high).
-This is activated immediately before the beginning of decimation (start of algorithm processing) and deactivated immediately at the end of the matched-filtering (end of algorithm processing).
-The execution time is then recorded on the oscilloscope to determine how long the GPIO was set high.
-An example can be seen in Figure \ref{fig:time_measure}.
-
 \begin{figure}[!ht]
 \centering
 \subfigure[\label{fig:multiple_comparison}]{\includegraphics[width=0.45\textwidth]{more_time_plots.png}}
@@ -225,19 +219,8 @@ An example can be seen in Figure \ref{fig:time_measure}.
 \label{fig:timing}
 \end{figure}
 %
-The throughput performance was assessed on the MSP432 with varying parameters and randomized data.
-This can be accomplished because the processing time is not affected by the data and this also simplifies this aspect of testing.
 Figure \ref{fig:multiple_comparison} shows the execution time with varying time-window lengths and sampling frequencies while maintaining two references used in the matched-filter process while operating at decimation $2$.
-Because the FFT dominates the processing load, and a custom FFT was written specifically for this unit and optimized for even-powered factors, one expects best throughput at radix 2 valued time-window lengths and sampling frequencies followed by other even-valued, non-radix 2, time-lengths and sampling frequencies. Both $62$Hz and $50$Hz have only one factor of $2$ hence the expectation that a sampling frequency of $62$Hz processing time is longer than that of the $50$Hz.
 Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time window at decimation $8$ while varying the sampling frequency and number of references.
-The processing that happens on the data before matched-filtering doesn't change the execution time with the number of references.
-Therefore, one can observe that matched-filtering accounts for roughly $80$\% of the processing time.
-
-An assessment of the processing costs associated with each algorithm in the process was made as seen in figure \ref{fig:flops_count}.
-In addition, timing tests were done for comparison on an Intel i7-4500U 1.80 GHz processor.
-Processing time came out to $12.0$ micro-seconds for dimensionality reduction processing and $114.0$ micro-seconds for matched-filter processing on the remaining two dimensions.
-This proportion shows relative consistency with figure \ref{fig:flops_count} as we would expect.
-FFT calls account for the bulk of the processing distribution and are part of the main processing kernel for the matched-filtering process.
 
 %%%%%%%%%%%%%%
 % Conclusion %
