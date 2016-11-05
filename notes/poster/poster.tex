@@ -11,7 +11,7 @@
 %\usepackage{fancybullets}
 \newtheorem{Def}{Definition}
 
-% Poster size can be 36" wide by 44" tall
+% Poster size can be 36" wide by 44" tall (A0 paper size)
 
 \title{{\fontsize{100}{120}\selectfont Real-Time Activity Classification by Matched Filtering Using Body-Worn Accelerometers}}
 
@@ -28,7 +28,6 @@ California State University Northridge}
 
 \maketitle
 
-%%% Begin of Multicols-Enviroment
 \begin{multicols}{3}
 
 %%%%%%%%%%%%
@@ -51,7 +50,7 @@ We adopt the matched-filter method for classification to identify an individual'
 Our algorithms are designed for computational efficiency to accommodate the resource limitations of a microcontroller.
 Timing tests were performed on the MSP432 microcontroller.
 
-Two main algorithms are described here: The activity classification module for real-time processing and the training module to train the device to identify the user's activity for the purpose of real-time activity classification.
+Two main algorithms are described here: Activity classification for real-time processing and training to train the device to identify the user's activity for the purpose of real-time activity classification.
 
 Because training module does not need to be performed in real time, this can be performed on an external device such as a smart phone or tablet where processing resources are in greater abundance.
 Training the module creates the reference signals to be used on the microcontroller for the real-time activity classification processing.
@@ -76,7 +75,7 @@ We can then normalize \eqref{eq:cross_correlation} by the following:
 %
 where $|| \cdot ||$ is the usual $\ell_2$ norm and $\widetilde{\textbf{y}}_k = \{y_p\}_{p=k}^{M+k-1}$.
 \eqref{eq:norm_cross_correlation} is now bounded by $[-1,1]$.
-We improve our computational efficiency by applying the convolution theorem to \eqref{eq:cross_correlation} and replacing it with:
+We improve our computational efficiency from $\mathcal{O}(n^2)$ to $\mathcal{O}(n log_2n)$ by applying the convolution theorem to \eqref{eq:cross_correlation} and replacing it with:
 %
 \begin{equation} \label{eq:conv_theorem}
 (\textbf{x} \star \textbf{y}) := FFT^{-1}(FFT(\textbf{x}') FFT(\textbf{y})^*)
@@ -92,16 +91,14 @@ MF_{\textbf{x}}(\textbf{y}) := \underset{k \in [0, M-N)}{max} \left \{\widehat{(
 %
 If \eqref{eq:matched_filter} passes a set threshold, then the corresponding signal $\textbf{y}$ is classified as a match to the reference $\textbf{x}$.
 
-Applying the convolution theorem to $\eqref{eq:conv_theorem}$ changes the computational complexity or the cross correlation from $\mathcal{O}(n^2)$ to $\mathcal{O}(n log_2n)$.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Dimensionality Reduction %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dimensionality Reduction}
 We manage to reduce our computational resources and remove our dependence on sensor orientation at the same time through a process of dimensionality reduction with principal component analysis (PCA) \cite{bishop_2006}.
-We assume that over a short period of time, the user's limb movement is constrained mostly to a two-dimensional plane.
+We assume that over a short period of time, the user's limb movement is constrained mostly to two dimensions.
 We project the acceleration data onto this plane and re-define our new axis accordingly.
-If we let $\textbf{a} = \{a_i\}_{i=0}^{N}$ represent our demeaned acceleration data (where each $a_i$ is represented as a column) over a specified time window in three dimensions, then the covariance matrix of our acceleration data is represented by the real-symmetric $3 \times 3$ matrix $Q = \textbf{a} \textbf{a}^T$.
+If we let $\textbf{a} = \{a_i\}_{i=0}^{N}$ represent our demeaned acceleration data (with each $a_i$ being a column) over a specified time window in three dimensions, then the covariance matrix of our acceleration data is represented by the real-symmetric $3 \times 3$ matrix $Q = \textbf{a} \textbf{a}^T$.
 The resulting unit length column eigenvectors of $Q$ are $V = (\textbf{v}^1,\textbf{v}^2,\textbf{v}^3)$ with their respective eigenvalues $\lambda^1 \geq \lambda^2 \geq \lambda^3$ of this matrix are orthonormal and point in the directions where the data varies most in descending order for each orthogonal direction.
 Here, we use superscripts to identify the axis directions in ascending order to represent the primary, secondary, and tertiary principal axis directions respectively.
 %
@@ -110,7 +107,7 @@ Here, we use superscripts to identify the axis directions in ascending order to 
 \end{equation}
 %
 We now represent our acceleration data as $\textbf{a}'$ after projecting our acceleration data $\textbf{a}$ onto our rotated axis $V$ by \eqref{eq:project}.
-We compute the matched-filter output for two dimensions by generalizing \eqref{eq:matched_filter}.
+We compute the matched-filter output by generalizing \eqref{eq:matched_filter} for two dimensions.
 We augment our reference and signal with both dimensions appropriately for normalization and adding together the cross correlations as:
 %
 \begin{equation} \label{eq:cross_correlation_2}
