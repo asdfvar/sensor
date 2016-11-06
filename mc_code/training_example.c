@@ -18,7 +18,7 @@ int main()
    float *reference_x = (float*)malloc( 600 );
    float *reference_y = (float*)malloc( 600 );
    float *reference_z = (float*)malloc( 600 );
-   const int num_samples = 4;
+   const int num_samples = 40;
    void  *workspace = malloc( 200000 );
 
    /*
