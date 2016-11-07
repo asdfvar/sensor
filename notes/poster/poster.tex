@@ -158,8 +158,8 @@ s''_k := s'_{(k+1)D-1}, \quad k = 0, 1, 2, ..., N/D.
 %%%%%%%%%%%%%%%%%%%%%
 \section{Activity Training}
 We are able to identify an individual's activity by matching the signal to a reference template.
-We develop a reference template for our matched-filter directly from a subset of the person's motion signature.
-The individual performs a specified activity over a specified amount of time and select the sub-interval of time that we find best represents the user's motion signature.
+We develop our reference for our matched-filter directly from a subset of the person's motion signature.
+The individual performs a specified activity over a specified amount of time and we select the sub-interval of time that we find best represents the user's motion signature.
 For a given activity, we attempt to find the representative signal $\textbf{s}$ of our individual's activity to be our template for our matched-filter.
 
 If $\textbf{t} = \{t_k\}_{k=0}^{N_t}$ is our training set over $N_t$ data points, we define a collection of subsets $X$ of $\textbf{t}$:
@@ -205,9 +205,8 @@ To assess the real-time processing potential of the algorithms outlined in this 
 The Texas Instruments - MSP432P401R is a low power plus performance microcontroller that is based on the ARM 32-Bit Cortex-M4F processor.
 Some of the notable features of the MSP432P410R is having a clock frequency of 48 MHz, 64 kB SRAM, 256 kB Flash Memory, an IEEE 754-compliant single-precision Floating-Point Unit (FPU), and Memory Protection Unit (MPU).
 The single-precision processing capability on this unit provides us with the dynamic range necessary to process the algorithms that fixed-point processing cannot provide.
-The 64 kB of SRAM provides sufficient space to process the results found in figure \ref{fig:timing} and
-the 256 kB is more than enough flash memory to store the program and data references.
-The clock frequency operates at 48 MHz which drives the execution speed.
+The 64 kB of SRAM provides sufficient space to process our algorithms.
+The 256 kB is more than enough flash memory to store the program and data references.
 
 \begin{figure}[!ht]
 \centering
