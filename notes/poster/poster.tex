@@ -52,7 +52,7 @@ Timing tests were performed on the MSP432 microcontroller.
 
 Two main algorithms are described here: Activity classification for real-time processing and training to train the device to identify the user's activity for the purpose of real-time activity classification.
 
-Because training module does not need to be performed in real time, this can be performed on an external device such as a smart phone or tablet where processing resources are in greater abundance.
+Because training module does not need to be performed in real time, this can be done on an external device such as a smart phone or tablet where processing resources are in greater abundance.
 Training the module creates the reference signals to be used on the microcontroller for the real-time activity classification processing.
 
 %%%%%%%%%%%%%%%
@@ -182,11 +182,11 @@ where $M \leq N$, $I$ is a positive, fixed integer, and $(m,n) \in \mathbb{Z}^2$
 
 We chose this method for its simplicity and robustness against outliers in our training set. We anticipate that the user will have idle motion at the start and end of their training duration when they activate the training mode and with possible disruptions during the process.
 
-%%%%%%%%%%%%%%%
-% Performance %
-%%%%%%%%%%%%%%%
-\section{Performance}
-The Kinetisense sensor was used for the algorithm performance analysis.
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Performance Assessment %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Performance Assessment}
+The Kinetisense sensor was used for the algorithm performance assessment.
 This unit has a three-axis accelerometer with an acceleration range of -5g to +5g and a sampling rate of 128Hz.
 Samples of walking, jogging, and bicycling have been recorded with this unit attached to the ankle of the user.
 A separate instance of walking data was used specifically for training the classifier.
