@@ -180,8 +180,10 @@ where $M \leq N$, $I$ is a positive, fixed integer, and $(m,n) \in \mathbb{Z}^2$
 \sum_{y \in Y}MF^2_{\textbf{s}}(\textbf{y}) \geq \sum_{y \in Y}MF^2_{\textbf{x}}(\textbf{y}), \quad \forall \textbf{x} \in X
 \end{equation}
 
-We chose this method for its simplicity and robustness against outliers in our training set. We anticipate that the user will have idle motion at the start and end of their training duration when they activate the training mode and with possible disruptions during the process.
+We chose this method for its simplicity and robustness against outliers in our training set.
 
+\vfill
+\columnbreak
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % Performance Assessment %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -189,7 +191,7 @@ We chose this method for its simplicity and robustness against outliers in our t
 The Kinetisense sensor was used for the algorithm performance assessment.
 This unit has a three-axis accelerometer with an acceleration range of -5g to +5g and a sampling rate of 128Hz.
 Samples of walking, jogging, and bicycling have been recorded with this unit attached to the ankle of the user.
-A separate instance of walking data was used specifically for training the classifier.
+A separate instance of walking data was used for training the classifier.
 
 \begin{figure}[!ht]
 \centering
@@ -201,23 +203,18 @@ A separate instance of walking data was used specifically for training the class
 
 Figures \ref{fig:frac_walking_jogging} and \ref{fig:frac_walking_bicycling} show the fraction of the correlation results that exceed the given correlation threshold when comparing the walking data reference to the given activity.
 
-To assess the real-time processing potential of the algorithms outlined in this paper, a throughput assessment was performed on the MSP432P401R microcontroller with varying parameters.
+To assess the real-time processing potential of the algorithms outlined, a throughput assessment was performed on the MSP432P401R microcontroller with varying parameters.
 The Texas Instruments - MSP432P401R is a low power plus performance microcontroller that is based on the ARM 32-Bit Cortex-M4F processor.
-Some of the notable features of the MSP432P410R is having a clock frequency of 48 MHz, 64 kB SRAM, 256 kB Flash Memory, an IEEE 754-compliant single-precision Floating-Point Unit (FPU), and Memory Protection Unit (MPU).
-The single-precision processing capability on this unit provides us with the dynamic range necessary to process the algorithms that fixed-point processing cannot provide.
-The 64 kB of SRAM provides sufficient space to process our algorithms.
-The 256 kB is more than enough flash memory to store the program and data references.
+This controller has a clock frequency of 48 MHz, 64 kB SRAM which provides sufficient space for processing our algorithms, 256 kB Flash Memory to store the program and data, an IEEE 754-compliant single-precision Floating-Point Unit (FPU) that provides the dynamic range necessary to process the algorithms, and Memory Protection Unit (MPU).
 
 \begin{figure}[!ht]
 \centering
 \subfigure[\label{fig:multiple_comparison}]{\includegraphics[width=0.45\textwidth]{more_time_plots.png}}
 \subfigure[\label{fig:timing_refs}]{\includegraphics[width=0.45\textwidth]{one_and_two_references.png}}
-\caption{Timing results with varying sampling frequencies, time-window lengths, and number of references used for the matched-filter on the MSP432 microcontroller processor. The time window used for (b) is 4.0 seconds with timings measured at sampling frequencies of $16, 32, 62, 64, 75, 100,$ and $128$ Hz.}
+\caption{Timing results with varying sampling frequencies, time-window lengths, and number of references used for the matched-filter on the MSP432 microcontroller processor. Figure (a) is the measured execution time with varying time-window lengths and sampling frequencies while maintaining two references used in the matched-filter process at decimation $2$. The time window used for (b) is 4.0 seconds with timings measured at sampling frequencies of $16, 32, 62, 64, 75, 100,$ and $128$ Hz.}
 \label{fig:timing}
 \end{figure}
 %
-Figure \ref{fig:multiple_comparison} shows the execution time with varying time-window lengths and sampling frequencies while maintaining two references used in the matched-filter process while operating at decimation $2$.
-Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time window at decimation $8$ while varying the sampling frequency and number of references.
 
 %%%%%%%%%%%%%%
 % Conclusion %
@@ -226,7 +223,7 @@ Figure \ref{fig:timing_refs} shows the execution time over a $4.0$ second time w
 We have demonstrated excellent activity classification capability of the matched-filter method using data obtained from a Kinetisense tri-axis accelerometer sensor.
 We have shown that real-time processing on a low-powered micro-controller can be achieved with timing results obtained from the MSP432 microcontroller.
 Timing results have demonstrated that radix 2 time-window lengths and frequency values result in faster processing times as expected given that the FFTs account for a significant amount of the processing time.
-We increased our throughput with the use of data-compression techniques, namely decimation and dimensionality reduction, which reduced our computational requirements.
+We increased our throughput with the use of data-compression techniques, namely decimation and dimensionality reduction.
 The references used in the matched-filter are obtained from the training module where a training set is provided by the user through some specified activity and the best representative motion signature of the individual is extracted through the use of an instance-based learning algorithm.
 
 %%%%%%%%%%%%%%
