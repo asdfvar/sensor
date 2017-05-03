@@ -51,7 +51,7 @@ void training_main(
    for (cand_ref = 0; cand_ref < num_samples; cand_ref++)
    {
 
-      int start_ref_index = (int)((total_data_time_length - data_time_length) / num_samples) * cand_ref;
+      int start_ref_index = (int)((total_data_time_length - data_time_length) / (float)num_samples * sampling_freq * cand_ref);
 
       for (k = 0; k < N_window; k++) ref_buffer_x[k] = ax[start_ref_index + k];
       for (k = 0; k < N_window; k++) ref_buffer_y[k] = ay[start_ref_index + k];
@@ -75,11 +75,11 @@ void training_main(
       for (data_it = 0; data_it < num_samples; data_it++)
       {
 
-         int start_data_index = total_data_time_length / num_samples * data_it;
+         int start_data_index = (int)((total_data_time_length - data_time_length) / (float)num_samples * sampling_freq * data_it);
 
-         for (k = 0; k < N_window; k++) ax_buffer[k] = ax[start_ref_index + k];
-         for (k = 0; k < N_window; k++) ay_buffer[k] = ay[start_ref_index + k];
-         for (k = 0; k < N_window; k++) az_buffer[k] = az[start_ref_index + k];
+         for (k = 0; k < N_window; k++) ax_buffer[k] = ax[start_data_index + k];
+         for (k = 0; k < N_window; k++) ay_buffer[k] = ay[start_data_index + k];
+         for (k = 0; k < N_window; k++) az_buffer[k] = az[start_data_index + k];
 
          /*
          ** PRE-PROCESSING

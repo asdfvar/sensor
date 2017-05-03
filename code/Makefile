@@ -9,7 +9,7 @@ UTILITIES = utilities
 INC = -I$(MATCHFILTER) -I$(UTILITIES) -I$(PREPROC)
 LIBPATH = -L./$(MATCHFILTER) -L./$(UTILITIES) -L./$(PREPROC)
 
-LIBS = -lmatflt -lsens -lpreproc
+LIBS =  -lsens -lmatflt -lpreproc
 
 MAIN_DIRECTIVE = -Dpc #-DTAPER
 

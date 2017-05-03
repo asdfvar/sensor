@@ -353,7 +353,7 @@ float matchedfilter::get_correlation (void)
 {
    if ( correlation_computed )
    {
-      if (isnan(correlation))
+      if (std::isnan(correlation))
       {
          std::cout << "correlation is NaN" << std::endl;
       }
